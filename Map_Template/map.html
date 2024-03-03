@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แผนที่</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<h2>แผนที่</h2>
+<div id="map"></div>
+<p id="places"></p>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  var map = L.map('map').setView([13.7563, 100.5018], 15);
+  var marker, circle;
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  // เพิ่มเหตุการณ์คลิกที่แผนที่
+  map.on('click', function(e) {
+    // ลบหมุดเก่า, วงรอบ, และ popup (ถ้ามี)
+    if (marker) {
+      map.removeLayer(marker);
+    }
+    if (circle) {
+      map.removeLayer(circle);
+    }
+    map.closePopup();
+
+    // เพิ่มหมุดใหม่ที่ตำแหน่งที่คลิก
+    var popupContent = 'ตำแหน่งที่คุณคลิก: ' + e.latlng.toString();
+    marker = L.marker(e.latlng).addTo(map)
+      .bindPopup(popupContent)
+      .openPopup();
+
+    // เพิ่มวงรอบ (Circle) ที่มีรัศมี 1 เมตร
+    circle = L.circle(e.latlng, {
+      color: 'red',
+      fillColor: '#f03',
+      fillOpacity: 0.3,
+      radius: 1000 // 1,000 เมตร = 1 กิโลเมตร
+    }).addTo(map);
+
+    // ดึงข้อมูลสถานที่ท่องเที่ยวภายในรัศมี 1 กิโลเมตร
+    fetch('https://overpass-api.de/api/interpreter?data=[out:json];node(around:1000,' + e.latlng.lat + ',' + e.latlng.lng + ')["tourism"];out;')
+    .then(response => response.json())
+    .then(data => {
+        // สร้าง HTML แสดงชื่อสถานที่ท่องเที่ยวทั้งหมด
+        var placesContainer = document.getElementById('places');
+        placesContainer.innerHTML = ''; // เคลียร์เนื้อหาที่มีอยู่
+
+        data.elements.forEach(element => {
+        var placeName = element.tags.name;
+        if (placeName) {
+            var placeItem = document.createElement('div');
+            placeItem.textContent = placeName;
+            placesContainer.appendChild(placeItem);
+        }
+        });
+
+        if (placesContainer.children.length === 0) {
+        var noPlacesItem = document.createElement('div');
+        noPlacesItem.textContent = 'ไม่มีสถานที่ท่องเที่ยวในรัศมีนี้';
+        placesContainer.appendChild(noPlacesItem);
+        }
+    })
+    .catch(error => console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error));
+    });
+</script>
+
+</body>
+</html>
