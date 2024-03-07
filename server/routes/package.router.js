@@ -87,6 +87,33 @@ router.get("/package", getAllPackage);
  *          description: Some error happened!!
  */
 router.get("/package/type/:type_package", searchByTypePackage)
+/**
+ * @swagger
+ * /package/{id}:
+ *   get:
+ *     summary: Get Package by ID.
+ *     tags:    [Package]
+ *     parameters:
+ *      -   in: path
+ *          name: type_package
+ *          required: true
+ *          schema:
+ *              type: string
+ *          description:    the Package type
+ *     responses:
+ *       200:
+ *          description: A list of Package.
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: array
+ *                      items:
+ *                          $ref:   '#/components/schemas/Package'
+ *       404:
+ *          description: Not Found Package ID
+ *       500:
+ *          description: Some error happened!!
+ */
 router.get("/package/:id", getByIdPackage)
 // router.post('/package',creatRes)
 // router.delete('/package/:id',deleteById)
