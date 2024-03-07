@@ -26,17 +26,17 @@ const searchByNamePackage = async (req, res) => {
   }
 };
 
-// const getByIdPackage = async (req, res) => {
-//   try {
-//     const packagetId = req.params.id;
-//     const packaget = await PackageModel.findById({ _id: packagetId });
-//     if (!packaget) {
-//       res.status(404).json({ message: "Product not found" });
-//     }
-//     res.json(packaget);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
+const getByIdPackage = async (req, res) => {
+  try {
+    const packagetId = req.params.id;
+    const packaget = await PackageModel.findById({ _id: packagetId });
+    if (!packaget) {
+      res.status(404).json({ message: "Product not found" });
+    }
+    res.json(packaget);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-module.exports = { getAllPackage, searchByNamePackage,  };
+module.exports = { getAllPackage, searchByNamePackage,  getByIdPackage};

@@ -60,7 +60,7 @@ const { getAllPackage, searchByNamePackage,getByIdPackage } = require("../contro
  */
 router.get("/package", getAllPackage);
 router.get("/package/PackageName/:name", searchByNamePackage)
-// router.get("/package/:id", getByIdPackage)
+router.get("/package/:id", getByIdPackage)
 // router.post('/package',creatRes)
 // router.delete('/package/:id',deleteById)
 // router.put('/package/:id',updateById)
