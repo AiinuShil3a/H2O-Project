@@ -12,14 +12,15 @@ const getAllPackage = async (req, res) => {
   }
 };
 
-const searchByNamePackage = async (req, res) => {
-  const name = req.params.name;
+
+const searchByTypePackage = async (req, res) => {
+  const type_package = req.params.type_package;
   try {
-    const NamePackage = await PackageModel.findOne({ name });
-    if (!NamePackage) {
-      return res.status(404).send("Not Found Package name : " + name);
+    const PackageType = await PackageModel.findOne({ type_package });
+    if (!PackageType) {
+      return res.status(404).send("Not Found Package name : " + type_package);
     }
-    res.status(200).json({ NamePackage });
+    res.status(200).json({ PackageType });
   } catch (err) {
     console.log(err);
     res.status(500).send("have an error on server");
@@ -28,15 +29,15 @@ const searchByNamePackage = async (req, res) => {
 
 const getByIdPackage = async (req, res) => {
   try {
-    const packagetId = req.params.id;
-    const packaget = await PackageModel.findById({ _id: packagetId });
-    if (!packaget) {
+    const packageId = req.params.id;
+    const package = await PackageModel.findById({ _id: packagetId });
+    if (!package) {
       res.status(404).json({ message: "Product not found" });
     }
-    res.json(packaget);
+    res.json(package);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = { getAllPackage, searchByNamePackage,  getByIdPackage};
+module.exports = { getAllPackage, searchByTypePackage,  getByIdPackage};

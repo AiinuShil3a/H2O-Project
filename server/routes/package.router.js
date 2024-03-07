@@ -38,7 +38,7 @@
  */
 const express = require("express");
 const router = express.Router();
-const { getAllPackage, searchByNamePackage,getByIdPackage } = require("../controller/package.controller.js");
+const { getAllPackage, searchByTypePackage,getByIdPackage } = require("../controller/package.controller.js");
 
 /**
  * @swagger
@@ -59,7 +59,34 @@ const { getAllPackage, searchByNamePackage,getByIdPackage } = require("../contro
  *         description: Some error happened
  */
 router.get("/package", getAllPackage);
-router.get("/package/PackageName/:name", searchByNamePackage)
+/**
+ * @swagger
+ * /package/type/{type_package}:
+ *   get:
+ *     summary: Get Package by type.
+ *     tags:    [Package]
+ *     parameters:
+ *      -   in: path
+ *          name: type_package
+ *          required: true
+ *          schema:
+ *              type: string
+ *          description:    the Package type
+ *     responses:
+ *       200:
+ *          description: A list of Package.
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: array
+ *                      items:
+ *                          $ref:   '#/components/schemas/Package'
+ *       404:
+ *          description: Not Found Type Package
+ *       500:
+ *          description: Some error happened!!
+ */
+router.get("/package/type/:type_package", searchByTypePackage)
 router.get("/package/:id", getByIdPackage)
 // router.post('/package',creatRes)
 // router.delete('/package/:id',deleteById)
