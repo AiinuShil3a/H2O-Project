@@ -4,9 +4,7 @@ const Search = () => {
   return (
     <div className="relative bg-red p-8 h-[500px] flex items-center">
       <div className="mx-auto">
-        {/* Black card */}
         <div className="relative bg-blue p-6 rounded  w-[50vw] h-[35vh] flex flex-col items-center justify-center">
-          {/* Increase padding for a larger card */}
           {/* Search input */}
           <input
             type="text"
