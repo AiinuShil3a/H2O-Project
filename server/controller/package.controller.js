@@ -3,7 +3,7 @@ const PackageModel = require("../model/package.model")
 const getAllPackage = async (req, res) => {
     try {
         const package = await PackageModel.find();
-          res.status(200).json(result)
+          res.status(200).json(package)
       return;
     } catch (err) {
       console.log(err);
@@ -20,4 +20,4 @@ const getAllPackage = async (req, res) => {
 
 
 
-module.exports = {getAllPackage}
+  module.exports = { getAllPackage };
