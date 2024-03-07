@@ -38,7 +38,7 @@
  */
 const express = require("express");
 const router = express.Router();
-const { getAllPackage } = require("../controller/package.controller.js");
+const { getAllPackage, searchByNamePackage,getByIdPackage } = require("../controller/package.controller.js");
 
 /**
  * @swagger
@@ -59,7 +59,8 @@ const { getAllPackage } = require("../controller/package.controller.js");
  *         description: Some error happened
  */
 router.get("/package", getAllPackage);
-// router.get("/package/:id", getById)
+router.get("/package/PackageName/:name", searchByNamePackage)
+// router.get("/package/:id", getByIdPackage)
 // router.post('/package',creatRes)
 // router.delete('/package/:id',deleteById)
 // router.put('/package/:id',updateById)
