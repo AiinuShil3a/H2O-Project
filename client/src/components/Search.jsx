@@ -2,15 +2,16 @@ import React from 'react';
 
 const Search = () => {
   return (
-    <div className="relative bg-red p-8">
-      <div className=""> {/* Adjust max-width as needed */}
+    <div className="relative bg-red p-8 h-[500px] flex items-center">
+      <div className="mx-auto">
         {/* Black card */}
-        <div className="bg-blue p-6 rounded w-250px "> {/* Increase padding for a larger card */}
+        <div className="relative bg-blue p-6 rounded  w-[50vw] h-[35vh] flex flex-col items-center justify-center">
+          {/* Increase padding for a larger card */}
           {/* Search input */}
           <input
             type="text"
             placeholder="Search..."
-            className="bg-white text-black rounded p-2 mb-4 block w-full"
+            className="bg-white text-black rounded p-2 mb-4 block w-[30vw]"
           />
           {/* Buttons container */}
           <div className="flex items-center justify-between mt-4">
