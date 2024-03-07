@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const {getAll ,getById ,creatRes, deleteById, updateById} =require ('../controller/packge.controller.js')
+const {getAllPackage ,getById ,creatRes, deleteById, updateById} =require ('../controller/package.controller.js')
 
 
-router.get("/pachage", getAll);
-router.get("/pachage/:id", getById)
-router.post('/pachage',creatRes)
-router.delete('/pachage/:id',deleteById)
-router.put('/pachage/:id',updateById)
+router.get("/package", getAllPackage);
+router.get("/package/:id", getById)
+router.post('/package',creatRes)
+router.delete('/package/:id',deleteById)
+router.put('/package/:id',updateById)
 
 module.exports = router;
