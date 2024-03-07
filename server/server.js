@@ -2,6 +2,7 @@ const express = require("express")
 const cors = require("cors")
 const router = express.Router();
 const dotenv = require("dotenv");
+const packgeController = require("./controller/packge.controller")
 const mongoose = require("mongoose");
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
@@ -17,6 +18,10 @@ app.use(express.urlencoded({ extended: false }));
 
 const MONGODB_URL = process.env.MONGODB_URL;
 mongoose.connect(MONGODB_URL);
+
+
+
+app.use("/package", packgeController);
 
 app.get("/", (req, res) => {
     res.send("<h1> Welcome to H2O Project</h1>");
