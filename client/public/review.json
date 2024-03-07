@@ -1,6 +1,6 @@
 [
   {
-      "_id": "1",
+      "_id": "65e0bf27e91792bffddc46b6",
       "name": "Pop Socket",
       "description": "A collapsible grip and stand for your phone, with various designs available.",
       "price": 5.99,
@@ -30,5 +30,13 @@
       "price": 8.99,
       "image": "https://th.bing.com/th/id/OIP.Jb4XrrIxatYfB2DQxV0TngHaFs?rs=1&pid=ImgDetMain",
       "category": "popular"
+  },
+  {
+      "_id": "5",
+      "name": "Cozy Blanket",
+      "description": "A soft and warm blanket for chilly evenings.",
+      "price": 24.99,
+      "image": "https://th.bing.com/th/id/OIP.Jb4XrrIxatYfB2DQxV0TngHaFs?rs=1&pid=ImgDetMain",
+      "category": "Swags"
   }
 ]
