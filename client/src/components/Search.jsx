@@ -9,6 +9,7 @@ const Search = () => {
     setIsPackage(false)
   }
   return (
+  
     <div
       className="relative p-8 h-[500px] flex items-center"
       style={{
