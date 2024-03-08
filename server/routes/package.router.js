@@ -38,7 +38,13 @@
  */
 const express = require("express");
 const router = express.Router();
-const { getAllPackage, searchByTypePackage,getByIdPackage } = require("../controller/package.controller.js");
+const {
+  getAllPackage,
+  searchByTypePackage,
+  getByIdPackage,
+  createPackage,
+  getByPricePackage,
+} = require("../controller/package.controller.js");
 
 /**
  * @swagger
@@ -86,7 +92,7 @@ router.get("/package", getAllPackage);
  *       500:
  *          description: Some error happened!!
  */
-router.get("/package/type/:type_package", searchByTypePackage)
+router.get("/package/type/:type_package", searchByTypePackage);
 /**
  * @swagger
  * /package/{id}:
@@ -95,7 +101,7 @@ router.get("/package/type/:type_package", searchByTypePackage)
  *     tags:    [Package]
  *     parameters:
  *      -   in: path
- *          name: type_package
+ *          name: id
  *          required: true
  *          schema:
  *              type: string
@@ -114,8 +120,58 @@ router.get("/package/type/:type_package", searchByTypePackage)
  *       500:
  *          description: Some error happened!!
  */
-router.get("/package/:id", getByIdPackage)
-// router.post('/package',creatRes)
+router.get("/package/:id", getByIdPackage);
+/**
+ * @swagger
+ * /package/{price}:
+ *   get:
+ *     summary: Get Package by price.
+ *     tags:    [Package]
+ *     parameters:
+ *      -   in: path
+ *          name: price
+ *          required: true
+ *          schema:
+ *              type: string
+ *          description:    the Package price
+ *     responses:
+ *       200:
+ *          description: A list of Package.
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: array
+ *                      items:
+ *                          $ref:   '#/components/schemas/Package'
+ *       404:
+ *          description: Not Found Package ID
+ *       500:
+ *          description: Some error happened!!
+ */
+router.get("/package/price/:price", getByPricePackage);
+/**
+ * @swagger
+ * /package:
+ *   post:
+ *     summary: Create a new Package.
+ *     tags:    [Package]
+ *     requestBody:
+ *          required:   true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref:   '#/components/schemas/Package'
+ *     responses:
+ *          201:
+ *              description: A list of Package.
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref:   '#/components/schemas/Package'
+ *          500:
+ *              description: Some error happened
+ */
+router.post('/package',createPackage)
 // router.delete('/package/:id',deleteById)
 // router.put('/package/:id',updateById)
 

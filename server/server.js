@@ -6,6 +6,7 @@ const packgeRouter = require("./routes/package.router");
 const mongoose = require("mongoose");
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+
 const swaggerDefinition = {
   openapi: "3.0.0",
   info: {
@@ -38,6 +39,9 @@ const options = {
   swaggerDefinition,
   // Paths to files containing OpenAPI definitions
   apis: ["./routes/*.js"],
+  connectTimeoutMS: 10000, // ตั้งค่า timeout ในการเชื่อมต่อ
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 };
 const swaggerSpec = swaggerJSDoc(options);
 dotenv.config();
@@ -52,6 +56,11 @@ app.use(express.urlencoded({ extended: false }));
 //connect mongoDB
 const MONGODB_URL = process.env.MONGODB_URL;
 mongoose.connect(MONGODB_URL);
+if(mongoose.connect){
+  console.log("connected");
+}else{
+  console.log("disonnected");
+}
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get("/swagger.json", (req, res) => {
