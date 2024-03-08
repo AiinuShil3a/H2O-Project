@@ -51,29 +51,29 @@ const Signin = () => {
       <div className="max-w-md bg-white shadow w-full mx-auto flex items-center justify-center my-20">
         <div className="modal-box action mt-0 flex flex-col justify-center">
           <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
-            <h3 className="font-bold text-lg">Please Login!</h3>
+            <h3 className="font-bold text-lg">ลงชื่อเข้าใช้!</h3>
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Email</span>
+                <span className="label-text">อีเมลล์</span>
               </label>
               <input
-                type="email"
-                placeholder="email"
+                type="อีเมลล์"
+                placeholder="อีเมลล์"
                 className="input input-bordered"
                 required
-                {...register("email")}
+                {...register("อีเมลล์")}
               />
             </div>
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Password</span>
+                <span className="label-text">รหัสผ่าน</span>
               </label>
               <input
-                type="password"
-                placeholder="password"
+                type="รหัสผ่าน"
+                placeholder="รหัสผ่าน"
                 className="input input-bordered"
                 required
-                {...register("password")}
+                {...register("รหัสผ่าน")}
               />
               <label className="label">
                 <a href="#" className="label-text-alt link link-hover">
@@ -84,7 +84,7 @@ const Signin = () => {
             <div className="form-control mt-6">
               <input
                 type="submit"
-                value="Login"
+                value="เข้าสู่ระบบ"
                 className="btn bg-red-700 text-white"
               />
             </div>
