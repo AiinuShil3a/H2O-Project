@@ -42,6 +42,7 @@ const getByIdPackage = async (req, res) => {
 const createPackage = async (req, res) => {
   const package = req.body;
   const newPackage = new PackageModel(package);
+  console.log(package);
   try {
     const package = await newPackage.save();
     res.status(201).json(package);
@@ -63,10 +64,27 @@ const getByPricePackage = async (req, res) => {
   }
 };
 
+const updatePackage = async (req, res) => {
+  const id = req.params.id;
+  const date = req.body;
+  try {
+    const updatePackage = await PackageModel.findByIdAndUpdate(id, date, {
+      new: true,
+    });
+    if (!updatePackage) {
+      res.status(404).json({ message: "Package Not Found" });
+    }
+    res.status(201).json({ message: "Package Updated!"})
+  } catch (error) {
+    es.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAllPackage,
   searchByTypePackage,
   getByIdPackage,
   createPackage,
   getByPricePackage,
+  updatePackage,
 };

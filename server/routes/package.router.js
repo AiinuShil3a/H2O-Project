@@ -44,6 +44,7 @@ const {
   getByIdPackage,
   createPackage,
   getByPricePackage,
+  updatePackage,
 } = require("../controller/package.controller.js");
 
 /**
@@ -123,7 +124,7 @@ router.get("/package/type/:type_package", searchByTypePackage);
 router.get("/package/:id", getByIdPackage);
 /**
  * @swagger
- * /package/{price}:
+ * /package/price/{price}:
  *   get:
  *     summary: Get Package by price.
  *     tags:    [Package]
@@ -172,7 +173,39 @@ router.get("/package/price/:price", getByPricePackage);
  *              description: Some error happened
  */
 router.post('/package',createPackage)
-// router.delete('/package/:id',deleteById)
-// router.put('/package/:id',updateById)
+/**
+ * @swagger
+ * /package/{id}:
+ *   put:
+ *     summary: Update the package detail.
+ *     tags:    [Package]
+ *     parameters:
+ *      -   in: path
+ *          name: id
+ *          required: true
+ *          schema:
+ *              type: string
+ *          description:    the Package ID
+ *     requestBody:
+ *      required:   true
+ *      content:
+ *          application/json:
+ *              schema:
+ *                  $ref:   '#/components/schemas/Package'
+ *     responses:
+ *      200:
+ *          description: The Package by id.
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref:   '#/components/schemas/Package'
+ *      404:
+ *          description: Package Not Found 
+ *      500:
+ *          description: Some error happened
+ */
+router.put('/package/:id',updatePackage)
+
+// router.delete('/package/:id',updateById)
 
 module.exports = router;
