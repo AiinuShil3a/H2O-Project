@@ -45,6 +45,7 @@ const {
   createPackage,
   getByPricePackage,
   updatePackage,
+  deletePackage,
 } = require("../controller/package.controller.js");
 
 /**
@@ -205,7 +206,31 @@ router.post('/package',createPackage)
  *          description: Some error happened
  */
 router.put('/package/:id',updatePackage)
-
-// router.delete('/package/:id',updateById)
+/**
+ * @swagger
+ * /package/{id}:
+ *   delete:
+ *     summary: Delete package by id.
+ *     tags:    [Package]
+ *     parameters:
+ *      -   in: path
+ *          name: id
+ *          required: true
+ *          schema:
+ *              type: string
+ *          description:    The Package Id
+ *     responses:
+ *      200:
+ *          description: Package is deldeted.
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref:   '#/components/schemas/Package'
+ *      404:
+ *          description: Not Found Package
+ *      500:
+ *          description: Some error happened
+ */
+router.delete('/package/:id',deletePackage)
 
 module.exports = router;

@@ -76,9 +76,22 @@ const updatePackage = async (req, res) => {
     }
     res.status(201).json({ message: "Package Updated!"})
   } catch (error) {
-    es.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
+
+const deletePackage = async (req, res) => {
+  const id = req.params.id
+  try {
+    const package = await PackageModel.findByIdAndDelete({ _id : id})
+    if (!package) {
+      res.status(404).json({ message : "Package NOt Found"})
+    }
+    res.status(200).json(package);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
 
 module.exports = {
   getAllPackage,
@@ -87,4 +100,5 @@ module.exports = {
   createPackage,
   getByPricePackage,
   updatePackage,
+  deletePackage,
 };
