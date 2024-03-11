@@ -9,8 +9,8 @@ const Main = () => {
   const { setThisPage } = useContext(AuthContext);
 
   useEffect(() => {
-    setThisPage(location.pathname); // แสดง path ปัจจุบัน และเซทไว้มน Context
-  }, [location.pathname, setThisPage]);
+    setThisPage(location.pathname); // แสดง path ปัจจุบัน และเซทไว้ใน Context
+  }, [location.pathname, setThisPage]); //ทำทุกครั้งเมื่อ ค่ามีการเปลี่ยนแปลง
 
   return (
     <div>
