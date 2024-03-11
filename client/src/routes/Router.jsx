@@ -16,19 +16,17 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "signin",
+        path: "/signin",
         element: <Signin />,
       },
 
       {
-        path: "signup",
+        path: "/signUp-User",
         element: <Signup />,
       },
 
     ],
   },
 ]);
-
-
 
 export default router

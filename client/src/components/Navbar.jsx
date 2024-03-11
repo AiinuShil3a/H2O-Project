@@ -1,10 +1,13 @@
-import React from "react";
+import React , {useContext} from "react";
 import { Link } from "react-router-dom";
 import Search from "./Search";
+import { AuthContext } from "../AuthContext/auth.provider";
 
 const Navbar = () => {
+  const { thisPage } = useContext(AuthContext);
   return (
-    <nav className="bg-white border-gray-200 dark:bg-gray-900">
+    thisPage === "/" ?(
+      <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div
         className="relative p-8 h-[700px]"
         style={{
@@ -63,6 +66,13 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
+    ):(
+      thisPage === "/signUp-User"?(
+        <h1>h1</h1>
+      ):(
+        null
+      )
+    )
   );
 };
 
