@@ -46,7 +46,7 @@ const {
   getByPricePackage,
   updatePackage,
   deletePackage,
-} = require("../controller/package.controller.js");
+  } = require("../controller/package.controller.js");
 
 /**
  * @swagger
@@ -201,7 +201,7 @@ router.post('/package',createPackage)
  *                  schema:
  *                      $ref:   '#/components/schemas/Package'
  *      404:
- *          description: Package Not Found 
+ *          description: Package Not Found
  *      500:
  *          description: Some error happened
  */
