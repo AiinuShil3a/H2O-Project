@@ -50,8 +50,20 @@ const createHomeStay = async (req, res) => {
   }
 };
 
+const updateHomeStay = async (req,res) => {
+  try {
+    const newHomeStay = await HomeStayModel.findByIdAndUpdate( req.params.id ,req.body, {new:true})
+    if (!newHomeStay) {
+      return res.status(404).json({message : "HomeStay not found"})
+    }
+   
+    res.status(200).json(newHomeStay)
+  } catch (error) {
+    res.status(500).json({message : error.message})
+  }
+}
 
 
 
 
-module.exports = { getAllHomeStay,getIdHomeStay  , createHomeStay};
+module.exports = { getAllHomeStay,getIdHomeStay  , createHomeStay , updateHomeStay};

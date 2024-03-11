@@ -94,7 +94,7 @@
 */
 const express = require("express");
 const router = express.Router();
-const {  createHomeStay, getAllHomeStay , getIdHomeStay } = require("../controller/homestay.controller.js");
+const {  createHomeStay, getAllHomeStay , getIdHomeStay , updateHomeStay} = require("../controller/homestay.controller.js");
 /**
  * @swagger
  * /homestay:
@@ -172,6 +172,7 @@ router.get("/:id" ,getIdHomeStay)
 router.post("/" , createHomeStay)
 
 
+router.put("/:id" , updateHomeStay)
 
 
 
