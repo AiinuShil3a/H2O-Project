@@ -112,7 +112,14 @@ const PackageSchema = new Schema({
     type: [{ type: Schema.Types.ObjectId, ref: "Location" }],
   },
   image: {
-    type: [{ type: Schema.Types.ObjectId, ref: "Images" }],
+    type: [
+      {
+        image: {
+          type: String,
+        },
+      },
+    ],
+    required: [true, 'At least one activity must be provided'],
   },
   price_package: {
     type: Number,
