@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
-const PackageSchema = new Schema({
+const HomeStaySchema = new Schema({
   name_homestay: { 
     type: String, require: true 
   },
@@ -8,7 +8,7 @@ const PackageSchema = new Schema({
     type: String, require: true 
   },
   detail_homestay: { 
-    type: Number, require: true 
+    type: String  , require: true 
   },
   time_checkin_homestay: {
      type: String, require: true 
@@ -22,8 +22,15 @@ const PackageSchema = new Schema({
   location: {
       type: [{ type: Schema.Types.ObjectId, ref: 'Location' }], required: true 
      },
-  image: {
-     type: [{ type: Schema.Types.ObjectId, ref: 'Images' }], required: true 
+     image: {
+      type: [
+        {
+          image: {
+            type: String,
+          },
+        },
+      ],
+      required: [true, 'At least one activity must be provided'],
     },
   max_people: {
     type: Number, required: true 
@@ -53,5 +60,5 @@ const PackageSchema = new Schema({
      type: Boolean, required: true 
     },
 });
-const PackageModel = model("Package", PackageSchema);
-module.exports = PackageModel;
+const HomeStayModel = model("HomeStay", HomeStaySchema);
+module.exports = HomeStayModel;
