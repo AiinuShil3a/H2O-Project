@@ -71,7 +71,7 @@ app.get("/swagger.json", (req, res) => {
 
 //
 app.use("/", packgeRouter);
-app.use("/", locationRouter)
+app.use("/", locationRouter);
 
 app.get("/", (req, res) => {
   res.send("<h1> Welcome to H2O Project</h1>");

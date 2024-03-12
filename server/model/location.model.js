@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Schema, model } = mongoose;
+const { Schema } = mongoose;
 const LocationSchema = new Schema(
   {
     name_location: {
@@ -39,5 +39,4 @@ const LocationSchema = new Schema(
     timestamps: true,
   }
 );
-const LocationModel = model("Location", LocationSchema);
-module.exports = LocationModel;
+module.exports = LocationSchema;

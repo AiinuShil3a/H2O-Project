@@ -66,9 +66,10 @@
 // const PackageModel = model("Package", PackageSchema);
 // module.exports = PackageModel;
 
-
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
+const Location = require("./location.model");
+const images = require("./image.model")
 const PackageSchema = new Schema({
   name_package: {
     type: String,
@@ -94,7 +95,7 @@ const PackageSchema = new Schema({
         },
       },
     ],
-    required: [true, 'At least one activity must be provided'],
+    required: true,
   },
   time_start_package: {
     type: Date,
@@ -108,18 +109,13 @@ const PackageSchema = new Schema({
     type: String,
     required: true,
   },
-  address: {
-    type: [{ type: Schema.Types.ObjectId, ref: "Location" }],
+  location: {
+    type: [Location],
+    required: true
   },
   image: {
-    type: [
-      {
-        image: {
-          type: String,
-        },
-      },
-    ],
-    required: [true, 'At least one activity must be provided'],
+    type: [ images ],
+    required: true,
   },
   price_package: {
     type: Number,
@@ -139,4 +135,3 @@ const PackageSchema = new Schema({
 });
 const PackageModel = model("Package", PackageSchema);
 module.exports = PackageModel;
-

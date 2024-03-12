@@ -2,7 +2,7 @@ const LocationModel = require("../model/location.model");
 
 const getAllLocation = async (req, res) => {
     try {
-      const location = await LocationModel.find();
+      const location = await LocationModel.find()
       res.status(200).json(location);
       return;
     } catch (err) {
