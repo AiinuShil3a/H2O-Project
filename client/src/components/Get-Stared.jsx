@@ -1,28 +1,35 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { SiGmail } from "react-icons/si";
 import { useForm } from "react-hook-form";
 
 const Modal = ({ name }) => {
   const {
-    register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const [isLogin, setIsLogin] = useState(true);
+  const [activePage, setActivePage] = useState("login");
 
   const onSubmit = (data) => {
     console.log(data);
   };
 
-  const toggleForm = () => {
-    setIsLogin(!isLogin);
+  const toggleForm = (page) => {
+    setActivePage(page);
   };
 
   return (
     <dialog id={name} className="modal">
-      <div className="modal-box">
+      <div className="modal-box ">
+        <div
+          className={
+            activePage === "login"
+              ? "bg-gradient-to-r from-primaryUser to-primaryBusiness absolute bottom-0 left-0 right-0 h-3"
+              : activePage === "signup-user"
+              ? "bg-primaryUser absolute bottom-0 left-0 right-0 h-3"
+              : "bg-primaryBusiness absolute bottom-0 left-0 right-0 h-3"
+          }
+        ></div>
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           onClick={() => document.getElementById(name).close()}
@@ -42,7 +49,11 @@ const Modal = ({ name }) => {
         </button>
         <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
           <h3 className="font-bold text-xl ml-auto mr-auto">
-            {isLogin ? "Login Now" : "Sign Up Now!"}
+            {activePage === "login"
+              ? "Login Now"
+              : activePage === "signup-user"
+              ? "Sign Up - Customer"
+              : "Sign Up - Business"}
           </h3>
           <div className="form-control">
             <label className="label">
@@ -53,7 +64,6 @@ const Modal = ({ name }) => {
               placeholder="email"
               className="input input-bordered"
               required
-              {...register("email")}
             />
           </div>
           <div className="form-control">
@@ -65,9 +75,8 @@ const Modal = ({ name }) => {
               placeholder="password"
               className="input input-bordered"
               required
-              {...register("password")}
             />
-            {isLogin && (
+            {activePage === "login" && (
               <label className="label ml-auto mt-5">
                 <a href="#" className="label-text-alt link link-hover">
                   Forgot password?
@@ -78,37 +87,96 @@ const Modal = ({ name }) => {
           <div className="form-control mt-2">
             <input
               type="submit"
-              value={isLogin ? "Login" : "Sign Up"}
-              className="btn bg-gradient-to-r from-primaryUser to-primaryBusiness transition-opacity group-hover:opacity-100 text-white"
+              value={activePage === "login" ? "Login" : "Sign Up"}
+              className={
+                activePage === "login"
+                  ? "btn bg-gradient-to-r from-primaryUser to-primaryBusiness transition-opacity group-hover:opacity-100 text-white"
+                  : activePage === "signup-user"
+                  ? "btn bg-primaryUser transition-opacity group-hover:opacity-100 text-white"
+                  : "btn bg-primaryBusiness transition-opacity group-hover:opacity-100 text-white"
+              }
             />
           </div>
           <p className="text-center my-2 ">
-            {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+            {activePage === "login"
+              ? "Don't have an account?"
+              : "Already have an account?"}{" "}
             <button
               type="button"
               className="underline text-red-700 ml-1 "
-              onClick={toggleForm}
+              onClick={() =>
+                toggleForm(
+                  activePage === "login"
+                    ? "signup-user"
+                    : activePage === "signup-user" ||
+                      activePage === "signup-business"
+                    ? "login"
+                    : activePage === "login"
+                )
+              }
             >
-              {isLogin ? "Sign Up Now" : "Login"}
+              {activePage === "login" ? "Sign Up Now" : "Login"}
             </button>
           </p>
         </form>
         <div className="max-w-screen-xl flex items-center justify-between mx-auto p-4">
-            <hr className="w-[120px] border-t-2 border-primaryUser shadow-lg flex items-center space-x-3 rtl:space-x-reverse" />
-            <div className="hidden md:flex flex-grow items-center justify-center">
-                <h3>หรือเข้าสู่ระบบด้วย</h3>
-            </div>
-            <div className="flex items-center">
-                <hr className="w-[120px] border-t-2 border-primaryBusiness shadow-lg flex items-center space-x-3 rtl:space-x-reverse" />
-            </div>
+          <hr
+            className={
+              activePage === "login" || activePage === "signup-user"
+                ? "w-[50vw] border-t-2 border-primaryUser shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
+                : "w-[50vw] border-t-2 border-primaryBusiness shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
+            }
+          />
+          <div className="items-center justify-center ml-6 mr-6">
+            <h3>or</h3>
+          </div>
+          <hr
+            className={
+              activePage === "login" || activePage === "signup-business"
+                ? "w-[50vw] border-t-2 border-primaryBusiness shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
+                : "w-[50vw] border-t-2 border-primaryUser shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
+            }
+          />
         </div>
-        <div className="text-center space-x-3 mb-5 card-body">
-            <button className="rounded-[0.5rem] w-full h-12 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryUser hover:bg-gradient-to-r from-primaryUser to-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2">
-                <span className="relative z-10 flex items-center justify-center w-full h-full">
-                    <SiGmail className="w-6 h-6" />
-                    <h3 className="ml-3">Gmail</h3>
-                </span>
+        <div className="text-center card-body">
+          <button
+            className={
+              activePage === "login"
+                ? "rounded-[0.5rem] w-full h-12 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryUser hover:bg-gradient-to-r from-primaryUser to-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
+                : activePage === "signup-user"
+                ? "rounded-[0.5rem] w-full h-12 relative overflow-hidden focus:outline-none bg-white border border-primaryUser text-primaryUser hover:bg-primaryUser hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
+                : "rounded-[0.5rem] w-full h-12 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryBusiness hover:bg-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
+            }
+          >
+            <span className="relative z-10 flex items-center justify-center w-full h-full">
+              <SiGmail className="w-6 h-6" />
+              <h3 className="ml-3">Gmail</h3>
+            </span>
+          </button>
+          {activePage === "signup-user" || activePage === "signup-business" ? (
+            <button
+              className={
+                activePage === "signup-user"
+                  ? "rounded-[0.5rem] w-full h-12 relative overflow-hidden focus:outline-none bg-white border border-primaryUser text-primaryUser hover:bg-primaryUser hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2 mt-2"
+                  : "rounded-[0.5rem] w-full h-12 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryBusiness hover:bg-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2 mt-2"
+              }
+              onClick={() =>
+                toggleForm(
+                  activePage === "signup-user"
+                    ? "signup-business"
+                    : "signup-user"
+                )
+              }
+            >
+              <span className="relative z-10 flex items-center justify-center w-full h-full">
+                <h3 className="ml-3">
+                  {activePage === "signup-user"
+                    ? "Sing Up for Business"
+                    : "Sing Up for Customer"}
+                </h3>
+              </span>
             </button>
+          ) : null}
         </div>
       </div>
     </dialog>
