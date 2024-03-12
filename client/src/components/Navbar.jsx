@@ -2,6 +2,7 @@ import React , {useContext} from "react";
 import { Link } from "react-router-dom";
 import Search from "./Search";
 import { AuthContext } from "../AuthContext/auth.provider";
+import Modal from './Get-Stared'
 
 const Navbar = () => {
   const { thisPage } = useContext(AuthContext);
@@ -17,6 +18,7 @@ const Navbar = () => {
         }}
       >
         <div className="max-w-screen-xl flex items-center justify-between mx-auto p-4">
+        <Modal name="Get-Started" />
           <Link
             to="/"
             className="flex items-center space-x-3 rtl:space-x-reverse"
@@ -55,7 +57,7 @@ const Navbar = () => {
             </ul>
           </div>
           <div className="flex items-center">
-            <button className="ml-4 px-4 py-2 rounded">
+            <button className="ml-4 px-4 py-2 rounded" onClick={() => document.getElementById("Get-Started").showModal()}>
               Get Started
             </button>
           </div>

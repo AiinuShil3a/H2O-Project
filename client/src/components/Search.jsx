@@ -36,7 +36,7 @@ const Search = () => {
           <input
             type="text"
             placeholder="Search..."
-            className="bg-white text-black p-2 mb-2 rounded-tl-[10px] rounded-bl-[10px] block w-[25vw] relative" // หรือเปลี่ยนเป็น w-[100%]
+            className="bg-white text-black p-2 mb-2 rounded-tl-[10px] rounded-bl-[10px] block w-[25vw] relative"
           />
           <button className="bg-primaryUser text-black p-2 mb-2 block text-white rounded-tr-[10px] rounded-br-[10px]">
             ค้นหา

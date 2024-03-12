@@ -7,7 +7,7 @@ export default {
   theme: {
     colors: {
       'primaryUser': '#DC9832',
-      'secondary': '#4169E1',
+      'primaryBusiness': '#4B99FA',
       'white':"#FFFFFF",
       'yellow':"#FFFF33",
       'blue':"#0000CC"
