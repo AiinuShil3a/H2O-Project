@@ -4,7 +4,6 @@ const getAllPackage = async (req, res) => {
   try {
     const package = await PackageModel.find();
     res.status(200).json(package);
-
   } catch (err) {
     console.log(err);
     res.status(500).send("have an error on server !");
@@ -12,7 +11,7 @@ const getAllPackage = async (req, res) => {
 };
 
 const searchByTypePackage = async (req, res) => {
-    const type_package = req.params.type_package;
+  const type_package = req.params.type_package;
   try {
     const PackageType = await PackageModel.findOne({ type_package });
     if (!PackageType) {
@@ -20,7 +19,7 @@ const searchByTypePackage = async (req, res) => {
     }
     res.status(200).json({ PackageType });
   } catch (err) {
-console.log(err);
+    console.log(err);
     res.status(500).send("have an error on server");
   }
 };
@@ -73,18 +72,18 @@ const updatePackage = async (req, res) => {
     if (!updatePackage) {
       res.status(404).json({ message: "Package Not Found" });
     }
-    res.status(201).json({ message: "Package Updated!"})
+    res.status(201).json({ message: "Package Updated!" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
 const deletePackage = async (req, res) => {
-  const id = req.params.id
+  const id = req.params.id;
   try {
-    const package = await PackageModel.findByIdAndDelete({ _id : id})
+    const package = await PackageModel.findByIdAndDelete({ _id: id });
     if (!package) {
-      res.status(404).json({ message : "Package NOt Found"})
+      res.status(404).json({ message: "Package NOt Found" });
     }
     res.status(200).json(package);
   } catch (error) {
@@ -93,19 +92,11 @@ const deletePackage = async (req, res) => {
 };
 
 const searchPackage = async (req, res) => {
-  const type = req.query.type_package || "";
   const name = req.query.name_package || "";
-  console.log(req.query.review_rating_package);
-  const review_rating = parseInt(req.query.review_rating_package);
-  const rating = review_rating || null;
-  // const rating2 = (parseInt(rating))
-  console.log(name);
-  console.log(type);
-  console.log(rating);
+  const type = req.query.type_package || "";
+  const detail = req.query.detail_package || "";
   try {
     const data = await PackageModel.find({
-      review_rating_package: rating,
-
       $or: [
         {
           name_package: { $regex: name, $options: "i" },
@@ -113,11 +104,11 @@ const searchPackage = async (req, res) => {
         {
           type_package: { $regex: type, $options: "i" },
         },
+        {
+          detail_package: { $regex: detail, $options: "i" },
+        },
       ],
     });
-    // if (!data) {
-    //   res.status(404).json({ message: "Not Found Item" });
-    // }
     res.status(200).json(data);
   } catch (err) {
     res.status(500).send(err);

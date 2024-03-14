@@ -3,6 +3,7 @@ const cors = require("cors");
 const router = express.Router();
 const dotenv = require("dotenv");
 const packgeRouter = require("./routes/package.router");
+const userRouter = require("./routes/user.router");
 const mongoose = require("mongoose");
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
@@ -70,6 +71,7 @@ app.get("/swagger.json", (req, res) => {
 
 //
 app.use("/", packgeRouter);
+app.use("/user", userRouter);
 
 app.get("/", (req, res) => {
   res.send("<h1> Welcome to H2O Project</h1>");

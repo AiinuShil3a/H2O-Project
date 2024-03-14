@@ -46,6 +46,7 @@ const {
   getByPricePackage,
   updatePackage,
   deletePackage,
+  searchPackage,
   } = require("../controller/package.controller.js");
 
 /**
@@ -232,5 +233,40 @@ router.put('/package/:id',updatePackage)
  *          description: Some error happened
  */
 router.delete('/package/:id',deletePackage)
+/**
+ * @swagger
+ * /search:
+ *   get:
+ *     summary: Search Package.
+ *     tags: [Package]
+ *     parameters:
+ *       - in: query
+ *         name: name_package
+ *         schema:
+ *           type: string
+ *         description: Search by name.
+ *       - in: query
+ *         name: type_package
+ *         schema:
+ *           type: string
+ *         description: Search by type.
+ *       - in: query
+ *         name: detail_package
+ *         schema:
+ *           type: string
+ *         description: Search by detail.
+ *     responses:
+ *       200:
+ *         description: A list of Package.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Package'
+ *       500:
+ *         description: Some error happened!!
+ */
+router.get('/search',searchPackage)
 
 module.exports = router;
