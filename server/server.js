@@ -3,11 +3,8 @@ const cors = require("cors");
 const router = express.Router();
 const dotenv = require("dotenv");
 const packgeRouter = require("./routes/package.router");
-<<<<<<< HEAD
 const userRouter = require("./routes/user.router");
-=======
 const locationRouter = require("./routes/location.router")
->>>>>>> 6d052e356e23a186e3fbcfe6ccdbb27f168ebda6
 const mongoose = require("mongoose");
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
