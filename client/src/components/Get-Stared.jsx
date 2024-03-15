@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { SiGmail } from "react-icons/si";
 import { useForm } from "react-hook-form";
 
@@ -9,6 +9,12 @@ const Modal = ({ name }) => {
   } = useForm();
 
   const [activePage, setActivePage] = useState("login");
+  const [countriesData, setCountriesData] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+
+  const handleChange = (event) => {
+    setSelectedCountry(event.target.value);
+  };
 
   const onSubmit = (data) => {
     console.log(data);
@@ -18,18 +24,22 @@ const Modal = ({ name }) => {
     setActivePage(page);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/codePhone.json");
+        const data = await response.json();
+        setCountriesData(data)
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <dialog id={name} className="modal">
       <div className="modal-box ">
-        <div
-          className={
-            activePage === "login"
-              ? "bg-gradient-to-r from-primaryUser to-primaryBusiness absolute bottom-0 left-0 right-0 h-3"
-              : activePage === "signup-user"
-              ? "bg-primaryUser absolute bottom-0 left-0 right-0 h-3"
-              : "bg-primaryBusiness absolute bottom-0 left-0 right-0 h-3"
-          }
-        ></div>
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           onClick={() => {
@@ -58,27 +68,124 @@ const Modal = ({ name }) => {
               ? "Sign Up - Customer"
               : "Sign Up - Business"}
           </h3>
+          {activePage === "login" 
+              ? (
+                <>
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text">Email</span>
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="email"
+                      className="input input-bordered"
+                      required
+                    />
+                  </div>
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text">Password</span>
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="password"
+                      className="input input-bordered"
+                      required
+                    />
+                  </div>
+                </>
+              )
+              : activePage === "signup-user"
+              ? (
+                <>
+                  <div className="flex flex-row justify-between">
+                    <div>
+                      <label className="label">
+                        <span className="label-text">Name</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Your name"
+                        className="input input-bordered w-full"
+                        required
+                      />
+                    </div>
+                    <div className="ml-2">
+                      <label className="label">
+                        <span className="label-text">Last Name</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Your last name"
+                        className="input input-bordered w-full"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text">Email</span>
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="email"
+                      className="input input-bordered"
+                      required
+                    />
+                  </div>
+                  <div className="flex flex-row justify-between">
+                    <div>
+                      <label className="label">
+                        <span className="label-text">Password</span>
+                      </label>
+                      <input
+                        type="password"
+                        placeholder="password"
+                        className="input input-bordered w-full"
+                        required
+                      />
+                    </div>
+                    <div className="ml-2">
+                      <label className="label">
+                        <span className="label-text">Confirm Password</span>
+                      </label>
+                      <input
+                        type="password"
+                        placeholder="confirm password"
+                        className="input input-bordered w-full"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <label className="label">
+                    <span className="label-text">Phone Number</span>
+                  </label>
+                  <div className="flex flex-row justify-between">
+                    <div>
+                      <select className="input input-bordered w-[4.4rem]">
+                        {countriesData.map((country, index) => (
+                          <option key={index} value={country.code}>
+                            {country.code} {String.fromCharCode(160)}( {country.name} )
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                      <input
+                        type="tel"
+                        placeholder="Phone number"
+                        className="input input-bordered ml-2 w-full"
+                        required
+                      />
+                    </div>
+                </>
+              )
+              : (
+                <>
+
+                </>
+              )
+          }
           <div className="form-control">
-            <label className="label">
-              <span className="label-text">Email</span>
-            </label>
-            <input
-              type="email"
-              placeholder="email"
-              className="input input-bordered"
-              required
-            />
-          </div>
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Password</span>
-            </label>
-            <input
-              type="password"
-              placeholder="password"
-              className="input input-bordered"
-              required
-            />
             {activePage === "login" && (
               <label className="label ml-auto mt-5">
                 <a href="#" className="label-text-alt link link-hover">
@@ -122,7 +229,7 @@ const Modal = ({ name }) => {
             </button>
           </p>
         </form>
-        <div className="max-w-screen-xl flex items-center justify-between mx-auto p-4">
+        <div className="max-w-screen-xl flex items-center justify-between">
           <hr
             className={
               activePage === "login" || activePage === "signup-user"
@@ -141,7 +248,7 @@ const Modal = ({ name }) => {
             }
           />
         </div>
-        <div className="text-center card-body">
+        <div className="text-center justify-center items-center p-7">
           <button
             className={
               activePage === "login"
@@ -160,8 +267,8 @@ const Modal = ({ name }) => {
             <button
               className={
                 activePage === "signup-user"
-                  ? "rounded-[0.5rem] w-full h-12 relative overflow-hidden focus:outline-none bg-white border border-primaryUser text-primaryUser hover:bg-primaryUser hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2 mt-2"
-                  : "rounded-[0.5rem] w-full h-12 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryBusiness hover:bg-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2 mt-2"
+                  ? "rounded-[0.5rem] w-full h-12 relative overflow-hidden focus:outline-none bg-white border border-primaryUser text-primaryUser hover:bg-primaryUser hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2 mt-4"
+                  : "rounded-[0.5rem] w-full h-12 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryBusiness hover:bg-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2 mt-4"
               }
               onClick={() =>
                 toggleForm(
@@ -181,6 +288,15 @@ const Modal = ({ name }) => {
             </button>
           ) : null}
         </div>
+        <div
+          className={
+            activePage === "login"
+              ? "bg-gradient-to-r from-primaryUser to-primaryBusiness absolute bottom-0 left-0 right-0 h-3"
+              : activePage === "signup-user"
+              ? "bg-primaryUser absolute bottom-0 left-0 right-0 h-3"
+              : "bg-primaryBusiness absolute bottom-0 left-0 right-0 h-3"
+          }
+        ></div>
       </div>
     </dialog>
   );
