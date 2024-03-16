@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { SiGmail } from "react-icons/si";
 import { useForm } from "react-hook-form";
 
@@ -10,11 +10,6 @@ const Modal = ({ name }) => {
 
   const [activePage, setActivePage] = useState("login");
   const [countriesData, setCountriesData] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState(null);
-
-  const handleChange = (event) => {
-    setSelectedCountry(event.target.value);
-  };
 
   const onSubmit = (data) => {
     console.log(data);
@@ -29,7 +24,7 @@ const Modal = ({ name }) => {
       try {
         const response = await fetch("/codePhone.json");
         const data = await response.json();
-        setCountriesData(data)
+        setCountriesData(data);
       } catch (error) {
         console.log("Error fetching data:", error);
       }
@@ -68,123 +63,185 @@ const Modal = ({ name }) => {
               ? "Sign Up - Customer"
               : "Sign Up - Business"}
           </h3>
-          {activePage === "login" 
-              ? (
-                <>
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text">Email</span>
-                    </label>
-                    <input
-                      type="email"
-                      placeholder="email"
-                      className="input input-bordered"
-                      required
-                    />
-                  </div>
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text">Password</span>
-                    </label>
-                    <input
-                      type="password"
-                      placeholder="password"
-                      className="input input-bordered"
-                      required
-                    />
-                  </div>
-                </>
-              )
-              : activePage === "signup-user"
-              ? (
-                <>
-                  <div className="flex flex-row justify-between">
-                    <div>
-                      <label className="label">
-                        <span className="label-text">Name</span>
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Your name"
-                        className="input input-bordered w-full"
-                        required
-                      />
-                    </div>
-                    <div className="ml-2">
-                      <label className="label">
-                        <span className="label-text">Last Name</span>
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Your last name"
-                        className="input input-bordered w-full"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text">Email</span>
-                    </label>
-                    <input
-                      type="email"
-                      placeholder="email"
-                      className="input input-bordered"
-                      required
-                    />
-                  </div>
-                  <div className="flex flex-row justify-between">
-                    <div>
-                      <label className="label">
-                        <span className="label-text">Password</span>
-                      </label>
-                      <input
-                        type="password"
-                        placeholder="password"
-                        className="input input-bordered w-full"
-                        required
-                      />
-                    </div>
-                    <div className="ml-2">
-                      <label className="label">
-                        <span className="label-text">Confirm Password</span>
-                      </label>
-                      <input
-                        type="password"
-                        placeholder="confirm password"
-                        className="input input-bordered w-full"
-                        required
-                      />
-                    </div>
-                  </div>
+          {activePage === "login" ? (
+            <>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Email</span>
+                </label>
+                <input
+                  type="email"
+                  placeholder="email"
+                  className="input input-bordered"
+                  required
+                />
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Password</span>
+                </label>
+                <input
+                  type="password"
+                  placeholder="password"
+                  className="input input-bordered"
+                  required
+                />
+              </div>
+            </>
+          ) : activePage === "signup-user" ? (
+            <>
+              <div className="flex flex-row justify-between">
+                <div>
                   <label className="label">
-                    <span className="label-text">Phone Number</span>
+                    <span className="label-text">Name</span>
                   </label>
-                  <div className="flex flex-row justify-between">
-                    <div>
-                      <select className="input input-bordered w-[4.4rem]">
-                        {countriesData.map((country, index) => (
-                          <option key={index} value={country.code}>
-                            {country.code} {String.fromCharCode(160)}( {country.name} )
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                      <input
-                        type="tel"
-                        placeholder="Phone number"
-                        className="input input-bordered ml-2 w-full"
-                        required
-                      />
-                    </div>
-                </>
-              )
-              : (
-                <>
-
-                </>
-              )
-          }
+                  <input
+                    type="text"
+                    placeholder="Your name"
+                    className="input input-bordered w-full"
+                    required
+                  />
+                </div>
+                <div className="ml-2">
+                  <label className="label">
+                    <span className="label-text">Last Name</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Your last name"
+                    className="input input-bordered w-full"
+                    required
+                  />
+                </div>
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Email</span>
+                </label>
+                <input
+                  type="email"
+                  placeholder="email"
+                  className="input input-bordered"
+                  required
+                />
+              </div>
+              <div className="flex flex-row justify-between">
+                <div>
+                  <label className="label">
+                    <span className="label-text">Password</span>
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="password"
+                    className="input input-bordered w-full"
+                    required
+                  />
+                </div>
+                <div className="ml-2">
+                  <label className="label">
+                    <span className="label-text">Confirm Password</span>
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="confirm password"
+                    className="input input-bordered w-full"
+                    required
+                  />
+                </div>
+              </div>
+              <label className="label">
+                <span className="label-text">Phone Number</span>
+              </label>
+              <div className="flex flex-row justify-between">
+                <div>
+                  <select className="input input-bordered w-[4.4rem]">
+                    {countriesData.map((country, index) => (
+                      <option key={index} value={country.code}>
+                        {country.code} {String.fromCharCode(160)}({" "}
+                        {country.name} )
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <input
+                  type="tel"
+                  placeholder="Phone number"
+                  className="input input-bordered ml-2 w-full"
+                  required
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Business name</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Your business name"
+                  className="input input-bordered"
+                  required
+                />
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Email</span>
+                </label>
+                <input
+                  type="email"
+                  placeholder="email"
+                  className="input input-bordered"
+                  required
+                />
+              </div>
+              <div className="flex flex-row justify-between">
+                <div>
+                  <label className="label">
+                    <span className="label-text">Password</span>
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="password"
+                    className="input input-bordered w-full"
+                    required
+                  />
+                </div>
+                <div className="ml-2">
+                  <label className="label">
+                    <span className="label-text">Confirm Password</span>
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="confirm password"
+                    className="input input-bordered w-full"
+                    required
+                  />
+                </div>
+              </div>
+              <label className="label">
+                <span className="label-text">Phone Number</span>
+              </label>
+              <div className="flex flex-row justify-between">
+                <div>
+                  <select className="input input-bordered w-[4.4rem]">
+                    {countriesData.map((country, index) => (
+                      <option key={index} value={country.code}>
+                        {country.code} {String.fromCharCode(160)}({" "}
+                        {country.name} )
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <input
+                  type="tel"
+                  placeholder="Phone number"
+                  className="input input-bordered ml-2 w-full"
+                  required
+                />
+              </div>
+            </>
+          )}
           <div className="form-control">
             {activePage === "login" && (
               <label className="label ml-auto mt-5">
@@ -202,8 +259,8 @@ const Modal = ({ name }) => {
                 activePage === "login"
                   ? "btn bg-gradient-to-r from-primaryUser to-primaryBusiness transition-opacity group-hover:opacity-100 text-white"
                   : activePage === "signup-user"
-                  ? "btn bg-primaryUser transition-opacity group-hover:opacity-100 text-white"
-                  : "btn bg-primaryBusiness transition-opacity group-hover:opacity-100 text-white"
+                  ? "btn bg-gradient-to-r from-primaryUser to-secondUser transition-opacity group-hover:opacity-100 text-white"
+                  : "btn bg-gradient-to-r from-primaryBusiness to-secondBusiness transition-opacity group-hover:opacity-100 text-white"
               }
             />
           </div>

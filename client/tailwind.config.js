@@ -8,10 +8,9 @@ export default {
     colors: {
       'primaryUser': '#DC9832',
       'primaryBusiness': '#4B99FA',
+      'secondUser': '#E1BF0E',
+      'secondBusiness': '#72B1FF',
       'white':"#FFFFFF",
-      'yellow':"#FFFF33",
-      'blue':"#0000CC"
-      
     }
   },
   plugins: [require("daisyui")],

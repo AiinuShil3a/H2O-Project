@@ -6,15 +6,26 @@ import { useContext, createContext } from "react";
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-
-  const [thisPage , setThisPage] = useState("")
+  const [thisPage, setThisPage] = useState("");
   const [reload, setReload] = useState(false);
+  const [userInfo, setUserInfo] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+
+  useEffect(() => {
+    if (userInfo) {
+      localStorage.setItem("user", JSON.stringify(userInfo));
+    }
+  }, [userInfo]);
 
   const authInfo = {
     thisPage,
     setThisPage,
     reload,
     setReload,
+    userInfo,
+    setUserInfo
   };
 
   return (
