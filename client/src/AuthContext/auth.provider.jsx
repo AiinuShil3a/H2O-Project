@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { useContext, createContext } from "react";
 
@@ -7,6 +5,7 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [thisPage, setThisPage] = useState("");
+  const [whatUser, setWhatUser] = useState([]);
   const [reload, setReload] = useState(false);
   const [userInfo, setUserInfo] = useState(() => {
     const storedUser = localStorage.getItem("user");
@@ -19,13 +18,46 @@ const AuthProvider = ({ children }) => {
     }
   }, [userInfo]);
 
+  const handleLogin = async(email, password ,) => {
+    try {
+      const response = await fetch("/userData.json");
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+      const userData = await response.json();
+      // ตรวจสอบว่า email และ password ตรงกับข้อมูลที่มีในระบบหรือไม่
+      const user = userData.filter(user => user.email === email && user.password === password);
+      if (user.length > 1) {
+        document.getElementById("Get-Started").close();
+        document.getElementById("Modal-SelectRoles").showModal();
+        setWhatUser(user)
+      } else if(user.length === 1){
+        setUserInfo(user[0]);
+      }
+      else {
+        console.log("Invalid email or password");
+      }
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
+  };  
+
+  const handleLogout = () => {
+    setUserInfo(null);
+    localStorage.removeItem("user");
+  };
+
   const authInfo = {
     thisPage,
     setThisPage,
     reload,
     setReload,
     userInfo,
-    setUserInfo
+    setUserInfo,
+    handleLogin,
+    whatUser, 
+    setWhatUser,
+    handleLogout
   };
 
   return (

@@ -1,0 +1,26 @@
+[
+  {
+    "_id": "65e0bf27e91792bffddc46b6",
+    "email": "Supphalak@gmail.com",
+    "password": "123456",
+    "role": "user"
+  },
+  {
+    "_id": "65e0bf27e91792bffddc46a9",
+    "email": "Supphalak@gmail.com",
+    "password": "123456",
+    "role": "admin"
+  },
+  {
+    "_id": "65e0bf27e91792bffddc56b8",
+    "email": "Supphalak.sm@gmail.com",
+    "password": "123456",
+    "role": "user"
+  },
+  {
+    "_id": "65e0bf25e91792bbbddc87a9",
+    "email": "Supphalak.sm@gmail.com",
+    "password": "1234567",
+    "role": "admin"
+  }
+]

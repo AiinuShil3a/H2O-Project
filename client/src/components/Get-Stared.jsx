@@ -1,18 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useContext } from "react";
 import { SiGmail } from "react-icons/si";
 import { useForm } from "react-hook-form";
+import { AuthContext } from "../AuthContext/auth.provider";
 
 const Modal = ({ name }) => {
-  const {
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+
+  const { handleSubmit, formState: { errors }, register, watch } = useForm();
+
+  const { handleLogin } = useContext(AuthContext);
 
   const [activePage, setActivePage] = useState("login");
   const [countriesData, setCountriesData] = useState([]);
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    const email = data.email;
+    const password = data.password;
+    if (activePage === "login") {
+      handleLogin(email, password);
+      document.getElementById(name).close();
+    } else if (activePage === "signup-user") {
+      console.log("Hello2");
+    } else {
+      console.log("Hello3");
+    }
   };
 
   const toggleForm = (page) => {
@@ -74,6 +84,7 @@ const Modal = ({ name }) => {
                   placeholder="email"
                   className="input input-bordered"
                   required
+                  {...register("email")}
                 />
               </div>
               <div className="form-control">
@@ -85,6 +96,7 @@ const Modal = ({ name }) => {
                   placeholder="password"
                   className="input input-bordered"
                   required
+                  {...register("password")}
                 />
               </div>
             </>
@@ -100,6 +112,7 @@ const Modal = ({ name }) => {
                     placeholder="Your name"
                     className="input input-bordered w-full"
                     required
+                    {...register("name")}
                   />
                 </div>
                 <div className="ml-2">
@@ -111,6 +124,7 @@ const Modal = ({ name }) => {
                     placeholder="Your last name"
                     className="input input-bordered w-full"
                     required
+                    {...register("lastName")}
                   />
                 </div>
               </div>
@@ -123,6 +137,7 @@ const Modal = ({ name }) => {
                   placeholder="email"
                   className="input input-bordered"
                   required
+                  {...register("email")}
                 />
               </div>
               <div className="flex flex-row justify-between">
@@ -135,6 +150,7 @@ const Modal = ({ name }) => {
                     placeholder="password"
                     className="input input-bordered w-full"
                     required
+                    {...register("password")}
                   />
                 </div>
                 <div className="ml-2">
@@ -146,6 +162,7 @@ const Modal = ({ name }) => {
                     placeholder="confirm password"
                     className="input input-bordered w-full"
                     required
+                    {...register("c-password")}
                   />
                 </div>
               </div>
@@ -168,6 +185,7 @@ const Modal = ({ name }) => {
                   placeholder="Phone number"
                   className="input input-bordered ml-2 w-full"
                   required
+                  {...register("phone")}
                 />
               </div>
             </>
@@ -182,6 +200,7 @@ const Modal = ({ name }) => {
                   placeholder="Your business name"
                   className="input input-bordered"
                   required
+                  {...register("b-name")}
                 />
               </div>
               <div className="form-control">
@@ -193,6 +212,7 @@ const Modal = ({ name }) => {
                   placeholder="email"
                   className="input input-bordered"
                   required
+                  {...register("email")}
                 />
               </div>
               <div className="flex flex-row justify-between">
@@ -205,6 +225,7 @@ const Modal = ({ name }) => {
                     placeholder="password"
                     className="input input-bordered w-full"
                     required
+                    {...register("password")}
                   />
                 </div>
                 <div className="ml-2">
@@ -216,6 +237,7 @@ const Modal = ({ name }) => {
                     placeholder="confirm password"
                     className="input input-bordered w-full"
                     required
+                    {...register("c-password")}
                   />
                 </div>
               </div>
@@ -238,6 +260,7 @@ const Modal = ({ name }) => {
                   placeholder="Phone number"
                   className="input input-bordered ml-2 w-full"
                   required
+                  {...register("phone")}
                 />
               </div>
             </>
