@@ -10,9 +10,9 @@ const ModalSelectRoles = ({ name }) => {
     setUserInfo(customerUser);
     document.getElementById(name).close();
   };
-  const clickAdmin = () => {
-    const adminUser = whatUser.find((user) => user.role === "admin");
-    setUserInfo(adminUser);
+  const clickBusiness = () => {
+    const businessUser = whatUser.find((user) => user.role === "business");
+    setUserInfo(businessUser);
     document.getElementById(name).close();
   };
   return (
@@ -54,7 +54,7 @@ const ModalSelectRoles = ({ name }) => {
         </button>
         <button
           className="rounded-[0.5rem] w-full h-[100px] relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryBusiness hover:bg-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2 mt-[1rem] text-[36px]"
-          onClick={clickAdmin}
+          onClick={clickBusiness}
         >
           <span className="relative z-10 flex items-center justify-center w-full h-full">
             <FaBuildingUser />

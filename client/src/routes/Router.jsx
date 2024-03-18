@@ -1,7 +1,7 @@
 import {createBrowserRouter} from "react-router-dom";
 import Main from '../layout/Main';
 import ProfileUser from "../pages/user/profile";
-import ProfileAdmin from "../pages/admin/profile";
+import ProfileBusiness from "../pages/business/profile";
 
 const router = createBrowserRouter([
   {
@@ -13,8 +13,8 @@ const router = createBrowserRouter([
         element: <ProfileUser />,
       },
       {
-        path: "/profile-admin",
-        element: <ProfileAdmin />,
+        path: "/profile-business",
+        element: <ProfileBusiness />,
       },
     ],
   },

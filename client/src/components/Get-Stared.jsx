@@ -17,7 +17,6 @@ const Modal = ({ name }) => {
     const password = data.password;
     if (activePage === "login") {
       handleLogin(email, password);
-      document.getElementById(name).close();
     } else if (activePage === "signup-user") {
       console.log("Hello2");
     } else {

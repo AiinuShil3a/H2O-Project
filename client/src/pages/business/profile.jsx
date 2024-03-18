@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 const Profile = () => {
   const { userInfo , handleLogout } = useContext(AuthContext);
   
-  if (userInfo && userInfo.role === "admin") {
+  if (userInfo && userInfo.role === "business") {
     return (
       <div>
         <h1>ยินดีต้อนรับ{userInfo.email}</h1>

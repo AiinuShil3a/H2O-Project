@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useContext, createContext } from "react";
+import Swal from 'sweetalert2'
 
 export const AuthContext = createContext();
 
@@ -33,9 +34,21 @@ const AuthProvider = ({ children }) => {
         setWhatUser(user)
       } else if(user.length === 1){
         setUserInfo(user[0]);
+        document.getElementById("Get-Started").close();
       }
       else {
-        console.log("Invalid email or password");
+        document.getElementById("Get-Started").close();
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Invalid email or password!",
+          footer: '<a href="#">Why do I have this issue?</a>',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.getElementById("Get-Started").showModal();
+          }
+        });
+        
       }
     } catch (error) {
       console.error('Error:', error.message);
