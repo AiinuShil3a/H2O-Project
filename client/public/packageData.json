@@ -1,0 +1,167 @@
+[
+    {
+        "name_package": "ท่องเที่ยวป่าชายเลน",
+        "type_package": "การท่องเที่ยวธรรมชาติ",
+        "max_people": 3,
+        "detail_package": "ท่องเที่ยวกับเพื่อนๆทั่วไทยในป่า",
+        "activity_package": [
+            { "activity_name": "ยามเช้าที่เขาใหญ่" },
+            { "activity_name": "ชมวิวทะเล" },
+            { "activity_name": "เที่ยวชมเมืองโบราณ" }
+        ],
+        "time_start_package": "2567-02-10T00:00:00.000Z",
+        "time_end_package": "2567-02-15T00:00:00.000Z",
+        "policy_cancel_package": "xxxxxxxxxx",
+        "location": [  {
+        "name_location": "หาดลำพึง",
+        "province_location": "ตราด",
+        "district_location": "เมืองตราด",
+        "subdistrict_location": "ตราด",
+        "zipcode_location": 1772,
+        "latitude_location": 12.3456,
+        "longitude_location": 78.9012,
+        "radius_location": 6326257482232
+      }],
+        "image": [
+            { "image_upload": "https://th.bing.com/th/id/OIP.A2s6Fnt_-xonf204AC5cLQHaHa?w=480&h=480&rs=1&pid=ImgDetMain" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" }
+        ],
+        "price_package": 5000,
+        "homestay": ["609d435b0a8cf654d8b48fc3"],
+        "business_user": ["609d435b0a8cf654d8b48fc4"],
+        "review_rating_package": 5
+    },
+    {
+        "name_package": "เที่ยวทั่วไทยบนน้ำใต้ทะเล",
+        "type_package": "การท่องเที่ยวทางน้ำ",
+        "max_people": 3,
+        "detail_package": "การท่องเที่ยวดำน้ำหรืออะไร",
+        "activity_package": [
+            { "activity_name": "ยามเช้าที่เขาใหญ่" },
+            { "activity_name": "ชมวิวทะเล" },
+            { "activity_name": "เที่ยวชมเมืองโบราณ" }
+        ],
+        "time_start_package": "2567-02-10T00:00:00.000Z",
+        "time_end_package": "2567-02-15T00:00:00.000Z",
+        "policy_cancel_package": "xxxxxxxxxx",
+        "location": [  {
+        "name_location": "หาดลำพึง",
+        "province_location": "ตราด",
+        "district_location": "เมืองตราด",
+        "subdistrict_location": "ตราด",
+        "zipcode_location": 1772,
+        "latitude_location": 12.3456,
+        "longitude_location": 78.9012,
+        "radius_location": 6326257482232
+      }],
+        "image": [
+            { "image_upload": "https://i.pinimg.com/474x/e6/34/75/e63475ab4bd2aa6781b9a4d2a79e74a3.jpg" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" }
+        ],
+        "price_package": 5000,
+        "homestay": ["609d435b0a8cf654d8b48fc3"],
+        "business_user": ["609d435b0a8cf654d8b48fc4"],
+        "review_rating_package": 5
+    },
+    {
+        "name_package": "เที่ยวทั่วไทยกับคุณยาย",
+        "type_package": "การท่องเที่ยวเชิงวัฒนธรรม",
+        "max_people": 3,
+        "detail_package": "ท่องเที่ยวกับเพื่อนๆทั่วไทย",
+        "activity_package": [
+            { "activity_name": "ยามเช้าที่เขาใหญ่" },
+            { "activity_name": "ชมวิวทะเล" },
+            { "activity_name": "เที่ยวชมเมืองโบราณ" }
+        ],
+        "time_start_package": "2567-02-10T00:00:00.000Z",
+        "time_end_package": "2567-02-15T00:00:00.000Z",
+        "policy_cancel_package": "xxxxxxxxxx",
+        "location": [  {
+        "name_location": "หาดลำพึง",
+        "province_location": "ตราด",
+        "district_location": "เมืองตราด",
+        "subdistrict_location": "ตราด",
+        "zipcode_location": 1772,
+        "latitude_location": 12.3456,
+        "longitude_location": 78.9012,
+        "radius_location": 6326257482232
+      }],
+        "image": [
+            { "image_upload": "https://www.plan-travel.com/tour/pic/tour.jpg" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" }
+        ],
+        "price_package": 5000,
+        "homestay": ["609d435b0a8cf654d8b48fc3"],
+        "business_user": ["609d435b0a8cf654d8b48fc4"],
+        "review_rating_package": 5
+    },
+    {
+        "name_package": "เที่ยวทั่วไทยในชีวิตของชนบท",
+        "type_package": "การท่องเที่ยวเชิงวัฒนธรรม",
+        "max_people": 3,
+        "detail_package": "ท่องเที่ยวกับเพื่อนๆทั่วไทย",
+        "activity_package": [
+            { "activity_name": "ยามเช้าที่เขาใหญ่" },
+            { "activity_name": "ชมวิวทะเล" },
+            { "activity_name": "เที่ยวชมเมืองโบราณ" }
+        ],
+        "time_start_package": "2567-02-10T00:00:00.000Z",
+        "time_end_package": "2567-02-15T00:00:00.000Z",
+        "policy_cancel_package": "xxxxxxxxxx",
+        "location": [  {
+        "name_location": "หาดลำพึง",
+        "province_location": "ตราด",
+        "district_location": "เมืองตราด",
+        "subdistrict_location": "ตราด",
+        "zipcode_location": 1772,
+        "latitude_location": 12.3456,
+        "longitude_location": 78.9012,
+        "radius_location": 6326257482232
+      }],
+        "image": [
+            { "image_upload": "https://th.bing.com/th/id/OIP.kaYx6mSW0xvyA4Rg_JfqQAHaFj?w=800&h=600&rs=1&pid=ImgDetMain" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" }
+        ],
+        "price_package": 5000,
+        "homestay": ["609d435b0a8cf654d8b48fc3"],
+        "business_user": ["609d435b0a8cf654d8b48fc4"],
+        "review_rating_package": 5
+    },
+    {
+        "name_package": "เที่ยวทั่วไทยในเมืองกรุง",
+        "type_package": "การท่องเที่ยวเชิงวัฒนธรรม",
+        "max_people": 3,
+        "detail_package": "ท่องเที่ยวกับเพื่อนๆทั่วไทย",
+        "activity_package": [
+            { "activity_name": "ยามเช้าที่เขาใหญ่" },
+            { "activity_name": "ชมวิวทะเล" },
+            { "activity_name": "เที่ยวชมเมืองโบราณ" }
+        ],
+        "time_start_package": "2567-02-10T00:00:00.000Z",
+        "time_end_package": "2567-02-15T00:00:00.000Z",
+        "policy_cancel_package": "xxxxxxxxxx",
+        "location": [  {
+        "name_location": "หาดลำพึง",
+        "province_location": "ตราด",
+        "district_location": "เมืองตราด",
+        "subdistrict_location": "ตราด",
+        "zipcode_location": 1772,
+        "latitude_location": 12.3456,
+        "longitude_location": 78.9012,
+        "radius_location": 6326257482232
+      }],
+        "image": [
+            { "image_upload": "https://thumbs.dreamstime.com/b/travelling-people-horizontal-flyers-set-travelling-people-horizontal-flyers-young-tourist-family-small-children-baggage-114513597.jpg" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" }
+        ],
+        "price_package": 5000,
+        "homestay": ["609d435b0a8cf654d8b48fc3"],
+        "business_user": ["609d435b0a8cf654d8b48fc4"],
+        "review_rating_package": 5
+    }
+]

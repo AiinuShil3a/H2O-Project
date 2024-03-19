@@ -10,6 +10,7 @@ export default {
       'primaryBusiness': '#4B99FA',
       'secondUser': '#E1BF0E',
       'secondBusiness': '#72B1FF',
+      'Smoke': '#848884  ',
       'white':"#FFFFFF",
     }
   },

@@ -1,0 +1,213 @@
+[
+    {
+        "_id": "631a74543412345678901235",
+        "name_homestay": "บ้านสวนริมน้ำ",
+        "type_homestay": "บ้านเดี่ยว",
+        "detail_homestay": "บ้านพักสไตล์โมเดิร์น ร่มรื่น อยู่ติดริมแม่น้ำ เจ้าของใจดี",
+        "time_checkin_homestay": "14:00 น.",
+        "time_checkOut_homestay": "12:00 น.",
+        "policy_cancel_homestay": "แจ้งล่วงหน้า 7 วัน คืนเงินเต็มจำนวน",
+        "address": {
+          "_id": "631a74543412345678901236",
+          "name_location": "บ้านสวนริมน้ำ",
+          "province_location": "กรุงเทพมหานคร",
+          "district_location": "บางเขน",
+          "subdistrict_location": "อนุสาวรีย์",
+          "zipcode_location": "10220",
+          "latitude_location": "13.8799322",
+          "longitude_location": "100.5702121"
+        },
+        "image": [
+            { "image_upload": "https://th.bing.com/th/id/OIP.diu3tPwE4l1pocYRUr-E_QHaFj?w=800&h=600&rs=1&pid=ImgDetMain" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" }
+        ],
+        "max_people": 6,
+        "bathroom_homestay": 2,
+        "bedroom_homestay": 3,
+        "sizebed_homestay": "เตียงคิงไซส์ 1 เตียง เตียงควีนไซส์ 1 เตียง เตียงเดี่ยว 1 เตียง",
+        "facilities": [
+          {
+            "facilities_name": "Wi-Fi"
+          },
+          {
+            "facilities_name": "เครื่องปรับอากาศ"
+          },
+          {
+            "facilities_name": "สระว่ายน้ำ"
+          }
+        ],
+        "price_homestay": 2500,
+        "business_user": "631a74543412345678901564",
+        "review_rating_package": 4.5
+    },
+    {
+        "_id": "631a74543412345678901235",
+        "name_homestay": "บ้านสวนริมป่าเขา",
+        "type_homestay": "โฮมสเตย์",
+        "detail_homestay": "บ้านพักสไตล์โมเดิร์น ร่มรื่น อยู่ติดริมแม่น้ำ เจ้าของใจดี",
+        "time_checkin_homestay": "14:00 น.",
+        "time_checkOut_homestay": "12:00 น.",
+        "policy_cancel_homestay": "แจ้งล่วงหน้า 7 วัน คืนเงินเต็มจำนวน",
+        "address": {
+          "_id": "631a74543412345678901236",
+          "name_location": "บ้านสวนริมน้ำ",
+          "province_location": "กรุงเทพมหานคร",
+          "district_location": "บางเขน",
+          "subdistrict_location": "อนุสาวรีย์",
+          "zipcode_location": "10220",
+          "latitude_location": "13.8799322",
+          "longitude_location": "100.5702121"
+        },
+        "image": [
+            { "image_upload": "https://th.bing.com/th/id/OIP.dbG2XVEIRm9jI8KaacvQKgHaEu?w=1440&h=918&rs=1&pid=ImgDetMain" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" }
+        ],
+        "max_people": 6,
+        "bathroom_homestay": 2,
+        "bedroom_homestay": 3,
+        "sizebed_homestay": "เตียงคิงไซส์ 1 เตียง เตียงควีนไซส์ 1 เตียง เตียงเดี่ยว 1 เตียง",
+        "facilities": [
+          {
+            "facilities_name": "Wi-Fi"
+          },
+          {
+            "facilities_name": "เครื่องปรับอากาศ"
+          },
+          {
+            "facilities_name": "สระว่ายน้ำ"
+          }
+        ],
+        "price_homestay": 2500,
+        "business_user": "631a74543412345678901564",
+        "review_rating_package": 4.5
+    },
+    {
+        "_id": "631a74543412345678901235",
+        "name_homestay": "บ้านนอกรีด",
+        "type_homestay": "วิลล่า",
+        "detail_homestay": "บ้านพักสไตล์โมเดิร์น ร่มรื่น อยู่ติดริมแม่น้ำ เจ้าของใจดี",
+        "time_checkin_homestay": "14:00 น.",
+        "time_checkOut_homestay": "12:00 น.",
+        "policy_cancel_homestay": "แจ้งล่วงหน้า 7 วัน คืนเงินเต็มจำนวน",
+        "address": {
+          "_id": "631a74543412345678901236",
+          "name_location": "บ้านสวนริมน้ำ",
+          "province_location": "กรุงเทพมหานคร",
+          "district_location": "บางเขน",
+          "subdistrict_location": "อนุสาวรีย์",
+          "zipcode_location": "10220",
+          "latitude_location": "13.8799322",
+          "longitude_location": "100.5702121"
+        },
+        "image": [
+            { "image_upload": "https://th.bing.com/th/id/OIP.mfb92mCMjn550PeB1m73cQHaEK?w=1400&h=788&rs=1&pid=ImgDetMain" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" }
+        ],
+        "max_people": 6,
+        "bathroom_homestay": 2,
+        "bedroom_homestay": 3,
+        "sizebed_homestay": "เตียงคิงไซส์ 1 เตียง เตียงควีนไซส์ 1 เตียง เตียงเดี่ยว 1 เตียง",
+        "facilities": [
+          {
+            "facilities_name": "Wi-Fi"
+          },
+          {
+            "facilities_name": "เครื่องปรับอากาศ"
+          },
+          {
+            "facilities_name": "สระว่ายน้ำ"
+          }
+        ],
+        "price_homestay": 2500,
+        "business_user": "631a74543412345678901564",
+        "review_rating_package": 4.5
+    },
+    {
+        "_id": "631a74543412345678901235",
+        "name_homestay": "บ้านใต้ทะเล",
+        "type_homestay": "วิลล่า",
+        "detail_homestay": "บ้านพักสไตล์โมเดิร์น ร่มรื่น อยู่ติดริมแม่น้ำ เจ้าของใจดี",
+        "time_checkin_homestay": "14:00 น.",
+        "time_checkOut_homestay": "12:00 น.",
+        "policy_cancel_homestay": "แจ้งล่วงหน้า 7 วัน คืนเงินเต็มจำนวน",
+        "address": {
+          "_id": "631a74543412345678901236",
+          "name_location": "บ้านสวนริมน้ำ",
+          "province_location": "กรุงเทพมหานคร",
+          "district_location": "บางเขน",
+          "subdistrict_location": "อนุสาวรีย์",
+          "zipcode_location": "10220",
+          "latitude_location": "13.8799322",
+          "longitude_location": "100.5702121"
+        },
+        "image": [
+            { "image_upload": "https://i.pinimg.com/originals/73/68/52/7368522c1c2a2abf6ea2f4a9ebff169f.jpg" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" }
+        ],
+        "max_people": 6,
+        "bathroom_homestay": 2,
+        "bedroom_homestay": 3,
+        "sizebed_homestay": "เตียงคิงไซส์ 1 เตียง เตียงควีนไซส์ 1 เตียง เตียงเดี่ยว 1 เตียง",
+        "facilities": [
+          {
+            "facilities_name": "Wi-Fi"
+          },
+          {
+            "facilities_name": "เครื่องปรับอากาศ"
+          },
+          {
+            "facilities_name": "สระว่ายน้ำ"
+          }
+        ],
+        "price_homestay": 2500,
+        "business_user": "631a74543412345678901564",
+        "review_rating_package": 4.5
+    },
+    {
+        "_id": "631a74543412345678901235",
+        "name_homestay": "บ้านบนฟ้า",
+        "type_homestay": "วิลล่า",
+        "detail_homestay": "บ้านพักสไตล์โมเดิร์น ร่มรื่น อยู่ติดริมแม่น้ำ เจ้าของใจดี",
+        "time_checkin_homestay": "14:00 น.",
+        "time_checkOut_homestay": "12:00 น.",
+        "policy_cancel_homestay": "แจ้งล่วงหน้า 7 วัน คืนเงินเต็มจำนวน",
+        "address": {
+          "_id": "631a74543412345678901236",
+          "name_location": "บ้านสวนริมน้ำ",
+          "province_location": "กรุงเทพมหานคร",
+          "district_location": "บางเขน",
+          "subdistrict_location": "อนุสาวรีย์",
+          "zipcode_location": "10220",
+          "latitude_location": "13.8799322",
+          "longitude_location": "100.5702121"
+        },
+        "image": [
+            { "image_upload": "https://th.bing.com/th/id/OIP.JzmFI0zTgN-yNkI169bljQHaD1?w=970&h=503&rs=1&pid=ImgDetMain" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" },
+            { "image_upload": "https://img.lovepik.com/free-png/20210918/lovepik-cartoon-characters-png-image_400232769_wh1200.png" }
+        ],
+        "max_people": 6,
+        "bathroom_homestay": 2,
+        "bedroom_homestay": 3,
+        "sizebed_homestay": "เตียงคิงไซส์ 1 เตียง เตียงควีนไซส์ 1 เตียง เตียงเดี่ยว 1 เตียง",
+        "facilities": [
+          {
+            "facilities_name": "Wi-Fi"
+          },
+          {
+            "facilities_name": "เครื่องปรับอากาศ"
+          },
+          {
+            "facilities_name": "สระว่ายน้ำ"
+          }
+        ],
+        "price_homestay": 2500,
+        "business_user": "631a74543412345678901564",
+        "review_rating_package": 4.5
+    }
+  ]
+  
