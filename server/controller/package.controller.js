@@ -92,26 +92,20 @@ const deletePackage = async (req, res) => {
 };
 
 const searchPackage = async (req, res) => {
-  const name = req.query.name_package || "";
-  const type = req.query.type_package || "";
-  const detail = req.query.detail_package || "";
+  const name = req.query.name_package;
+  const type = req.query.type_package ;
+  const detail = req.query.detail_package ;
   try {
     const data = await PackageModel.find({
       $or: [
-        {
-          name_package: { $regex: name, $options: "i" },
-        },
-        {
-          type_package: { $regex: type, $options: "i" },
-        },
-        {
-          detail_package: { $regex: detail, $options: "i" },
-        },
+        { name_package: { $regex: `${name}` } },
+        { type_package: { $regex: `${type}` } },
+        { detail_package: { $regex: `${detail}` } },
       ],
     });
     res.status(200).json(data);
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 

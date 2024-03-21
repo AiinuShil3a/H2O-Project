@@ -2,36 +2,78 @@
  * @swagger
  * components:
  *  schemas:
- *      Package:
- *          type: object
- *          required:
- *              -   email
- *              -   price
- *              -   name
- *              -   image
- *              -   quantity
- *          properties:
- *              email:
- *                  type:   string
- *                  description:   the email of the CartItem
- *              price:
- *                  type:   number
- *                  description:   the price of the CartItem
- *              name:
- *                  type:   string
- *                  description:   the name of the CartItem
- *              image:
- *                  type:   string
- *                  description:   the image of the CartItem
- *              quantity:
- *                  type:   string
- *                  description:   the quantity of the CartItem
- *          example:
- *              email:"test@gmail.com"
- *              price:"9999"
- *              name:"package Pro"
- *              image:"http://example.com/macbook.jpg"
- *              quantity:"1"
+ *    Package:
+ *      type: object
+ *      required:
+ *        - name_package
+ *        - type_package
+ *        - max_people
+ *        - detail_package
+ *        - activity_package
+ *        - time_start_package
+ *        - time_end_package
+ *        - policy_cancel_package
+ *        - location
+ *        - image
+ *        - price_package
+ *        - business_user
+ *        - review_rating_package
+ *      properties:
+ *        name_package:
+ *          type: string
+ *          description: The name of the package
+ *        type_package:
+ *          type: string
+ *          description: The type of the package
+ *        max_people:
+ *          type: integer
+ *          description: The maximum number of people for the package
+ *        detail_package:
+ *          type: string
+ *          description: Details of the package
+ *        activity_package:
+ *          type: array
+ *          items:
+ *            type: object
+ *            properties:
+ *              activity_name:
+ *                type: string
+ *                description: The name of the activity
+ *        time_start_package:
+ *          type: string
+ *          format: date-time
+ *          description: The start time of the package
+ *        time_end_package:
+ *          type: string
+ *          format: date-time
+ *          description: The end time of the package
+ *        policy_cancel_package:
+ *          type: string
+ *          description: The cancellation policy of the package
+ *        location:
+ *          type: array
+ *          items:
+ *            $ref: '#/components/schemas/Location'
+ *        image:
+ *          type: array
+ *          items:
+ *            $ref: '#/components/schemas/Image'
+ *        price_package:
+ *          type: number
+ *          description: The price of the package
+ *        homestay:
+ *          type: array
+ *          items:
+ *            type: string
+ *            description: The ID of the homestay associated with the package
+ *        business_user:
+ *          type: array
+ *          items:
+ *            type: string
+ *            description: The ID of the business user associated with the package
+ *        review_rating_package:
+ *          type: number
+ *          description: The review rating of the package
  * tags:
  *  name: Package
  *  description: the Package managing API
@@ -47,7 +89,7 @@ const {
   updatePackage,
   deletePackage,
   searchPackage,
-  } = require("../controller/package.controller.js");
+} = require("../controller/package.controller.js");
 
 /**
  * @swagger
@@ -174,7 +216,7 @@ router.get("/package/price/:price", getByPricePackage);
  *          500:
  *              description: Some error happened
  */
-router.post('/package',createPackage)
+router.post("/package", createPackage);
 /**
  * @swagger
  * /package/{id}:
@@ -206,7 +248,7 @@ router.post('/package',createPackage)
  *      500:
  *          description: Some error happened
  */
-router.put('/package/:id',updatePackage)
+router.put("/package/:id", updatePackage);
 /**
  * @swagger
  * /package/{id}:
@@ -232,7 +274,7 @@ router.put('/package/:id',updatePackage)
  *      500:
  *          description: Some error happened
  */
-router.delete('/package/:id',deletePackage)
+router.delete("/package/:id", deletePackage);
 /**
  * @swagger
  * /search:
@@ -267,6 +309,6 @@ router.delete('/package/:id',deletePackage)
  *       500:
  *         description: Some error happened!!
  */
-router.get('/search',searchPackage)
+router.get("/search", searchPackage);
 
 module.exports = router;
