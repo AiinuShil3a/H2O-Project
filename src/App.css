@@ -1,0 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=K2D:wght@100&family=Kanit:ital@1&family=Noto+Sans+Cypro+Minoan&family=Open+Sans:ital,wght@0,300;0,400;1,400;1,500&display=swap");
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: white;
+    color: black;
+  }
+  .modal-box {
+    background-color: white;
+    color: black;
+  }
+  .input {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+  }
+  .label-text {
+    font-size: 0.95rem;
+    font-weight: bold;
+    line-height: 1.25rem;
+    --tw-text-opacity: 1;
+    color: black;
+  }
+  .label-text-alt {
+    font-size: 0.9rem;
+    font-weight: bold;
+    line-height: 1rem;
+    --tw-text-opacity: 1;
+    color: black;
+  }
+  
+}
+
+body {
+  font-family: "K2D", sans-serif;
+  color: black;
+}
+
+@media only screen and (max-width: 640px) {
+  .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+  }
+}

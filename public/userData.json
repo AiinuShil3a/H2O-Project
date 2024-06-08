@@ -1,0 +1,36 @@
+[
+  {
+    "_id": "65e0bf27e91792bffddc46b6",
+    "name": "Jesus",
+    "lastName": "Human",
+    "email": "Supphalak@gmail.com",
+    "password": "123456",
+    "image" : "https://th.bing.com/th/id/OIP.-NU4zH9CLbVTC6BkHRWEiwHaHa?rs=1&pid=ImgDetMain",
+    "role": "user"
+  },
+  {
+    "_id": "65e0bf27e91792bffddc46a9",
+    "businessName": "JesusHotel",
+    "email": "Supphalak@gmail.com",
+    "password": "123456",
+    "image" : "https://th.bing.com/th/id/OIP.-NU4zH9CLbVTC6BkHRWEiwHaHa?rs=1&pid=ImgDetMainhttps://th.bing.com/th/id/OIP.yfUyXTHfvcWo34bxC8Xy2AHaEK?rs=1&pid=ImgDetMain",
+    "role": "business"
+  },
+  {
+    "_id": "65e0bf27e91792bffddc56b8",
+    "name": "Jesus",
+    "lastName": "Human",
+    "email": "Supphalak.sm@gmail.com",
+    "password": "123456",
+    "image" : "https://th.bing.com/th/id/OIP.-NU4zH9CLbVTC6BkHRWEiwHaHa?rs=1&pid=ImgDetMain",
+    "role": "user"
+  },
+  {
+    "_id": "65e0bf25e91792bbbddc87a9",
+    "businessName": "JesusHotel",
+    "email": "Supphalak.sm@gmail.com",
+    "password": "1234567",
+    "image" : "https://th.bing.com/th/id/OIP.-NU4zH9CLbVTC6BkHRWEiwHaHa?rs=1&pid=ImgDetMainhttps://th.bing.com/th/id/OIP.yfUyXTHfvcWo34bxC8Xy2AHaEK?rs=1&pid=ImgDetMain",
+    "role": "business"
+  }
+]
