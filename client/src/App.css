@@ -35,6 +35,16 @@ body {
   color: black;
 }
 
+.bg-custom-bg {
+  background-image: url('https://i.ytimg.com/vi/pH2huXfpGBQ/maxresdefault.jpg');
+  opacity: 0.5;
+}
+
+.bg-custom-bg:hover {
+  opacity: 1; /* หรือค่าอื่น ๆ ที่คุณต้องการเปลี่ยน */
+}
+
+
 @media only screen and (max-width: 640px) {
   .container {
       padding-left: 1rem;

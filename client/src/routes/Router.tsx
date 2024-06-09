@@ -3,6 +3,7 @@ import Main from '../layout/Main';
 import Home from "../pages/home/homepage";
 import ProfileUser from "../pages/user/profile";
 import ProfileBusiness from "../pages/business/profile";
+import SelectionCreate from "../pages/business/selectionCreate";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "/profile-business",
         element: <ProfileBusiness />,
+      },
+      {
+        path: "/create-business",
+        element: <SelectionCreate />,
       },
     ],
   },
