@@ -3,7 +3,7 @@ const LeftSide = () => {
     <div className="w-[90vh] h-screen flex flex-col items-center justify-center relative">
       <a
         href="https://www.youtube.com/"
-        className="relative group w-full text-center"
+        className="relative group w-full text-center shadow-xl"
       >
         <div className="text-overlay text-[100px] font-bold">
           Create Homestay
@@ -12,7 +12,7 @@ const LeftSide = () => {
       </a>
       <a
         href="https://www.youtube.com/"
-        className="relative group mt-10 w-full text-center"
+        className="relative group mt-[5rem] w-full text-center shadow-xl"
       >
         <div className="text-overlay text-[100px] font-bold">
           Create Package
