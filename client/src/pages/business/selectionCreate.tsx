@@ -1,30 +1,36 @@
-import React from "react";
-
-const RightSide = () => {
-  return (
-    <div className="w-1/2 h-screen flex justify-center items-center relative">
-      <div className="absolute inset-0 bg-custom-bg bg-no-repeat bg-cover bg-opacity-50 hover:bg-opacity-100 transition-opacity duration-500"></div>
-      <div className="z-10 text-[100px] font-bold">Create Package</div>
-    </div>
-  );
-};
-
 const LeftSide = () => {
   return (
-    <div className="w-1/2 h-screen flex justify-center items-center relative">
-      <div className="absolute inset-0 bg-custom-bg bg-no-repeat bg-cover bg-opacity-50 hover:bg-opacity-100 transition-opacity duration-500"></div>
-      <div className="z-10 text-[100px] font-bold">Create HomeStay</div>
+    <div className="w-[90vh] h-screen flex flex-col items-center justify-center relative">
+      <a
+        href="https://www.youtube.com/"
+        className="relative group w-full text-center"
+      >
+        <div className="text-overlay text-[100px] font-bold">
+          Create Homestay
+        </div>
+        <div className="bg-custom-bg1 absolute inset-0"></div>
+      </a>
+      <a
+        href="https://www.youtube.com/"
+        className="relative group mt-10 w-full text-center"
+      >
+        <div className="text-overlay text-[100px] font-bold">
+          Create Package
+        </div>
+        <div className="bg-custom-bg2 absolute inset-0"></div>
+      </a>
     </div>
   );
 };
 
 const SelectionCreate = () => {
   return (
-    <div className="flex">
-      <LeftSide />
-      <RightSide />
+    <div className="flex h-[93vh] overflow-hidden relative z-1">
+      <div className="absolute inset-0 w-full h-full bg-gif" />
+        <LeftSide />
     </div>
   );
 };
+
 
 export default SelectionCreate;

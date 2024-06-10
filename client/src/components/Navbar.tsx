@@ -139,20 +139,19 @@ const Navbar: React.FC = () => {
                               Dashboard
                             </a>
                           </li>
+                          {userInfo && userInfo.role === "business" && (
+                            <li>
+                              <a href="/create-business" className="block px-4 py-2">
+                                Create a sale 
+                              </a>
+                            </li>
+                          )}
                           <li>
                             <a
                               href="#"
                               className="block px-4 py-2"
                             >
                               Settings
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              href="#"
-                              className="block px-4 py-2"
-                            >
-                              Earnings
                             </a>
                           </li>
                         </ul>
