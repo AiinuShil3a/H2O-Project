@@ -56,7 +56,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       }
       const userData: User[] = await response.json();
       const user = userData.filter(
-        (user) => user.email === email && user.password === password
+        (user) => user.email.toLowerCase() === email.toLowerCase() && user.password === password
       );
       if (user.length > 1) {
         (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
