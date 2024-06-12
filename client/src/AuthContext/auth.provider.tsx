@@ -2,6 +2,25 @@ import React, { useState, useEffect, ReactNode } from "react";
 import { createContext, FC } from "react";
 import Swal from "sweetalert2";
 
+type SignUpForm1Data = {
+  type: "form1";
+  name: string | undefined;
+  lastName: string | undefined;
+  email: string;
+  password: string;
+  phone: string | undefined;
+};
+
+type SignUpForm2Data = {
+  type: "form2";
+  businessName: string | undefined;
+  email: string;
+  password: string;
+  phone: string | undefined;
+};
+
+type SignUpFormData = SignUpForm1Data | SignUpForm2Data;
+
 interface User {
   name?: string;
   lastName?: string;
@@ -10,6 +29,7 @@ interface User {
   password: string;
   role: string;
   image: string;
+  phone: string | undefined;
 }
 
 interface AuthContextType {
@@ -20,25 +40,26 @@ interface AuthContextType {
   userInfo: User | null;
   setUserInfo: React.Dispatch<React.SetStateAction<User | null>>;
   handleLogin: (email: string, password: string) => Promise<void>;
+  handleSignUp: (formData: SignUpFormData) => Promise<void>;
   whatUser: User[];
   setWhatUser: React.Dispatch<React.SetStateAction<User[]>>;
   handleLogout: () => void;
+}
+
+interface AuthProviderProps {
+  children: ReactNode;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
 );
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
 const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [thisPage, setThisPage] = useState<string>("");
   const [whatUser, setWhatUser] = useState<User[]>([]);
   const [reload, setReload] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<User | null>(() => {
-  const storedUser = localStorage.getItem("user");
+    const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
@@ -48,6 +69,81 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }
   }, [userInfo]);
 
+  const sendOTP = async (phone: string | undefined) => {
+    // แทนที่ด้วยการส่ง OTP ผ่านบริการ SMS จริงด้วย Firebase (หากไม่ทำลบเเม้นนี้)
+    console.log(`Sending OTP to ${phone}`);
+    return "123456"; // OTP จำลอง
+  };
+
+  const handleSignUp = async (formData: SignUpFormData) => {
+    try {
+      const { email, password, type, phone } = formData;
+      let newUser: User;
+
+      if (type === "form1") {
+        const { name, lastName } = formData;
+        newUser = {
+          name,
+          lastName,
+          email,
+          password,
+          phone,
+          role: "user",
+          image: "",
+        };
+        (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+      } else if (type === "form2") {
+        const { businessName } = formData;
+        newUser = {
+          businessName,
+          email,
+          password,
+          phone,
+          role: "business",
+          image: "",
+        };
+        (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+      } else {
+        throw new Error("Invalid form type");
+      }
+
+      const otp = await sendOTP(phone);
+
+      let inputOTP: string | null = null;
+      while (inputOTP !== otp) {
+        const { value } = await Swal.fire({
+          title: "Enter your OTP",
+          input: "text",
+          inputLabel: "OTP",
+          inputPlaceholder: "Enter the OTP sent to your phone",
+          showCancelButton: true,
+        });
+        if (value === null) return;
+        inputOTP = value;
+        if (inputOTP !== otp) {
+          await Swal.fire({
+            icon: "error",
+            title: "Invalid OTP",
+            text: "The OTP you entered is incorrect. Please try again.",
+          });
+        }
+      }
+      setUserInfo(newUser);
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Sign up successful!",
+      });
+    } catch (error) {
+      console.error("Error:", (error as Error).message);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to sign up. Please try again.",
+      });
+    }
+  };
+
   const handleLogin = async (email: string, password: string) => {
     try {
       const response = await fetch("/userData.json");
@@ -56,7 +152,9 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       }
       const userData: User[] = await response.json();
       const user = userData.filter(
-        (user) => user.email.toLowerCase() === email.toLowerCase() && user.password === password
+        (user) =>
+          user.email.toLowerCase() === email.toLowerCase() &&
+          user.password === password
       );
       if (user.length > 1) {
         (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
@@ -104,6 +202,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     whatUser,
     setWhatUser,
     handleLogout,
+    handleSignUp,
   };
 
   return (

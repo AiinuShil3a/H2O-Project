@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { SiGmail } from "react-icons/si";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AuthContext } from "../AuthContext/auth.provider";
+import Swal from "sweetalert2";
 
 interface ModalProps {
   name: string;
@@ -12,9 +13,9 @@ interface FormValues {
   password: string;
   name?: string;
   lastName?: string;
-  "c-password"?: string;
+  ConfirmPassword?: string;
   phone?: string;
-  "b-name"?: string;
+  businessName?: string;
 }
 
 interface CountryData {
@@ -34,7 +35,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
     throw new Error('AuthContext must be used within an AuthProvider');
   }
 
-  const { handleLogin } = authContext;
+  const { handleLogin , handleSignUp } = authContext;
 
   const [activePage, setActivePage] = useState<
     "login" | "signup-user" | "signup-business"
@@ -44,12 +45,47 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const email = data.email;
     const password = data.password;
+    const confirmPassword = data.ConfirmPassword;
+    const name = data.name;
+    const lastName = data.lastName;
+    const businessName = data.businessName;
+    const phone = data.phone;
     if (activePage === "login") {
       handleLogin(email, password);
     } else if (activePage === "signup-user") {
-      console.log("Hello2");
+      if(password === confirmPassword){
+        handleSignUp({ type: 'form1', name, lastName, email, password , phone });
+      } else{
+        (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Password doesn't math",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            (
+              document.getElementById("Get-Started") as HTMLDialogElement
+            )?.showModal();
+          }
+        });
+      }
     } else {
-      console.log("Hello3");
+      if(password === confirmPassword){
+        handleSignUp({ type: 'form2', businessName, email, password , phone });
+      }else{
+        (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Password doesn't math",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            (
+              document.getElementById("Get-Started") as HTMLDialogElement
+            )?.showModal();
+          }
+        });
+      }
     }
   };
 
@@ -190,7 +226,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                     placeholder="confirm password"
                     className="input input-bordered w-full"
                     required
-                    {...register("c-password")}
+                    {...register("ConfirmPassword")}
                   />
                 </div>
               </div>
@@ -228,7 +264,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                   placeholder="Your business name"
                   className="input input-bordered"
                   required
-                  {...register("b-name")}
+                  {...register("businessName")}
                 />
               </div>
               <div className="form-control">
@@ -265,7 +301,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                     placeholder="confirm password"
                     className="input input-bordered w-full"
                     required
-                    {...register("c-password")}
+                    {...register("ConfirmPassword")}
                   />
                 </div>
               </div>
