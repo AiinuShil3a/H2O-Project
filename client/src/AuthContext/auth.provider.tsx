@@ -38,7 +38,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [whatUser, setWhatUser] = useState<User[]>([]);
   const [reload, setReload] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<User | null>(() => {
-    const storedUser = localStorage.getItem("user");
+  const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
@@ -90,6 +90,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const handleLogout = () => {
     setUserInfo(null);
     localStorage.removeItem("user");
+    window.location.href = "/";
   };
 
   const authInfo: AuthContextType = {

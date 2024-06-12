@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { AuthContext } from "../../AuthContext/auth.provider";
-import { Navigate } from "react-router-dom";
 
 const Profile = () => {
   const authContext = useContext(AuthContext);
@@ -16,9 +15,7 @@ const Profile = () => {
         <button onClick={handleLogout}>Logout</button>
       </div>
     );
-  } else {
-    return <Navigate to="/" />;
-  }
+  } 
 };
 
 export default Profile;

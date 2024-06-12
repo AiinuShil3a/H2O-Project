@@ -1,5 +1,7 @@
-import {createBrowserRouter} from "react-router-dom";
-import Main from '../layout/Main';
+import { createBrowserRouter } from "react-router-dom";
+import Main from "../layout/Main";
+import PrivateRouterUser from "../PrivateRouter/PrivateRouterUser";
+import PrivateRouterBusiness from "../PrivateRouter/PrivateRouterBusiness";
 import Home from "../pages/home/homepage";
 import ProfileUser from "../pages/user/profile";
 import ProfileBusiness from "../pages/business/profile";
@@ -13,21 +15,33 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
-      },    
+      },
       {
         path: "/profile-user",
-        element: <ProfileUser />,
+        element: (
+          <PrivateRouterUser>
+            <ProfileUser />
+          </PrivateRouterUser>
+        ),
       },
       {
         path: "/profile-business",
-        element: <ProfileBusiness />,
+        element: (
+          <PrivateRouterBusiness>
+            <ProfileBusiness />
+          </PrivateRouterBusiness>
+        ),
       },
       {
         path: "/create-business",
-        element: <SelectionCreate />,
+        element: (
+          <PrivateRouterBusiness>
+            <SelectionCreate />
+          </PrivateRouterBusiness>
+        ),
       },
     ],
   },
 ]);
 
-export default router
+export default router;
