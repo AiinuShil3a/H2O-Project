@@ -88,3 +88,23 @@ body {
       padding-right: 1rem;
   }
 }
+
+.swal2-confirm.user-button {
+  background: linear-gradient(to right, #DC9832, #E1BF0E);
+  border: none;
+}
+
+.swal2-deny.business-button {
+  background: linear-gradient(to right, #4B99FA, #72B1FF);
+  border: none;
+}
+
+.swal2-confirm.user-button:hover {
+  background-color: #DC9832;
+  color: white;
+}
+
+.swal2-deny.business-button:hover {
+  background-color: #4B99FA;
+  color: white;
+}

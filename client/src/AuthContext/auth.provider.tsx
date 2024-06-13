@@ -40,6 +40,7 @@ interface AuthContextType {
   userInfo: User | null;
   setUserInfo: React.Dispatch<React.SetStateAction<User | null>>;
   handleLogin: (email: string, password: string) => Promise<void>;
+  handleForgot: (email: string) => Promise<void>;
   handleSignUp: (formData: SignUpFormData) => Promise<void>;
   whatUser: User[];
   setWhatUser: React.Dispatch<React.SetStateAction<User[]>>;
@@ -185,6 +186,166 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const handleForgot = async (email: string) => {
+    try {
+      const response = await fetch("/userData.json");
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+      const userData: User[] = await response.json();
+      const user = userData.filter(
+        (user) => user.email.toLowerCase() === email.toLowerCase()
+      );
+      if (user.length > 1) {
+        const { isConfirmed, isDenied, isDismissed } = await Swal.fire({
+          title: 'Select Role',
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'User',
+          denyButtonText: 'Business',
+          cancelButtonText: 'All User',
+          customClass: {
+            confirmButton: 'user-button',
+            denyButton: 'business-button',
+          }
+        });
+      
+        if (isConfirmed) {
+          const role = "user";
+          console.log(role);
+        } else if (isDenied) {
+          const role = "business";
+          console.log(role);
+        } else if (isDismissed) {
+          const role1 = "user";
+          const role2 = "business";
+          console.log(role1);
+          console.log(role2);
+        }
+      } else if (user.length === 1) {
+        let phone: string | null = null;
+        while (user[0].phone !== phone) {
+          const { value } = await Swal.fire({
+            title: "Enter your phone",
+            input: "text",
+            inputLabel: "PHONE NUMBER",
+            inputPlaceholder: "Enter the phone sent to your OTP",
+            showCancelButton: true,
+          });
+          if (value === null) return;
+          phone = value;
+          if (user[0].phone !== phone) {
+            await Swal.fire({
+              icon: "error",
+              title: "Invalid phone",
+              text: "The phone you entered is incorrect. Please try again.",
+            });
+          }
+        }
+
+        const otp = await sendOTP(phone);
+
+        let inputOTP: string | null = null;
+        while (inputOTP !== otp) {
+          const { value } = await Swal.fire({
+            title: "Enter your OTP",
+            input: "text",
+            inputLabel: "OTP",
+            inputPlaceholder: "Enter the OTP sent to your phone",
+            showCancelButton: true,
+          });
+          if (value === null) return;
+          inputOTP = value;
+          if (inputOTP !== otp) {
+            await Swal.fire({
+              icon: "error",
+              title: "Invalid OTP",
+              text: "The OTP you entered is incorrect. Please try again.",
+            });
+          }
+        }
+
+        let newPassword = "";
+        let confirmPassword = "";
+        const passwordRegex =
+          /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+        const passwordValid = true;
+        while (passwordValid) {
+          const { value: newPass } = await Swal.fire({
+            title: "Enter New Password",
+            input: "password",
+            inputPlaceholder: "Enter your new password",
+            inputAttributes: {
+              minlength: "8",
+              required: "true",
+            },
+            showCancelButton: true,
+          });
+
+          if (!newPass) {
+            return;
+          }
+
+          if (!passwordRegex.test(newPass)) {
+            await Swal.fire({
+              icon: "error",
+              title: "Invalid Password",
+              text: "Password must contain at least 8 characters, including at least one uppercase letter, one lowercase letter, one digit, and one special character.",
+            });
+            continue;
+          }
+
+          const { value: confirmPass } = await Swal.fire({
+            title: "Confirm New Password",
+            input: "password",
+            inputPlaceholder: "Re-enter your new password",
+            inputAttributes: {
+              minlength: "8",
+              required: "true",
+            },
+            showCancelButton: true,
+          });
+
+          if (!confirmPass) {
+            return;
+          }
+
+          if (newPass === confirmPass) {
+            newPassword = newPass;
+            confirmPassword = confirmPass;
+            break;
+          } else {
+            await Swal.fire({
+              icon: "error",
+              title: "Passwords do not match",
+              text: "The passwords you entered do not match. Please try again.",
+            });
+          }
+        }
+        //ยิง api ที่นี่
+        if (newPassword === confirmPassword) {
+          console.log("New password:", newPassword);
+        }
+      } else {
+        (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Invalid email!",
+          footer: '<a href="#">Why do I have this issue?</a>',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            (
+              document.getElementById("Get-Started") as HTMLDialogElement
+            )?.showModal();
+          }
+        });
+      }
+    } catch (error) {
+      console.error("Error:", (error as Error).message);
+    }
+  };
+
   const handleLogout = () => {
     setUserInfo(null);
     localStorage.removeItem("user");
@@ -203,6 +364,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     setWhatUser,
     handleLogout,
     handleSignUp,
+    handleForgot,
   };
 
   return (

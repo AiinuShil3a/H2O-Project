@@ -35,7 +35,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
     throw new Error('AuthContext must be used within an AuthProvider');
   }
 
-  const { handleLogin , handleSignUp } = authContext;
+  const { handleLogin , handleSignUp , handleForgot } = authContext;
 
   const [activePage, setActivePage] = useState<
     "login" | "signup-user" | "signup-business"
@@ -91,6 +91,20 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
 
   const toggleForm = (page: "login" | "signup-user" | "signup-business") => {
     setActivePage(page);
+  };
+
+  const handleForgotPasswordClick = async(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    (
+      document.getElementById("Get-Started") as HTMLDialogElement
+    )?.close();
+    event.preventDefault();
+    const { value: email } = await Swal.fire({
+      title: 'Enter your email',
+      input: 'text',
+      inputPlaceholder: 'Enter the email your forgot!',
+      showCancelButton: true,
+    });
+    handleForgot(email);
   };
 
   useEffect(() => {
@@ -332,7 +346,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
           <div className="form-control">
             {activePage === "login" && (
               <label className="label ml-auto mt-5">
-                <a href="#" className="label-text-alt link link-hover">
+                <a href="#" className="label-text-alt link link-hover" onClick={handleForgotPasswordClick}>
                   Forgot password?
                 </a>
               </label>
