@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
             ? "bg-gradient-to-r from-primaryUser to-secondUser border-gray-200 dark:bg-gray-900 relative"
             : userInfo && userInfo.role === "business"
             ? "bg-gradient-to-r from-primaryBusiness to-secondBusiness border-gray-200 dark:bg-gray-900 relative"
-            : "bg-gradient-to-r from-primaryBusiness to-secondBusiness border-gray-200 dark:bg-gray-900 relative"
+            : "bg-gradient-to-r from-dark to-smoke border-gray-200 dark:bg-gray-900 relative"
         }
       >
         <div
@@ -133,7 +133,7 @@ const Navbar: React.FC = () => {
                         >
                           <li>
                             <a
-                              href={`profile-${userInfo.role}`}
+                              href={`/dashboard-${userInfo.role}`}
                               className="block px-4 py-2"
                             >
                               Dashboard
