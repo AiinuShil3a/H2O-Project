@@ -86,6 +86,10 @@ body {
   color: white;
 }
 
+.group:hover .overlay {
+  opacity: 1;
+}
+
 @media only screen and (max-width: 640px) {
   .container {
       padding-left: 1rem;

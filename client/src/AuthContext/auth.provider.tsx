@@ -29,6 +29,8 @@ interface User {
   password: string;
   role: string;
   image: string;
+  birthday: Date | null;
+  address: string;
   phone: string | undefined;
 }
 
@@ -91,6 +93,8 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           phone,
           role: "user",
           image: "",
+          address:"",
+          birthday:null,
         };
         (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
       } else if (type === "form2") {
@@ -102,6 +106,8 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           phone,
           role: "business",
           image: "",
+          address:"",
+          birthday:null,
         };
         (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
       } else {

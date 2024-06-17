@@ -2,6 +2,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../AuthContext/auth.provider";
 import { useContext } from "react";
+import { BsCamera } from "react-icons/bs";
 
 const Drawer: React.FC = () => {
   const authContext = useContext(AuthContext);
@@ -47,12 +48,30 @@ const Drawer: React.FC = () => {
                   : "menu p-4 w-80 min-h-full bg-gradient-to-b from-dark to-smoke text-white text-xl"
               }
             >
-              <div className="flex items-center justify-center mt-5 ">
-                <img
-                  src={userInfo?.image}
-                  alt=""
-                  className="btn-circle h-28 w-28"
-                />
+              <div className="flex items-center justify-center mt-5">
+                <div className="relative group">
+                  <div className="rounded-full h-28 w-28 object-cover bg-dark">
+                    <img
+                      src={userInfo?.image}
+                      alt="Profile"
+                      className="object-cover w-full h-full transition-opacity duration-300 group-hover:opacity-30 rounded-full"
+                    />
+                  </div>
+                  <label
+                    className="absolute inset-0 bg-gray-700 bg-opacity-50 text-white text-lg cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ textAlign: "center" }}
+                  >
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="flex flex-col items-center justify-center">
+                        <p>
+                          <BsCamera />
+                        </p>
+                        <p>เปลี่ยนรูป</p>
+                      </div>
+                    </div>
+                    <input type="file" accept="image/*" className="hidden" />
+                  </label>
+                </div>
               </div>
               <div className="flex flex-row items-center justify-center my-5">
                 <button
@@ -120,6 +139,23 @@ const Drawer: React.FC = () => {
                 </div>
               ) : null}
               <hr className="h-px my-4 bg-white border-0 dark:bg-gray-300"></hr>
+              {userInfo?.role === "user" ? (
+                <div>
+                  <Link to={"#"}>
+                    <li>
+                      <a>Payment methods</a>
+                    </li>
+                  </Link>
+                </div>
+              ) : userInfo?.role === "business" ? (
+                <div>
+                  <Link to={"#"}>
+                    <li>
+                      <a>How to get money</a>
+                    </li>
+                  </Link>
+                </div>
+              ) : null}
               <li onClick={handleLogout}>
                 <a>Log out</a>
               </li>

@@ -7,6 +7,8 @@
     "password": "123456",
     "image" : "https://th.bing.com/th/id/OIP.-NU4zH9CLbVTC6BkHRWEiwHaHa?rs=1&pid=ImgDetMain",
     "phone" : "0982510776",
+    "birthday" : "30/05/2545",
+    "address": "",
     "role": "user"
   },
   {
@@ -16,6 +18,8 @@
     "password": "123456",
     "image" : "https://th.bing.com/th/id/OIP.-NU4zH9CLbVTC6BkHRWEiwHaHa?rs=1&pid=ImgDetMainhttps://th.bing.com/th/id/OIP.yfUyXTHfvcWo34bxC8Xy2AHaEK?rs=1&pid=ImgDetMain",
     "phone" : "0982510776",
+    "birthday" : "30/05/2545",
+    "address": "",
     "role": "business"
   },
   {
@@ -26,6 +30,8 @@
     "password": "123456",
     "image" : "https://th.bing.com/th/id/OIP.-NU4zH9CLbVTC6BkHRWEiwHaHa?rs=1&pid=ImgDetMain",
     "phone" : "0982510776",
+    "birthday" : null,
+    "address": "",
     "role": "user"
   },
   {
@@ -35,6 +41,8 @@
     "password": "123456",
     "image" : "https://th.bing.com/th/id/OIP.-NU4zH9CLbVTC6BkHRWEiwHaHa?rs=1&pid=ImgDetMainhttps://th.bing.com/th/id/OIP.yfUyXTHfvcWo34bxC8Xy2AHaEK?rs=1&pid=ImgDetMain",
     "phone" : "0982510776",
+    "birthday" : "24/05/2545",
+    "address": "",
     "role": "business"
   }
 ]
