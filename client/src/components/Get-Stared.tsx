@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { SiGmail } from "react-icons/si";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AuthContext } from "../AuthContext/auth.provider";
+import { FaPhone } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 interface ModalProps {
@@ -24,18 +25,15 @@ interface CountryData {
 }
 
 const Modal: React.FC<ModalProps> = ({ name }) => {
-  const {
-    handleSubmit,
-    register,
-  } = useForm<FormValues>();
+  const { handleSubmit, register } = useForm<FormValues>();
 
   const authContext = useContext(AuthContext);
 
   if (!authContext) {
-    throw new Error('AuthContext must be used within an AuthProvider');
+    throw new Error("AuthContext must be used within an AuthProvider");
   }
 
-  const { handleLogin , handleSignUp , handleForgot } = authContext;
+  const { handleLogin, handleSignUp, handleForgot } = authContext;
 
   const [activePage, setActivePage] = useState<
     "login" | "signup-user" | "signup-business"
@@ -53,9 +51,9 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
     if (activePage === "login") {
       handleLogin(email, password);
     } else if (activePage === "signup-user") {
-      if(password === confirmPassword){
-        handleSignUp({ type: 'form1', name, lastName, email, password , phone });
-      } else{
+      if (password === confirmPassword) {
+        handleSignUp({ type: "form1", name, lastName, email, password, phone });
+      } else {
         (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
         Swal.fire({
           icon: "error",
@@ -70,9 +68,9 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
         });
       }
     } else {
-      if(password === confirmPassword){
-        handleSignUp({ type: 'form2', businessName, email, password , phone });
-      }else{
+      if (password === confirmPassword) {
+        handleSignUp({ type: "form2", businessName, email, password, phone });
+      } else {
         (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
         Swal.fire({
           icon: "error",
@@ -93,15 +91,15 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
     setActivePage(page);
   };
 
-  const handleForgotPasswordClick = async(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    (
-      document.getElementById("Get-Started") as HTMLDialogElement
-    )?.close();
+  const handleForgotPasswordClick = async (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
     event.preventDefault();
     const { value: email } = await Swal.fire({
-      title: 'Enter your email',
-      input: 'text',
-      inputPlaceholder: 'Enter the email your forgot!',
+      title: "Enter your email",
+      input: "text",
+      inputPlaceholder: "Enter the email your forgot!",
       showCancelButton: true,
     });
     handleForgot(email);
@@ -244,20 +242,20 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                   />
                 </div>
               </div>
-              <label className="label">
-                <span className="label-text">Phone Number</span>
+              <label className="label flex items-center">
+                <span className="label-text flex items-center">
+                  Phone Number <FaPhone className="ml-1" />
+                </span>
               </label>
               <div className="flex flex-row justify-between">
                 <div>
                   <select className="input input-bordered w-[4.4rem]">
-                    {countriesData.map((country, index) => (
-                      <option key={index} value={country.code}>
-                        {country.code} {String.fromCharCode(160)}({" "}
-                        {country.name} )
-                      </option>
-                    ))}
+                    <option value="+66">
+                      +66 {String.fromCharCode(160)} ( Thailand )
+                    </option>
                   </select>
                 </div>
+
                 <input
                   type="tel"
                   placeholder="Phone number"
@@ -319,18 +317,17 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                   />
                 </div>
               </div>
-              <label className="label">
-                <span className="label-text">Phone Number</span>
+              <label className="label flex items-center">
+                <span className="label-text flex items-center">
+                  Phone Number <FaPhone className="ml-1" />
+                </span>
               </label>
               <div className="flex flex-row justify-between">
                 <div>
                   <select className="input input-bordered w-[4.4rem]">
-                    {countriesData.map((country, index) => (
-                      <option key={index} value={country.code}>
-                        {country.code} {String.fromCharCode(160)}({" "}
-                        {country.name} )
-                      </option>
-                    ))}
+                    <option value="+66">
+                      +66 {String.fromCharCode(160)} ( Thailand )
+                    </option>
                   </select>
                 </div>
                 <input
@@ -346,7 +343,11 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
           <div className="form-control">
             {activePage === "login" && (
               <label className="label ml-auto mt-5">
-                <a href="#" className="label-text-alt link link-hover" onClick={handleForgotPasswordClick}>
+                <a
+                  href="#"
+                  className="label-text-alt link link-hover"
+                  onClick={handleForgotPasswordClick}
+                >
                   Forgot password?
                 </a>
               </label>
