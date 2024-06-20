@@ -4,6 +4,7 @@ import Search from "./Search";
 import { AuthContext } from "../AuthContext/auth.provider";
 import Modal from "./Get-Stared";
 import ModalSelectRoles from "./Modal-SelectRoles";
+import RecaptchaVerifierModal from "./RecaptchaVerifierModal";
 
 const Navbar: React.FC = () => {
   const authContext = useContext(AuthContext);
@@ -50,6 +51,7 @@ const Navbar: React.FC = () => {
           <div className="flex items-center justify-between">
             <Modal name="Get-Started" />
             <ModalSelectRoles name="Modal-SelectRoles" />
+            <RecaptchaVerifierModal name="Modal-RecaptchaVerifier" />
             <Link
               to="/"
               className="flex items-center space-x-3 rtl:space-x-reverse text-xl"

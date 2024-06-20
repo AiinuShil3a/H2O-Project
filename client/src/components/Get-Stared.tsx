@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState , useContext } from "react";
 import { SiGmail } from "react-icons/si";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AuthContext } from "../AuthContext/auth.provider";
@@ -19,11 +19,6 @@ interface FormValues {
   businessName?: string;
 }
 
-interface CountryData {
-  code: string;
-  name: string;
-}
-
 const Modal: React.FC<ModalProps> = ({ name }) => {
   const { handleSubmit, register } = useForm<FormValues>();
 
@@ -35,10 +30,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
 
   const { handleLogin, handleSignUp, handleForgot } = authContext;
 
-  const [activePage, setActivePage] = useState<
-    "login" | "signup-user" | "signup-business"
-  >("login");
-  const [countriesData, setCountriesData] = useState<CountryData[]>([]);
+  const [activePage, setActivePage] = useState<"login" | "signup-user" | "signup-business">("login");
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const email = data.email;
@@ -104,19 +96,6 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
     });
     handleForgot(email);
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/codePhone.json");
-        const data: CountryData[] = await response.json();
-        setCountriesData(data);
-      } catch (error) {
-        console.log("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
 
   return (
     <dialog id={name} className="modal">

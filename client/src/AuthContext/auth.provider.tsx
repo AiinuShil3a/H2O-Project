@@ -1,5 +1,6 @@
 import React, { useState, useEffect, ReactNode } from "react";
 import { createContext, FC } from "react";
+import { sendOTP } from "../Firebase/OTP";
 import Swal from "sweetalert2";
 
 type SignUpForm1Data = {
@@ -72,12 +73,6 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }
   }, [userInfo]);
 
-  const sendOTP = async (phone: string | undefined) => {
-    // แทนที่ด้วยการส่ง OTP ผ่านบริการ SMS จริงด้วย Firebase (หากไม่ทำลบเเม้นนี้)
-    console.log(`Sending OTP to ${phone}`);
-    return "123456"; // OTP จำลอง
-  };
-
   const handleSignUp = async (formData: SignUpFormData) => {
     try {
       const { email, password, type, phone } = formData;
@@ -96,7 +91,6 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           address:"",
           birthday:null,
         };
-        (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
       } else if (type === "form2") {
         const { businessName } = formData;
         newUser = {
@@ -109,15 +103,25 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           address:"",
           birthday:null,
         };
-        (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
       } else {
         throw new Error("Invalid form type");
       }
 
-      const otp = await sendOTP(phone);
+      (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+      (document.getElementById("Modal-RecaptchaVerifier") as HTMLDialogElement)?.showModal();
 
-      let inputOTP: string | null = null;
-      while (inputOTP !== otp) {
+      if(!phone){
+        throw new Error("Phone number is required");
+      }
+
+      const confirmationResult = await sendOTP(phone);
+      
+      if(!confirmationResult){
+        throw new Error("No confirmationResult");
+      }
+      let inputOTP: string = ""
+
+      while (inputOTP === "") {
         const { value } = await Swal.fire({
           title: "Enter your OTP",
           input: "text",
@@ -125,14 +129,20 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           inputPlaceholder: "Enter the OTP sent to your phone",
           showCancelButton: true,
         });
-        if (value === null) return;
+        if (value === undefined || value === "") {
+          inputOTP = ""
+        }
         inputOTP = value;
-        if (inputOTP !== otp) {
+        try {
+          await confirmationResult.confirm(inputOTP);
+          break;
+        } catch (error) {
           await Swal.fire({
             icon: "error",
             title: "Invalid OTP",
             text: "The OTP you entered is incorrect. Please try again.",
           });
+          inputOTP = ""
         }
       }
       setUserInfo(newUser);
@@ -251,8 +261,8 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
         const otp = await sendOTP(phone);
 
-        let inputOTP: string | null = null;
-        while (inputOTP !== otp) {
+        let inputOTP: string = ""
+        while (inputOTP !== "") {
           const { value } = await Swal.fire({
             title: "Enter your OTP",
             input: "text",
