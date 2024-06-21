@@ -48,7 +48,7 @@ const sendOTP = async (phone: string) => {
     recaptchaVerifier = new RecaptchaVerifier(auth, recaptchaContainer, {
       size: "normal",
       callback: () => {
-        (document.getElementById("Modal-RecaptchaVerifier") as HTMLDialogElement)?.close();
+        //(document.getElementById("Modal-RecaptchaVerifier") as HTMLDialogElement)?.close();
       },
       "expired-callback": () => {
         console.log("reCAPTCHA expired");
@@ -64,7 +64,7 @@ const sendOTP = async (phone: string) => {
     console.log("reCAPTCHA ถูก render แล้ว");
   }
 
-  try {
+/*   try {
     const confirmationResult = await signInWithPhoneNumber(
       auth,
       phone,
@@ -74,7 +74,7 @@ const sendOTP = async (phone: string) => {
     return confirmationResult;
   } catch (error) {
     console.error("เกิดข้อผิดพลาดในการส่ง OTP:", error);
-  }
+  } */
 };
 
 export { sendOTP };
