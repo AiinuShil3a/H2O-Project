@@ -2,7 +2,7 @@ import {
   auth,
   RecaptchaVerifier,
   signInWithPhoneNumber,
-} from "./firebase.config.js";
+} from "./firebase.config";
 import Swal from "sweetalert2";
 
 interface CustomWindow extends Window {
@@ -35,7 +35,7 @@ const sendOTP = async (phone: string) => {
     });
   }
 
-  const recaptchaContainer = document.getElementById("recaptcha-container")
+  const recaptchaContainer = document.getElementById("reCAPTCHA")
 
   if (!recaptchaContainer) {
     console.log("ไม่พบ element ที่ระบุสำหรับ reCAPTCHA");

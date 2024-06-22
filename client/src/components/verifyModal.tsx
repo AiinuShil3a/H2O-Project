@@ -1,0 +1,72 @@
+import React, { useRef, useEffect } from 'react';
+
+interface ModalProps {
+  showModal: boolean;
+  onClose: () => void;
+}
+
+const VerifyModal: React.FC<ModalProps> = ({ showModal, onClose }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
+
+  const handleModalClose = () => {
+    onClose();
+  };
+
+  useEffect(() => {
+    if (modalRef.current && backdropRef.current) {
+      if (showModal) {
+        modalRef.current.style.display = 'flex';
+        backdropRef.current.style.display = 'block';
+      } else {
+        modalRef.current.style.display = 'none';
+        backdropRef.current.style.display = 'none';
+      }
+    }
+  }, [showModal]);
+
+  return (
+    <>
+      <div
+        ref={modalRef}
+        className="fixed inset-0 z-50 hidden items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none"
+        style={{ display: 'none' }}
+      >
+        <div className="relative w-auto max-w-3xl mx-auto my-6">
+          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+            <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
+              <h4 className="text-2xl font-semibold">Modal title</h4>
+              <button
+                className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                onClick={handleModalClose}
+              >
+                <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                  &times;
+                </span>
+              </button>
+            </div>
+            <div className="relative p-6 flex-auto">
+              <div id='reCAPTCHA' className="flex items-center justify-center" />
+            </div>
+            <div className="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">
+              <button
+                className="bg-dark text-white active:bg-gray-600 font-bold uppercase text-sm px-6 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                type="button"
+                onClick={handleModalClose}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        ref={backdropRef}
+        className="fixed inset-0 z-40 bg-dark bg-opacity-50"
+        style={{ display: 'none', backdropFilter: 'blur(5px)' }}
+      ></div>
+    </>
+  );
+};
+
+export default VerifyModal;

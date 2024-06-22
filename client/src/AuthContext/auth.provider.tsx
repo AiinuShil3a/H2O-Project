@@ -1,4 +1,5 @@
 import React, { useState, useEffect, ReactNode } from "react";
+import VerifyModal from "../components/verifyModal";
 import { createContext, FC } from "react";
 import { sendOTP } from "../Firebase/OTP";
 import Swal from "sweetalert2";
@@ -62,6 +63,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [thisPage, setThisPage] = useState<string>("");
   const [whatUser, setWhatUser] = useState<User[]>([]);
   const [reload, setReload] = useState<boolean>(false);
+  const [showModalVerify, setShowModalVerify] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<User | null>(() => {
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
@@ -108,10 +110,11 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       }
 
       (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
-      (document.getElementById("Modal-RecaptchaVerifier") as HTMLDialogElement)?.showModal();
 
       if(!phone){
         throw new Error("Phone number is required");
+      }else{
+        setShowModalVerify(true)
       }
 
       const confirmationResult = await sendOTP(phone);
@@ -384,7 +387,10 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={authInfo}>
+      {children}
+      <VerifyModal showModal={showModalVerify} onClose={() => setShowModalVerify(false)} />
+    </AuthContext.Provider>
   );
 };
 
