@@ -66,6 +66,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [thisPage, setThisPage] = useState<string>("");
   const [messageOTP, setMessageOTP] = useState();
   const [whatUser, setWhatUser] = useState<User[]>([]);
+  const [dataRegister, setDataRegister] = useState<User | null>();
   const [reload, setReload] = useState<boolean>(false);
   const [isOTPVarify, setIsOTPVarify] = useState<boolean>(false);
   const [showModalVerify, setShowModalVerify] = useState<boolean>(false);
@@ -151,14 +152,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         }
         const confirmationResult = await sendOTP(newPhone , openInputOTP);
         setMessageOTP(confirmationResult)
-
-
-        setUserInfo(newUser);
-        Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: "Sign up successful!",
-        });
+        setDataRegister(newUser)
       } else {
         Swal.fire({
           icon: "error",
@@ -419,6 +413,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         onClose={() => setShowModalOTP(false)}
         messageOTP={messageOTP}
         invalidOTP={() => invalidOTP()}
+        dataRegister={dataRegister}
       />
     </AuthContext.Provider>
   );

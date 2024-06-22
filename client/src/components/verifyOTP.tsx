@@ -12,6 +12,7 @@ const VerifyModal: React.FC<ModalProps> = ({
   onClose,
   messageOTP,
   invalidOTP,
+  dataRegister,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -62,7 +63,7 @@ const VerifyModal: React.FC<ModalProps> = ({
     const verifyAndProcessOTP = async () => {
       if (fullOTP.length === 6) {
         try {
-          await verifyOTP(messageOTP, fullOTP , invalidOTP , formatOTP);
+          await verifyOTP(messageOTP, fullOTP , invalidOTP , formatOTP , dataRegister , onClose);
         } catch (error) {
           console.error("Error verifying OTP:", error);
         }

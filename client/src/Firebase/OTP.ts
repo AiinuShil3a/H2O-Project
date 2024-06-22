@@ -3,6 +3,7 @@ import {
   RecaptchaVerifier,
   signInWithPhoneNumber,
 } from "./firebase.config";
+import Swal from "sweetalert2";
 
 interface CustomWindow extends Window {
   recaptchaVerifier?: RecaptchaVerifier;
@@ -56,16 +57,45 @@ const sendOTP = async (phone: string, openInputOTP: () => void) => {
   }
 };
 
-const verifyOTP = async (confirmationResult: any, otp: string , invalidOTP , formatOTP) => {
+const verifyOTP = async (
+  confirmationResult: any,
+  otp: string,
+  invalidOTP,
+  formatOTP,
+  userData,
+  onClose,
+) => {
   console.log(otp);
   try {
     await confirmationResult.confirm(otp);
-    console.log("ยืนยัน OTP สำเร็จ");
+    try {
+      const response = await fetch("/userData.json", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      } else if (response.ok) {
+        onClose();
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Sign up successful!",
+        });
+      }
+      const data = await response.json();
+      console.log("Registration successful:", data);
+    } catch (error) {
+      console.error("Error registering user:", error);
+    }
   } catch (error) {
     formatOTP();
     invalidOTP();
   }
-}
+};
 
-
-export { sendOTP , verifyOTP };
+export { sendOTP, verifyOTP };
