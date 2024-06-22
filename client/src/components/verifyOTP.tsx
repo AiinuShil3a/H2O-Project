@@ -47,6 +47,10 @@ const VerifyModal: React.FC<ModalProps> = ({ showModal, onClose }) => {
       }
     }
     inputRef.current?.focus();
+    const fullOTP = otp.join('');
+    if(fullOTP.length === 6){
+      console.log(fullOTP);
+    }    
   }, [activeOTPIndex, showModal]);
 
   return (
