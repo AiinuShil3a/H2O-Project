@@ -10,6 +10,10 @@ interface CustomWindow extends Window {
   recaptchaWidgetId?: number;
 }
 
+interface ConfirmationResult {
+  confirm: (verificationCode: string) => Promise<firebase.auth.UserCredential>;
+}
+
 declare let window: CustomWindow;
 
 const sendOTP = async (phone: string, openInputOTP: () => void) => {
@@ -101,3 +105,4 @@ const verifyOTP = async (
 };
 
 export { sendOTP, verifyOTP };
+export type { ConfirmationResult };
