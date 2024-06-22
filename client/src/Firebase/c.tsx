@@ -1,11 +1,6 @@
-import {
-  auth,
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
-} from "./firebase.config";
+import { auth, RecaptchaVerifier, signInWithPhoneNumber } from "./firebase.config";
 import Swal from "sweetalert2";
 import firebase from "firebase/compat/app";
-import { User } from "../AuthContext/auth.provider"
 
 interface CustomWindow extends Window {
   recaptchaVerifier?: RecaptchaVerifier;
@@ -49,8 +44,9 @@ const sendOTP = async (phone: string, openInputOTP: () => void): Promise<Confirm
   }
 
   try {
-    await signInWithPhoneNumber(auth,phone,recaptchaVerifier);
+    const confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
     console.log("OTP ส่งเรียบร้อยแล้ว");
+    return confirmationResult;
   } catch (error) {
     console.error("เกิดข้อผิดพลาดในการส่ง OTP:", error);
   }
@@ -59,10 +55,10 @@ const sendOTP = async (phone: string, openInputOTP: () => void): Promise<Confirm
 const verifyOTP = async (
   confirmationResult: ConfirmationResult,
   otp: string,
-  invalidOTP:() => void,
-  formatOTP:() => void,
-  userData:User|null,
-  onClose:() => void,
+  invalidOTP: () => void,
+  formatOTP: () => void,
+  userData: User,
+  onClose: () => void
 ) => {
   console.log(otp);
   try {

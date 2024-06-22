@@ -6,13 +6,13 @@ import {
 } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD0hEZRkUc8Cp8eYzykqno8m3HZ354eml4",
-  authDomain: "opop-8e793.firebaseapp.com",
-  projectId: "opop-8e793",
-  storageBucket: "opop-8e793.appspot.com",
-  messagingSenderId: "34008444180",
-  appId: "1:34008444180:web:c5c7cf7fae1001f462a601",
-  measurementId: "G-ENJX03QZDG"
+  apiKey: "AIzaSyD56h2hgGd77nc4TbiYSn4f2yB6naqvp1Q",
+  authDomain: "finaltesting-d434e.firebaseapp.com",
+  projectId: "finaltesting-d434e",
+  storageBucket: "finaltesting-d434e.appspot.com",
+  messagingSenderId: "29211000858",
+  appId: "1:29211000858:web:0c6bf0c2dd58aeaa8dd1a3",
+  measurementId: "G-X4G9HREYF9"
 };
 
 const app = initializeApp(firebaseConfig);

@@ -82,19 +82,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }
   }, [userInfo]);
 
-  const invalidOTP =() => {
-    setShowModalOTP(false)
-    Swal.fire({
-      icon: "error",
-      title: "Invalid OTP",
-      text: "Please check the otp number again.",
-      confirmButtonText: "OK",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setShowModalOTP(true)
-      }
-    });
-  }
+
 
   const handleSignUp = async (formData: SignUpFormData) => {
     try {
@@ -222,6 +210,19 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const invalidOTP =() => {
+    setShowModalOTP(false)
+    Swal.fire({
+      icon: "error",
+      title: "Invalid OTP",
+      text: "Please check the otp number again.",
+      confirmButtonText: "OK",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setShowModalOTP(true)
+      }
+    });
+  }
 
   const handleLogout = () => {
     setUserInfo(null);
@@ -265,3 +266,5 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 };
 
 export default AuthProvider;
+export type { User };
+

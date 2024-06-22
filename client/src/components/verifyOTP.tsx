@@ -1,19 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import { verifyOTP } from "../Firebase/OTP";
+import { User } from "../AuthContext/auth.provider"
+import { ConfirmationResult } from "../Firebase/OTP";
+
 
 interface ModalProps {
   showModal: boolean;
   onClose: () => void;
+  messageOTP: ConfirmationResult | undefined;
+  invalidOTP: () => void;
+  dataRegister: User | null;
 }
 
+
 let currentOTPIndex: number = 0;
-const VerifyModal: React.FC<ModalProps> = ({
-  showModal,
-  onClose,
-  messageOTP,
-  invalidOTP,
-  dataRegister,
-}) => {
+const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalidOTP,dataRegister}) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -70,7 +71,7 @@ const VerifyModal: React.FC<ModalProps> = ({
     inputRef.current?.focus();
     const fullOTP = otp.join("");
     const verifyAndProcessOTP = async () => {
-      if (fullOTP.length === 6) {
+      if (fullOTP.length === 6 && messageOTP) {
         try {
           await verifyOTP(messageOTP, fullOTP , invalidOTP , formatOTP , dataRegister , handleModalClose);
         } catch (error) {
