@@ -62,6 +62,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 
 const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [thisPage, setThisPage] = useState<string>("");
+  const [messageOTP, setMessageOTP] = useState();
   const [whatUser, setWhatUser] = useState<User[]>([]);
   const [reload, setReload] = useState<boolean>(false);
   const [showModalVerify, setShowModalVerify] = useState<boolean>(false);
@@ -132,36 +133,8 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           setShowModalOTP(true)
         }
         const confirmationResult = await sendOTP(newPhone , openInputOTP);
+        setMessageOTP(confirmationResult)
 
-        if (!confirmationResult) {
-          throw new Error("No confirmationResult");
-        }
-        let inputOTP: string = "";
-
-        while (inputOTP === "") {
-          const { value } = await Swal.fire({
-            title: "Enter your OTP",
-            input: "text",
-            inputLabel: "OTP",
-            inputPlaceholder: "Enter the OTP sent to your phone",
-            showCancelButton: true,
-          });
-          if (value === undefined || value === "") {
-            inputOTP = "";
-          }
-          inputOTP = value;
-          try {
-            await confirmationResult.confirm(inputOTP);
-            break;
-          } catch (error) {
-            await Swal.fire({
-              icon: "error",
-              title: "Invalid OTP",
-              text: "The OTP you entered is incorrect. Please try again.",
-            });
-            inputOTP = "";
-          }
-        }
         setUserInfo(newUser);
         Swal.fire({
           icon: "success",
@@ -424,6 +397,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       <OTPModal
         showModal={showModalOTP}
         onClose={() => setShowModalOTP(false)}
+        messageOTP={messageOTP}
       />
     </AuthContext.Provider>
   );

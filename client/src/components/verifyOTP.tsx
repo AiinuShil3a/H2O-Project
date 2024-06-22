@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
+import { verifyOTP } from "../Firebase/OTP";
+
 
 interface ModalProps {
   showModal: boolean;
@@ -6,7 +8,7 @@ interface ModalProps {
 }
 
 let currentOTPIndex: number = 0;
-const VerifyModal: React.FC<ModalProps> = ({ showModal, onClose }) => {
+const VerifyModal: React.FC<ModalProps> = ({ showModal, onClose , messageOTP }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -48,9 +50,23 @@ const VerifyModal: React.FC<ModalProps> = ({ showModal, onClose }) => {
     }
     inputRef.current?.focus();
     const fullOTP = otp.join('');
-    if(fullOTP.length === 6){
-      console.log(fullOTP);
-    }    
+  // Verify OTP when full OTP is 6 digits
+  const verifyAndProcessOTP = async () => {
+    if (fullOTP.length === 6) {
+      try {
+        // Assuming verifyOTP returns a promise
+        await verifyOTP(messageOTP, fullOTP);
+        
+        // Perform actions after OTP verification if needed
+        // Example: Navigate to the next step, close modal, etc.
+      } catch (error) {
+        console.error('Error verifying OTP:', error);
+        // Handle error if necessary
+      }
+    }
+  };
+
+  verifyAndProcessOTP();
   }, [activeOTPIndex, showModal]);
 
   return (

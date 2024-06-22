@@ -43,7 +43,7 @@ const sendOTP = async (phone: string, openInputOTP: () => void) => {
     console.log("reCAPTCHA ถูก render แล้ว");
   }
 
-/*   try {
+  try {
     const confirmationResult = await signInWithPhoneNumber(
       auth,
       phone,
@@ -53,7 +53,19 @@ const sendOTP = async (phone: string, openInputOTP: () => void) => {
     return confirmationResult;
   } catch (error) {
     console.error("เกิดข้อผิดพลาดในการส่ง OTP:", error);
-  } */
+  }
 };
 
-export { sendOTP };
+const verifyOTP = async (confirmationResult: any, otp: string) => {
+  try {
+    await confirmationResult.confirm(otp);
+    console.log("ยืนยัน OTP สำเร็จ");
+    // ทำการเชื่อมโยงผู้ใช้หรือทำอย่างอื่นตามที่ต้องการหลังจากยืนยัน OTP สำเร็จ
+  } catch (error) {
+    console.error("เกิดข้อผิดพลาดในการยืนยัน OTP:", error);
+    // แสดงข้อความหรือกระบวนการแก้ไขข้อผิดพลาดต่อไป
+  }
+}
+
+
+export { sendOTP , verifyOTP };
