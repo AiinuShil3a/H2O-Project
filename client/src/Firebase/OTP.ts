@@ -3,7 +3,6 @@ import {
   RecaptchaVerifier,
   signInWithPhoneNumber,
 } from "./firebase.config";
-import Swal from "sweetalert2";
 
 interface CustomWindow extends Window {
   recaptchaVerifier?: RecaptchaVerifier;
@@ -12,12 +11,10 @@ interface CustomWindow extends Window {
 
 declare let window: CustomWindow;
 
-const sendOTP = async (phone: string , openInputOTP:() => void) => {
+const sendOTP = async (phone: string, openInputOTP: () => void) => {
   console.log(phone);
-  
 
-
-  const recaptchaContainer = document.getElementById("reCAPTCHA")
+  const recaptchaContainer = document.getElementById("reCAPTCHA");
 
   if (!recaptchaContainer) {
     console.log("ไม่พบ element ที่ระบุสำหรับ reCAPTCHA");
@@ -46,7 +43,7 @@ const sendOTP = async (phone: string , openInputOTP:() => void) => {
     console.log("reCAPTCHA ถูก render แล้ว");
   }
 
-/*   try {
+  try {
     const confirmationResult = await signInWithPhoneNumber(
       auth,
       phone,
@@ -56,7 +53,7 @@ const sendOTP = async (phone: string , openInputOTP:() => void) => {
     return confirmationResult;
   } catch (error) {
     console.error("เกิดข้อผิดพลาดในการส่ง OTP:", error);
-  } */
+  }
 };
 
 export { sendOTP };
