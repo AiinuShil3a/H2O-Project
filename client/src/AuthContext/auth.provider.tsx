@@ -82,8 +82,6 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }
   }, [userInfo]);
 
-
-
   const handleSignUp = async (formData: SignUpFormData) => {
     try {
       const { email, password, type, phone } = formData;

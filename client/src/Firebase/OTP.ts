@@ -64,7 +64,6 @@ const verifyOTP = async (
   userData:User|null,
   onClose:() => void,
 ) => {
-  console.log(otp);
   try {
     const connect = await confirmationResult.confirm(otp);
     if (connect) {
