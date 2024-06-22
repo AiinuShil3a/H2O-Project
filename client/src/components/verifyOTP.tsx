@@ -71,7 +71,7 @@ const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalid
     inputRef.current?.focus();
     const fullOTP = otp.join("");
     const verifyAndProcessOTP = async () => {
-      console.log(messageOTP);
+      //if (messageOTP === undefined) return;
       if (fullOTP.length === 6) {
         try {
           await verifyOTP(messageOTP, fullOTP , invalidOTP , formatOTP , dataRegister , handleModalClose);
