@@ -31,7 +31,7 @@ const OTPField = () => {
   }, [activeOTPIndex]);
 
   return (
-    <div>
+    <div className={"h-screen flex justify-center items-center space-x-2"}>
       {otp.map((_, index) => {
         return (
           <React.Fragment key={index}>

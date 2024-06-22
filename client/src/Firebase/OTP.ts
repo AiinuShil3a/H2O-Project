@@ -12,7 +12,7 @@ interface CustomWindow extends Window {
 
 declare let window: CustomWindow;
 
-const sendOTP = async (phone: string) => {
+const sendOTP = async (phone: string , openInputOTP:() => void) => {
   console.log(phone);
   
 
@@ -30,7 +30,7 @@ const sendOTP = async (phone: string) => {
     recaptchaVerifier = new RecaptchaVerifier(auth, recaptchaContainer, {
       size: "normal",
       callback: () => {
-        //(document.getElementById("Modal-RecaptchaVerifier") as HTMLDialogElement)?.close();
+        openInputOTP();
       },
       "expired-callback": () => {
         console.log("reCAPTCHA expired");

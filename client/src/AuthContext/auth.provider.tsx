@@ -1,5 +1,6 @@
 import React, { useState, useEffect, ReactNode } from "react";
 import VerifyModal from "../components/verifyModal";
+import OTPModal from "../components/verifyOTP";
 import { createContext, FC } from "react";
 import { sendOTP } from "../Firebase/OTP";
 import Swal from "sweetalert2";
@@ -64,6 +65,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [whatUser, setWhatUser] = useState<User[]>([]);
   const [reload, setReload] = useState<boolean>(false);
   const [showModalVerify, setShowModalVerify] = useState<boolean>(false);
+  const [showModalOTP, setShowModalOTP] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<User | null>(() => {
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
@@ -124,7 +126,12 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           newPhone = "+66" + phone;
           setShowModalVerify(true);
         }
-        const confirmationResult = await sendOTP(newPhone);
+
+        const openInputOTP = () => {
+          setShowModalVerify(false)
+          setShowModalOTP(true)
+        }
+        const confirmationResult = await sendOTP(newPhone , openInputOTP);
 
         if (!confirmationResult) {
           throw new Error("No confirmationResult");
@@ -409,10 +416,14 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   return (
     <AuthContext.Provider value={authInfo}>
-      {children}
       <VerifyModal
         showModal={showModalVerify}
         onClose={() => setShowModalVerify(false)}
+      />
+        {children}
+      <OTPModal
+        showModal={showModalOTP}
+        onClose={() => setShowModalOTP(false)}
       />
     </AuthContext.Provider>
   );
