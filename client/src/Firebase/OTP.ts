@@ -13,27 +13,9 @@ interface CustomWindow extends Window {
 declare let window: CustomWindow;
 
 const sendOTP = async (phone: string) => {
-  if (phone.length <= 10 && phone.length >= 9) {
-    if (phone.startsWith("0")) {
-      phone = "+66" + phone.substr(1);
-    } else if (!phone.startsWith("0")) {
-      phone = "+66" + phone;
-    }
-  } else {
-    (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
-    (document.getElementById("Modal-RecaptchaVerifier") as HTMLDialogElement)?.close();
+  console.log(phone);
+  
 
-    Swal.fire({
-      icon: "error",
-      title: "หมายเลขโทรศัพท์ไม่ถูกต้อง",
-      text: "กรุณาตรวจสอบหมายเลขโทรศัพท์อีกครั้ง",
-      confirmButtonText: "โอเค",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
-      }
-    });
-  }
 
   const recaptchaContainer = document.getElementById("reCAPTCHA")
 

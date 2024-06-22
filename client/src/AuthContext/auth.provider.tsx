@@ -90,8 +90,8 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           phone,
           role: "user",
           image: "",
-          address:"",
-          birthday:null,
+          address: "",
+          birthday: null,
         };
       } else if (type === "form2") {
         const { businessName } = formData;
@@ -102,8 +102,8 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           phone,
           role: "business",
           image: "",
-          address:"",
-          birthday:null,
+          address: "",
+          birthday: null,
         };
       } else {
         throw new Error("Invalid form type");
@@ -111,49 +111,70 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
       (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
 
-      if(!phone){
+      if (!phone) {
         throw new Error("Phone number is required");
-      }else{
-        setShowModalVerify(true)
       }
 
-      const confirmationResult = await sendOTP(phone);
-      
-      if(!confirmationResult){
-        throw new Error("No confirmationResult");
-      }
-      let inputOTP: string = ""
-
-      while (inputOTP === "") {
-        const { value } = await Swal.fire({
-          title: "Enter your OTP",
-          input: "text",
-          inputLabel: "OTP",
-          inputPlaceholder: "Enter the OTP sent to your phone",
-          showCancelButton: true,
-        });
-        if (value === undefined || value === "") {
-          inputOTP = ""
+      if (phone.length <= 10 && phone.length >= 9) {
+        let newPhone: string = "";
+        if (phone.startsWith("0")) {
+          newPhone = "+66" + phone.substr(1);
+          setShowModalVerify(true);
+        } else if (!phone.startsWith("0")) {
+          newPhone = "+66" + phone;
+          setShowModalVerify(true);
         }
-        inputOTP = value;
-        try {
-          await confirmationResult.confirm(inputOTP);
-          break;
-        } catch (error) {
-          await Swal.fire({
-            icon: "error",
-            title: "Invalid OTP",
-            text: "The OTP you entered is incorrect. Please try again.",
+        const confirmationResult = await sendOTP(newPhone);
+
+        if (!confirmationResult) {
+          throw new Error("No confirmationResult");
+        }
+        let inputOTP: string = "";
+
+        while (inputOTP === "") {
+          const { value } = await Swal.fire({
+            title: "Enter your OTP",
+            input: "text",
+            inputLabel: "OTP",
+            inputPlaceholder: "Enter the OTP sent to your phone",
+            showCancelButton: true,
           });
-          inputOTP = ""
+          if (value === undefined || value === "") {
+            inputOTP = "";
+          }
+          inputOTP = value;
+          try {
+            await confirmationResult.confirm(inputOTP);
+            break;
+          } catch (error) {
+            await Swal.fire({
+              icon: "error",
+              title: "Invalid OTP",
+              text: "The OTP you entered is incorrect. Please try again.",
+            });
+            inputOTP = "";
+          }
         }
+        setUserInfo(newUser);
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Sign up successful!",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid Phone Number",
+          text: "Please check the phone number again.",
+          confirmButtonText: "OK",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            (
+              document.getElementById("Get-Started") as HTMLDialogElement
+            )?.showModal();
+          }
+        });
       }
-      setUserInfo(newUser);
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "Sign up successful!",
-      });
     } catch (error) {
       console.error("Error:", (error as Error).message);
       Swal.fire({
@@ -217,18 +238,18 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       );
       if (user.length > 1) {
         const { isConfirmed, isDenied, isDismissed } = await Swal.fire({
-          title: 'Select Role',
+          title: "Select Role",
           showDenyButton: true,
           showCancelButton: true,
-          confirmButtonText: 'User',
-          denyButtonText: 'Business',
-          cancelButtonText: 'All User',
+          confirmButtonText: "User",
+          denyButtonText: "Business",
+          cancelButtonText: "All User",
           customClass: {
-            confirmButton: 'user-button',
-            denyButton: 'business-button',
-          }
+            confirmButton: "user-button",
+            denyButton: "business-button",
+          },
         });
-      
+
         if (isConfirmed) {
           const role = "user";
           console.log(role);
@@ -264,7 +285,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
         const otp = await sendOTP(phone);
 
-        let inputOTP: string = ""
+        let inputOTP: string = "";
         while (inputOTP !== "") {
           const { value } = await Swal.fire({
             title: "Enter your OTP",
@@ -389,7 +410,10 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   return (
     <AuthContext.Provider value={authInfo}>
       {children}
-      <VerifyModal showModal={showModalVerify} onClose={() => setShowModalVerify(false)} />
+      <VerifyModal
+        showModal={showModalVerify}
+        onClose={() => setShowModalVerify(false)}
+      />
     </AuthContext.Provider>
   );
 };
