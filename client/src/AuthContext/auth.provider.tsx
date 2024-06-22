@@ -150,9 +150,13 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           setShowModalVerify(false)
           setShowModalOTP(true)
         }
-        const confirmationResult = await sendOTP(newPhone , openInputOTP);
-        setMessageOTP(confirmationResult)
-        setDataRegister(newUser)
+        try {
+          const confirmationResult = await sendOTP(newPhone , openInputOTP);
+          setMessageOTP(confirmationResult)
+          setDataRegister(newUser)
+        } catch (error) {
+          console.error("Error:", (error as Error).message);
+        }
       } else {
         Swal.fire({
           icon: "error",

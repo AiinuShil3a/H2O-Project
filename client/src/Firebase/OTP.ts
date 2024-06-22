@@ -13,8 +13,6 @@ interface CustomWindow extends Window {
 declare let window: CustomWindow;
 
 const sendOTP = async (phone: string, openInputOTP: () => void) => {
-  console.log(phone);
-
   const recaptchaContainer = document.getElementById("reCAPTCHA");
 
   if (!recaptchaContainer) {
@@ -63,34 +61,38 @@ const verifyOTP = async (
   invalidOTP,
   formatOTP,
   userData,
-  onClose,
+  onClose
 ) => {
   console.log(otp);
   try {
-    await confirmationResult.confirm(otp);
-    try {
-      const response = await fetch("/userData.json", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      } else if (response.ok) {
-        onClose();
-        Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: "Sign up successful!",
+    const connect = await confirmationResult.confirm(otp);
+    if (connect) {
+      onClose();
+      try {
+        const response = await fetch("/userData.json", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
         });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        } else if (response.ok) {
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Sign up successful!",
+          });
+        }
+        const data = await response.json();
+        console.log("Registration successful:", data);
+      } catch (error) {
+        console.error("Error registering user:", error);
       }
-      const data = await response.json();
-      console.log("Registration successful:", data);
-    } catch (error) {
-      console.error("Error registering user:", error);
+    } else {
+      return;
     }
   } catch (error) {
     formatOTP();

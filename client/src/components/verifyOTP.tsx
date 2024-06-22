@@ -39,7 +39,16 @@ const VerifyModal: React.FC<ModalProps> = ({
     if (e.key === "Backspace") setActiveOTPIndex(currentOTPIndex - 1);
   };
 
+  const handleModalCloseAndOpenRegister = () => {
+    setOtp(new Array(6).fill(""));
+    setActiveOTPIndex(0);
+    onClose();
+    (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
+  };
+
   const handleModalClose = () => {
+    setOtp(new Array(6).fill(""));
+    setActiveOTPIndex(0);
     onClose();
   };
 
@@ -63,7 +72,7 @@ const VerifyModal: React.FC<ModalProps> = ({
     const verifyAndProcessOTP = async () => {
       if (fullOTP.length === 6) {
         try {
-          await verifyOTP(messageOTP, fullOTP , invalidOTP , formatOTP , dataRegister , onClose);
+          await verifyOTP(messageOTP, fullOTP , invalidOTP , formatOTP , dataRegister , handleModalClose);
         } catch (error) {
           console.error("Error verifying OTP:", error);
         }
@@ -86,7 +95,7 @@ const VerifyModal: React.FC<ModalProps> = ({
               <h4 className="text-2xl font-semibold">Modal OTP</h4>
               <button
                 className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                onClick={handleModalClose}
+                onClick={handleModalCloseAndOpenRegister}
               >
                 <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
                   &times;
@@ -120,7 +129,7 @@ const VerifyModal: React.FC<ModalProps> = ({
               <button
                 className="bg-dark text-white active:bg-gray-600 font-bold uppercase text-sm px-6 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
                 type="button"
-                onClick={handleModalClose}
+                onClick={handleModalCloseAndOpenRegister}
               >
                 Close
               </button>
