@@ -56,14 +56,14 @@ const sendOTP = async (phone: string, openInputOTP: () => void) => {
   }
 };
 
-const verifyOTP = async (confirmationResult: any, otp: string) => {
+const verifyOTP = async (confirmationResult: any, otp: string , invalidOTP , formatOTP) => {
+  console.log(otp);
   try {
     await confirmationResult.confirm(otp);
     console.log("ยืนยัน OTP สำเร็จ");
-    // ทำการเชื่อมโยงผู้ใช้หรือทำอย่างอื่นตามที่ต้องการหลังจากยืนยัน OTP สำเร็จ
   } catch (error) {
-    console.error("เกิดข้อผิดพลาดในการยืนยัน OTP:", error);
-    // แสดงข้อความหรือกระบวนการแก้ไขข้อผิดพลาดต่อไป
+    formatOTP();
+    invalidOTP();
   }
 }
 

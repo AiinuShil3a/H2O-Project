@@ -42,6 +42,8 @@ interface AuthContextType {
   setThisPage: React.Dispatch<React.SetStateAction<string>>;
   reload: boolean;
   setReload: React.Dispatch<React.SetStateAction<boolean>>;
+  isOTPVarify: boolean;
+  setIsOTPVarify: React.Dispatch<React.SetStateAction<boolean>>;
   userInfo: User | null;
   setUserInfo: React.Dispatch<React.SetStateAction<User | null>>;
   handleLogin: (email: string, password: string) => Promise<void>;
@@ -65,6 +67,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [messageOTP, setMessageOTP] = useState();
   const [whatUser, setWhatUser] = useState<User[]>([]);
   const [reload, setReload] = useState<boolean>(false);
+  const [isOTPVarify, setIsOTPVarify] = useState<boolean>(false);
   const [showModalVerify, setShowModalVerify] = useState<boolean>(false);
   const [showModalOTP, setShowModalOTP] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<User | null>(() => {
@@ -77,6 +80,20 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem("user", JSON.stringify(userInfo));
     }
   }, [userInfo]);
+
+  const invalidOTP =() => {
+    setShowModalOTP(false)
+    Swal.fire({
+      icon: "error",
+      title: "Invalid OTP",
+      text: "Please check the otp number again.",
+      confirmButtonText: "OK",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setShowModalOTP(true)
+      }
+    });
+  }
 
   const handleSignUp = async (formData: SignUpFormData) => {
     try {
@@ -134,6 +151,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         }
         const confirmationResult = await sendOTP(newPhone , openInputOTP);
         setMessageOTP(confirmationResult)
+
 
         setUserInfo(newUser);
         Swal.fire({
@@ -385,6 +403,8 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     handleLogout,
     handleSignUp,
     handleForgot,
+    isOTPVarify,
+    setIsOTPVarify,
   };
 
   return (
@@ -398,6 +418,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         showModal={showModalOTP}
         onClose={() => setShowModalOTP(false)}
         messageOTP={messageOTP}
+        invalidOTP={() => invalidOTP()}
       />
     </AuthContext.Provider>
   );
