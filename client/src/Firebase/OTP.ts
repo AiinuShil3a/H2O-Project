@@ -2,9 +2,9 @@ import {
   auth,
   RecaptchaVerifier,
   signInWithPhoneNumber,
+  UserCredential,
 } from "./firebase.config";
 import Swal from "sweetalert2";
-import firebase from "firebase/compat/app";
 import { User } from "../AuthContext/auth.provider"
 
 interface CustomWindow extends Window {
@@ -13,7 +13,7 @@ interface CustomWindow extends Window {
 }
 
 interface ConfirmationResult {
-  confirm: (verificationCode: string) => Promise<firebase.auth.UserCredential>;
+  confirm: (verificationCode: string) => Promise<UserCredential>;
 }
 
 declare let window: CustomWindow;
@@ -49,8 +49,13 @@ const sendOTP = async (phone: string, openInputOTP: () => void): Promise<Confirm
   }
 
   try {
-    await signInWithPhoneNumber(auth,phone,recaptchaVerifier);
+    const confirmationResult = await signInWithPhoneNumber(
+      auth,
+      phone,
+      recaptchaVerifier
+    );
     console.log("OTP ส่งเรียบร้อยแล้ว");
+    return confirmationResult;
   } catch (error) {
     console.error("เกิดข้อผิดพลาดในการส่ง OTP:", error);
   }
@@ -64,6 +69,7 @@ const verifyOTP = async (
   userData:User|null,
   onClose:() => void,
 ) => {
+  console.log(otp);
   try {
     const connect = await confirmationResult.confirm(otp);
     if (connect) {

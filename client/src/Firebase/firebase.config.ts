@@ -4,6 +4,7 @@ import {
   RecaptchaVerifier,
   signInWithPhoneNumber,
 } from "firebase/auth";
+import { type UserCredential } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBhgQu1djZfiFYyojiegG0pY6ciylL3kk8",
@@ -17,5 +18,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const type = getAuth();
 
-export { app, auth, RecaptchaVerifier, signInWithPhoneNumber };
+export { app, auth, RecaptchaVerifier, signInWithPhoneNumber , type };
+export type { UserCredential };

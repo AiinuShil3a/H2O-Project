@@ -1,7 +1,6 @@
-import React, { useState, useEffect, ReactNode } from "react";
+import React, { useState, useEffect, ReactNode , createContext , FC } from "react";
 import VerifyModal from "../components/verifyModal";
 import OTPModal from "../components/verifyOTP";
-import { createContext, FC } from "react";
 import { sendOTP , ConfirmationResult } from "../Firebase/OTP";
 import Swal from "sweetalert2";
 
