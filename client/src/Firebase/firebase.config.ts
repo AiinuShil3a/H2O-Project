@@ -7,13 +7,13 @@ import {
 import { type UserCredential } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBUPCUf-x-jOcIhBFO3faNGIN-2Zhcyd80",
-  authDomain: "testting-15514.firebaseapp.com",
-  projectId: "testting-15514",
-  storageBucket: "testting-15514.appspot.com",
-  messagingSenderId: "507284016535",
-  appId: "1:507284016535:web:ef0e70071fb310191388d2",
-  measurementId: "G-C988XLWDTX"
+  apiKey: "AIzaSyCoD4PbErtkXG3PTWxceNLhmblCxJUWS4Q",
+  authDomain: "testing-2646a.firebaseapp.com",
+  projectId: "testing-2646a",
+  storageBucket: "testing-2646a.appspot.com",
+  messagingSenderId: "659342724256",
+  appId: "1:659342724256:web:99478583d5d27ddf5f8dc5",
+  measurementId: "G-BKKNPV4XZC"
 };
 
 const app = initializeApp(firebaseConfig);

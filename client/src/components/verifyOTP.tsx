@@ -3,7 +3,7 @@ import { verifyOTP } from "../Firebase/OTP";
 import { User } from "../AuthContext/auth.provider"
 import { ConfirmationResult } from "../Firebase/OTP";
 import { MdSecurity } from "react-icons/md";
-
+import Swal from "sweetalert2";
 
 interface ModalProps {
   showModal: boolean;
@@ -11,16 +11,18 @@ interface ModalProps {
   messageOTP: ConfirmationResult | undefined;
   invalidOTP: () => void;
   dataRegister: User | null;
+  setMessageOTPUndify: () => void;
 }
 
 
 let currentOTPIndex: number = 0;
-const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalidOTP,dataRegister}) => {
+const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalidOTP,dataRegister,setMessageOTPUndify}) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [activeOTPIndex, setActiveOTPIndex] = useState(0);
+  const [invalidCounter, setInvalidCounter] = useState(0);
   const [counter, setCounter] = useState(60);
 
   const handleOnChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +32,6 @@ const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalid
 
     if (!value) setActiveOTPIndex(currentOTPIndex - 1);
     else setActiveOTPIndex(currentOTPIndex + 1);
-
     setOtp(newOTP);
   };
 
@@ -54,12 +55,30 @@ const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalid
     setOtp(new Array(6).fill(""));
     setActiveOTPIndex(0);
     setCounter(60);
+    setMessageOTPUndify();
     onClose();
   };
 
   const formatOTP = () => {
     setOtp(new Array(6).fill(""));
     setActiveOTPIndex(0);
+  };
+
+  const invalidCounterUser = () => {
+    if(invalidCounter <= 1){
+      invalidOTP();
+      setInvalidCounter((prevCounter) => prevCounter + 1)
+    }else{
+      setInvalidCounter(0)
+      handleModalClose();
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "You entered the wrong OTP and exceeded the limit.",
+      }).then(() => {
+        (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
+      });
+    }
   };
 
   useEffect(() => {
@@ -74,10 +93,11 @@ const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalid
     }
     inputRef.current?.focus();
     const fullOTP = otp.join("");
+    console.log(messageOTP);
     const verifyAndProcessOTP = async () => {
       if (fullOTP.length === 6 && messageOTP) {
         try {
-          await verifyOTP(messageOTP, fullOTP , invalidOTP , formatOTP , dataRegister , handleModalClose);
+          await verifyOTP(messageOTP, fullOTP , invalidCounterUser , formatOTP , dataRegister , handleModalClose);
         } catch (error) {
           console.error("Error verifying OTP:", error);
         }
@@ -85,7 +105,7 @@ const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalid
     };
 
     verifyAndProcessOTP();
-  }, [activeOTPIndex, showModal , messageOTP]);
+  }, [activeOTPIndex, showModal , messageOTP , invalidCounter]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;

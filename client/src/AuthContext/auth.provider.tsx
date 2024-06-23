@@ -260,6 +260,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         showModal={showModalOTP}
         onClose={() => setShowModalOTP(false)}
         messageOTP={messageOTP}
+        setMessageOTPUndify={() => setMessageOTP(undefined)}
         invalidOTP={() => invalidOTP()}
         dataRegister={dataRegister}
       />
