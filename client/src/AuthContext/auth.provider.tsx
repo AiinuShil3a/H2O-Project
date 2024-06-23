@@ -135,8 +135,13 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           setShowModalVerify(false)
           setShowModalOTP(true)
         }
+
+        const invalidMessageOTP = () => {
+          setShowModalVerify(false)
+        }
+
         try {
-          const confirmationResult = await sendOTP(newPhone , openInputOTP);
+          const confirmationResult = await sendOTP(newPhone , openInputOTP , invalidMessageOTP);
           setMessageOTP(confirmationResult)
           setDataRegister(newUser)
         } catch (error) {

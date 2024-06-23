@@ -18,9 +18,10 @@ interface ConfirmationResult {
 
 declare let window: CustomWindow;
 
-const sendOTP = async (phone: string, openInputOTP: () => void): Promise<ConfirmationResult | undefined> => {
+const sendOTP = async (phone: string , openInputOTP: () => void , invalidMessageOTP: () => void): Promise<ConfirmationResult | undefined> => {
   const recaptchaContainer = document.getElementById("reCAPTCHA");
-
+  console.log(auth);
+  
   if (!recaptchaContainer) {
     console.log("ไม่พบ element ที่ระบุสำหรับ reCAPTCHA");
     return;
@@ -32,7 +33,7 @@ const sendOTP = async (phone: string, openInputOTP: () => void): Promise<Confirm
     recaptchaVerifier = new RecaptchaVerifier(auth, recaptchaContainer, {
       size: "normal",
       callback: () => {
-        openInputOTP();
+        console.log("reCAPTCHA verify");
       },
       "expired-callback": () => {
         console.log("reCAPTCHA expired");
@@ -55,9 +56,20 @@ const sendOTP = async (phone: string, openInputOTP: () => void): Promise<Confirm
       recaptchaVerifier
     );
     console.log("OTP ส่งเรียบร้อยแล้ว");
+    openInputOTP();
     return confirmationResult;
   } catch (error) {
     console.error("เกิดข้อผิดพลาดในการส่ง OTP:", error);
+    console.log(recaptchaVerifier);
+    
+    invalidMessageOTP();
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Failed to send OTP. Please try again.",
+    }).then(() => {
+      (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
+    });
   }
 };
 
