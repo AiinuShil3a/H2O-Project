@@ -53,6 +53,7 @@ const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalid
   const handleModalClose = () => {
     setOtp(new Array(6).fill(""));
     setActiveOTPIndex(0);
+    setCounter(60);
     onClose();
   };
 
