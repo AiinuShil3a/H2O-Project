@@ -81,33 +81,34 @@ const verifyOTP = async (
   userData:User|null,
   onClose:() => void,
 ) => {
-  console.log(otp);
   try {
     const connect = await confirmationResult.confirm(otp);
     if (connect) {
       onClose();
-      try {
-        const response = await fetch("/userData.json", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userData),
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-        } else if (response.ok) {
-          Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "Sign up successful!",
+      if(userData){
+        try {
+          const response = await fetch("/userData.json", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userData),
           });
+  
+          if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+          } else if (response.ok) {
+            Swal.fire({
+              icon: "success",
+              title: "Success",
+              text: "Sign up successful!",
+            });
+          }
+          const data = await response.json();
+          console.log("Registration successful:", data);
+        } catch (error) {
+          console.error("Error registering user:", error);
         }
-        const data = await response.json();
-        console.log("Registration successful:", data);
-      } catch (error) {
-        console.error("Error registering user:", error);
       }
     } else {
       return;

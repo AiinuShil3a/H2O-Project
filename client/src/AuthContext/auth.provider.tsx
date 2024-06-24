@@ -1,7 +1,13 @@
-import React, { useState, useEffect, ReactNode , createContext , FC } from "react";
+import React, {
+  useState,
+  useEffect,
+  ReactNode,
+  createContext,
+  FC,
+} from "react";
 import VerifyModal from "../components/verifyModal";
 import OTPModal from "../components/verifyOTP";
-import { sendOTP , ConfirmationResult } from "../Firebase/OTP";
+import { sendOTP, ConfirmationResult } from "../Firebase/OTP";
 import Swal from "sweetalert2";
 
 type SignUpForm1Data = {
@@ -46,7 +52,7 @@ interface AuthContextType {
   userInfo: User | null;
   setUserInfo: React.Dispatch<React.SetStateAction<User | null>>;
   handleLogin: (email: string, password: string) => Promise<void>;
- // handleForgot: (email: string) => Promise<void>;
+  handleForgot: (email: string) => Promise<void>;
   handleSignUp: (formData: SignUpFormData) => Promise<void>;
   whatUser: User[];
   setWhatUser: React.Dispatch<React.SetStateAction<User[]>>;
@@ -64,8 +70,10 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [thisPage, setThisPage] = useState<string>("");
   const [whatUser, setWhatUser] = useState<User[]>([]);
-  const [messageOTP, setMessageOTP] = useState<ConfirmationResult | undefined>(undefined);
-  const [dataRegister, setDataRegister] = useState<User | null>(null);  
+  const [messageOTP, setMessageOTP] = useState<ConfirmationResult | undefined>(
+    undefined
+  );
+  const [dataRegister, setDataRegister] = useState<User | null>(null);
   const [reload, setReload] = useState<boolean>(false);
   const [isOTPVarify, setIsOTPVarify] = useState<boolean>(false);
   const [showModalVerify, setShowModalVerify] = useState<boolean>(false);
@@ -132,18 +140,22 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         }
 
         const openInputOTP = () => {
-          setShowModalVerify(false)
-          setShowModalOTP(true)
-        }
+          setShowModalVerify(false);
+          setShowModalOTP(true);
+        };
 
         const invalidMessageOTP = () => {
-          setShowModalVerify(false)
-        }
+          setShowModalVerify(false);
+        };
 
         try {
-          const confirmationResult = await sendOTP(newPhone , openInputOTP , invalidMessageOTP);
-          setMessageOTP(confirmationResult)
-          setDataRegister(newUser)
+          const confirmationResult = await sendOTP(
+            newPhone,
+            openInputOTP,
+            invalidMessageOTP
+          );
+          setMessageOTP(confirmationResult);
+          setDataRegister(newUser);
         } catch (error) {
           console.error("Error:", (error as Error).message);
         }
@@ -176,6 +188,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       const responseUser = await fetch("/userData.json");
       const responseBusiness = await fetch("/businessData.json");
       const responseAdmin = await fetch("/adminData.json");
+
       if (!responseUser.ok && !responseBusiness && !responseAdmin) {
         throw new Error("Failed to fetch user data");
       }
@@ -200,39 +213,45 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       );
 
       if (
-        user.length === 1 && business.length === 1 && admin.length === 1
-        || user.length === 1 && business.length === 1
-        || user.length === 1 && admin.length === 1
-        || business.length === 1 && admin.length === 1
+        (user.length === 1 && business.length === 1 && admin.length === 1) ||
+        (user.length === 1 && business.length === 1) ||
+        (user.length === 1 && admin.length === 1) ||
+        (business.length === 1 && admin.length === 1)
       ) {
         (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
-        (document.getElementById("Modal-SelectRoles") as HTMLDialogElement)?.showModal();
+        (
+          document.getElementById("Modal-SelectRoles") as HTMLDialogElement
+        )?.showModal();
         const whatUsers: User[] = [];
         if (user.length === 1 && business.length === 1 && admin.length === 1) {
-            const userRole = user[0];
-            const businessRole = business[0];
-            const adminRole = admin[0];
-            whatUsers.push(userRole , businessRole , adminRole);
+          const userRole = user[0];
+          const businessRole = business[0];
+          const adminRole = admin[0];
+          whatUsers.push(userRole, businessRole, adminRole);
         } else if (user.length === 1 && business.length === 1) {
-            const userRole = user[0];
-            const businessRole = business[0];
-            whatUsers.push(userRole , businessRole);
+          const userRole = user[0];
+          const businessRole = business[0];
+          whatUsers.push(userRole, businessRole);
         } else if (user.length === 1 && admin.length === 1) {
-            const userRole = user[0];
-            const adminRole = admin[0];
-            whatUsers.push(userRole , adminRole);
+          const userRole = user[0];
+          const adminRole = admin[0];
+          whatUsers.push(userRole, adminRole);
         } else if (business.length === 1 && admin.length === 1) {
-            const businessRole = business[0];
-            const adminRole = admin[0];
-            whatUsers.push(businessRole , adminRole);
-        } 
+          const businessRole = business[0];
+          const adminRole = admin[0];
+          whatUsers.push(businessRole, adminRole);
+        }
         setWhatUser(whatUsers);
-      } else if (user.length === 1 || business.length === 1 || admin.length === 1) {
-        if(user.length === 1){
+      } else if (
+        user.length === 1 ||
+        business.length === 1 ||
+        admin.length === 1
+      ) {
+        if (user.length === 1) {
           setUserInfo(user[0]);
-        }else if(business.length === 1){
+        } else if (business.length === 1) {
           setUserInfo(business[0]);
-        }else if(admin.length === 1){
+        } else if (admin.length === 1) {
           setUserInfo(admin[0]);
         }
         (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
@@ -256,8 +275,101 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const invalidOTP =() => {
-    setShowModalOTP(false)
+  const handleForgot = async (email: string) => {
+    try {
+      const responseUser = await fetch("/userData.json");
+      const responseBusiness = await fetch("/businessData.json");
+      const responseAdmin = await fetch("/adminData.json");
+
+      if (!responseUser.ok && !responseBusiness && !responseAdmin) {
+        throw new Error("Failed to fetch user data");
+      }
+      const userDataUser: User[] = await responseUser.json();
+      const userDataBusiness: User[] = await responseBusiness.json();
+      const userDataAdmin: User[] = await responseAdmin.json();
+
+      const user = userDataUser.filter(
+        (user) =>
+          user.email.toLowerCase() === email.toLowerCase()
+      );
+      const business = userDataBusiness.filter(
+        (business) =>
+          business.email.toLowerCase() === email.toLowerCase() 
+      );
+      const admin = userDataAdmin.filter(
+        (admin) =>
+          admin.email.toLowerCase() === email.toLowerCase()
+      );
+
+      if(user.length === 1 || business.length === 1 || admin.length === 1){
+        const validatePhoneFormat = (phone : string) => {
+          const phoneRegex = /^\d{10}$/;
+          return phoneRegex.test(phone);
+        };
+
+        const { value: phone } = await Swal.fire({
+          title: "Enter your phone number",
+          input: "text",
+          inputPlaceholder: "Please enter 10 digits only.",
+          showCancelButton: true,
+          inputValidator: (value) => {
+            if (!value) {
+              return "You need to enter an phone";
+            }else if (!validatePhoneFormat(value)) {
+              return 'Invalid phone number format';
+            }
+          },
+        });
+        
+        let newPhone: string = "";
+        if (phone.startsWith("0")) {
+          newPhone = "+66" + phone.substr(1);
+          //setShowModalVerify(true);
+        } else {
+          newPhone = "";
+          Swal.fire({
+            icon: "error",
+            title: "Invalid Phone Number",
+            text: "Please check the phone number again.",
+            confirmButtonText: "OK",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              (
+                document.getElementById("Get-Started") as HTMLDialogElement
+              )?.showModal();
+            }
+          });
+        }
+        
+        let whatUsers : User[] = [];
+        const userRole = user.filter(u => u.phone === newPhone);
+        const businessRole = business.filter(u => u.phone === newPhone);
+        const adminRole = admin.filter(u => u.phone === newPhone);
+        whatUsers = [...userRole, ...businessRole, ...adminRole];
+
+        if(whatUsers.length != 0){
+          console.log(whatUsers);
+        }else{
+          Swal.fire({
+            icon: 'error',
+            title: 'Email and Phone not math',
+            text: 'The email and phone you entered does not math in our system.',
+          });  
+        }
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Email not found',
+          text: 'The email you entered does not exist in our system.',
+        });  
+      }
+    } catch (error) {
+      console.error("Error:", (error as Error).message);
+    }
+  };
+
+  const invalidOTP = () => {
+    setShowModalOTP(false);
     Swal.fire({
       icon: "error",
       title: "Invalid OTP",
@@ -265,10 +377,10 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       confirmButtonText: "OK",
     }).then((result) => {
       if (result.isConfirmed) {
-        setShowModalOTP(true)
+        setShowModalOTP(true);
       }
     });
-  }
+  };
 
   const handleLogout = () => {
     setUserInfo(null);
@@ -288,7 +400,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     setWhatUser,
     handleLogout,
     handleSignUp,
-    //handleForgot,
+    handleForgot,
     isOTPVarify,
     setIsOTPVarify,
   };
@@ -299,7 +411,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         showModal={showModalVerify}
         onClose={() => setShowModalVerify(false)}
       />
-        {children}
+      {children}
       <OTPModal
         showModal={showModalOTP}
         onClose={() => setShowModalOTP(false)}
@@ -314,4 +426,3 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
 export default AuthProvider;
 export type { User };
-

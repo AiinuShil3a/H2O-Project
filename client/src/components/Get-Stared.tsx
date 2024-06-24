@@ -88,11 +88,24 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
   ) => {
     (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
     event.preventDefault();
+
+    const validateEmailFormat = (email : string) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    };
+
     const { value: email } = await Swal.fire({
       title: "Enter your email",
       input: "text",
       inputPlaceholder: "Enter the email your forgot!",
       showCancelButton: true,
+      inputValidator: (value) => {
+        if (!value) {
+          return 'You need to enter an email address';
+        } else if (!validateEmailFormat(value)) {
+          return 'Invalid email format';
+        }
+      },
     });
     handleForgot(email);
   };
