@@ -80,12 +80,13 @@ const verifyOTP = async (
   formatOTP:() => void,
   userData:User|null,
   onClose:() => void,
+  changPassword:User | null,
 ) => {
   try {
     const connect = await confirmationResult.confirm(otp);
     if (connect) {
       onClose();
-      if(userData){
+      if(userData !== null){
         try {
           const response = await fetch("/userData.json", {
             method: "POST",
@@ -108,6 +109,56 @@ const verifyOTP = async (
           console.log("Registration successful:", data);
         } catch (error) {
           console.error("Error registering user:", error);
+        }
+      }else if(userData === null && changPassword !== null){
+        try {
+          const { value: formValues } = await Swal.fire({
+            title: 'Enter your new password',
+            html:
+              '<input id="swal-input1" type="password" class="swal2-input" placeholder="New password">' +
+              '<input id="swal-input2" type="password" class="swal2-input" placeholder="Confirm password">',
+            focusConfirm: false,
+            showCancelButton: true,
+            preConfirm: () => {
+              const newPassword = (document.getElementById('swal-input1') as HTMLInputElement).value;
+              const confirmPassword = (document.getElementById('swal-input2') as HTMLInputElement).value;
+              if (!newPassword || !confirmPassword) {
+                Swal.showValidationMessage('You need to enter both passwords');
+              } else if (newPassword.length < 8) {
+                Swal.showValidationMessage('Password must be at least 8 characters long');
+              } else if (newPassword !== confirmPassword) {
+                Swal.showValidationMessage('Passwords do not match');
+              }
+              return { newPassword };
+            },
+          });
+
+          if (formValues) {
+            const newPassword = formValues.newPassword;
+            changPassword.password = newPassword;
+
+            const response = await fetch(`/${changPassword.role}Data.json`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(userData),
+            });
+
+            if (!response.ok) {
+              throw new Error(`Error: ${response.statusText}`);
+            } else if (response.ok) {
+              Swal.fire({
+                icon: "success",
+                title: "Success",
+                text: "Password change successful!",
+              });
+            }
+            const data = await response.json();
+            console.log("Password change successful:", data);
+          }
+        } catch (error) {
+          console.error("Error updating password:", error);
         }
       }
     } else {

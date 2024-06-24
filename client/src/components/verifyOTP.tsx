@@ -12,11 +12,12 @@ interface ModalProps {
   invalidOTP: () => void;
   dataRegister: User | null;
   setMessageOTPUndify: () => void;
+  changPassword: User | null;
 }
 
 
 let currentOTPIndex: number = 0;
-const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalidOTP,dataRegister,setMessageOTPUndify}) => {
+const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalidOTP,dataRegister,setMessageOTPUndify,changPassword}) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -95,9 +96,9 @@ const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalid
     const fullOTP = otp.join("");
     console.log(messageOTP);
     const verifyAndProcessOTP = async () => {
-      if (fullOTP.length === 6 && messageOTP && dataRegister) {
+      if (fullOTP.length === 6 && messageOTP) {
         try {
-          await verifyOTP(messageOTP, fullOTP , invalidCounterUser , formatOTP , dataRegister , handleModalClose);
+          await verifyOTP(messageOTP, fullOTP , invalidCounterUser , formatOTP , dataRegister , handleModalClose , changPassword);
         } catch (error) {
           console.error("Error verifying OTP:", error);
         }

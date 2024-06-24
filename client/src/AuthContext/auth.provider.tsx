@@ -74,6 +74,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     undefined
   );
   const [dataRegister, setDataRegister] = useState<User | null>(null);
+  const [changPassword, setChangPassword] = useState<User | null>(null);
   const [reload, setReload] = useState<boolean>(false);
   const [isOTPVarify, setIsOTPVarify] = useState<boolean>(false);
   const [showModalVerify, setShowModalVerify] = useState<boolean>(false);
@@ -324,7 +325,6 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         let newPhone: string = "";
         if (phone.startsWith("0")) {
           newPhone = "+66" + phone.substr(1);
-          //setShowModalVerify(true);
         } else {
           newPhone = "";
           Swal.fire({
@@ -348,7 +348,66 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         whatUsers = [...userRole, ...businessRole, ...adminRole];
 
         if(whatUsers.length != 0){
-          console.log(whatUsers);
+          let readyChangePassword : User[] = []
+
+          const inputOptions: { [key: string]: string } = {};
+          whatUsers.forEach((user) => {
+            inputOptions[user.role] = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+          });
+
+          if(whatUsers.length >= 2){
+            const { value: role } = await Swal.fire({
+              title: 'Select your role',
+              input: 'select',
+              inputOptions: inputOptions,
+              inputPlaceholder: 'Select a role',
+              showCancelButton: true,
+              inputValidator: (value) => {
+                if (!value) {
+                  return 'You need to select a role';
+                }
+              }
+            });
+            const oneUser = whatUsers.find((user) => user.role === role);
+            if (oneUser) {
+              readyChangePassword.push(oneUser)
+            }
+          }else if (whatUsers.length === 1){
+            readyChangePassword = [whatUsers[0]]
+          }
+          
+          const phonInData = readyChangePassword[0].phone
+
+          if(phonInData){
+            setChangPassword(readyChangePassword[0])
+            setShowModalVerify(true);
+            const openInputOTP = () => {
+              setShowModalVerify(false);
+              setShowModalOTP(true);
+            };
+    
+            const invalidMessageOTP = () => {
+              setShowModalVerify(false);
+            };
+    
+            try {
+              const confirmationResult = await sendOTP(
+                phonInData,
+                openInputOTP,
+                invalidMessageOTP
+              );
+              setMessageOTP(confirmationResult);
+              setDataRegister(null);
+            } catch (error) {
+              console.error("Error:", (error as Error).message);
+            }
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: "Error something",
+              text: 'Please contact the admin.',
+            });  
+          }        
         }else{
           Swal.fire({
             icon: 'error',
@@ -419,6 +478,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         setMessageOTPUndify={() => setMessageOTP(undefined)}
         invalidOTP={() => invalidOTP()}
         dataRegister={dataRegister}
+        changPassword={changPassword}
       />
     </AuthContext.Provider>
   );
