@@ -1,27 +1,25 @@
 [
   {
-    "_id": "65e0bf27e91792bffddc46b6",
-    "name": "Jesus",
-    "lastName": "Human",
+    "_id": "65e0bf27e91792bffddc46a9",
+    "businessName": "JesusHotel",
     "email": "Supphalak@gmail.com",
     "password": "123456",
-    "image" : "https://th.bing.com/th/id/OIP.-NU4zH9CLbVTC6BkHRWEiwHaHa?rs=1&pid=ImgDetMain",
+    "image" : "https://th.bing.com/th/id/OIP.-NU4zH9CLbVTC6BkHRWEiwHaHa?rs=1&pid=ImgDetMainhttps://th.bing.com/th/id/OIP.yfUyXTHfvcWo34bxC8Xy2AHaEK?rs=1&pid=ImgDetMain",
     "phone" : "0982510776",
     "birthday" : "30/05/2545",
     "address": "",
-    "role": "user"
+    "role": "business"
   },
   {
-    "_id": "65e0bf27e91792bffddc56b8",
-    "name": "Supphalak",
-    "lastName": "Maneepanpanit",
-    "email": "Supphalak.sm1@gmail.com",
+    "_id": "65e0bf25e91792bbbddc87a9",
+    "businessName": "JesusHotel",
+    "email": "Supphalak.sm2@gmail.com",
     "password": "123456",
-    "image" : "https://th.bing.com/th/id/OIP.-NU4zH9CLbVTC6BkHRWEiwHaHa?rs=1&pid=ImgDetMain",
+    "image" : "https://th.bing.com/th/id/OIP.-NU4zH9CLbVTC6BkHRWEiwHaHa?rs=1&pid=ImgDetMainhttps://th.bing.com/th/id/OIP.yfUyXTHfvcWo34bxC8Xy2AHaEK?rs=1&pid=ImgDetMain",
     "phone" : "0982510776",
-    "birthday" : null,
+    "birthday" : "24/05/2545",
     "address": "",
-    "role": "user"
+    "role": "business"
   },
   {
     "_id": "65e0bf25e91792bbbddc87a9",
@@ -32,17 +30,17 @@
     "phone" : "0982510776",
     "birthday" : "24/05/2545",
     "address": "",
-    "role": "user"
+    "role": "business"
   },
   {
     "_id": "65e0bf25e91792bbbddc87a9",
     "businessName": "JesusHotel",
-    "email": "Supphalak2@gmail.com",
+    "email": "Supphalak3@gmail.com",
     "password": "123456",
     "image" : "https://th.bing.com/th/id/OIP.-NU4zH9CLbVTC6BkHRWEiwHaHa?rs=1&pid=ImgDetMainhttps://th.bing.com/th/id/OIP.yfUyXTHfvcWo34bxC8Xy2AHaEK?rs=1&pid=ImgDetMain",
     "phone" : "0982510776",
     "birthday" : "24/05/2545",
     "address": "",
-    "role": "user"
+    "role": "business"
   }
 ]

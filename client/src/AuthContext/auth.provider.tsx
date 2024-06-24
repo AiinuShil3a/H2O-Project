@@ -29,11 +29,11 @@ interface User {
   businessName?: string;
   email: string;
   password: string;
-  role: string;
   image: string;
   birthday: Date | null;
   address: string;
   phone: string | undefined;
+  role: string;
 }
 
 interface AuthContextType {
@@ -173,24 +173,68 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const response = await fetch("/userData.json");
-      if (!response.ok) {
+      const responseUser = await fetch("/userData.json");
+      const responseBusiness = await fetch("/businessData.json");
+      const responseAdmin = await fetch("/adminData.json");
+      if (!responseUser.ok && !responseBusiness && !responseAdmin) {
         throw new Error("Failed to fetch user data");
       }
-      const userData: User[] = await response.json();
-      const user = userData.filter(
+      const userDataUser: User[] = await responseUser.json();
+      const userDataBusiness: User[] = await responseBusiness.json();
+      const userDataAdmin: User[] = await responseAdmin.json();
+
+      const user = userDataUser.filter(
         (user) =>
           user.email.toLowerCase() === email.toLowerCase() &&
           user.password === password
       );
-      if (user.length > 1) {
+      const business = userDataBusiness.filter(
+        (business) =>
+          business.email.toLowerCase() === email.toLowerCase() &&
+          business.password === password
+      );
+      const admin = userDataAdmin.filter(
+        (admin) =>
+          admin.email.toLowerCase() === email.toLowerCase() &&
+          admin.password === password
+      );
+
+      if (
+        user.length === 1 && business.length === 1 && admin.length === 1
+        || user.length === 1 && business.length === 1
+        || user.length === 1 && admin.length === 1
+        || business.length === 1 && admin.length === 1
+      ) {
         (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
-        (
-          document.getElementById("Modal-SelectRoles") as HTMLDialogElement
-        )?.showModal();
-        setWhatUser(user);
-      } else if (user.length === 1) {
-        setUserInfo(user[0]);
+        (document.getElementById("Modal-SelectRoles") as HTMLDialogElement)?.showModal();
+        const whatUsers: User[] = [];
+        if (user.length === 1 && business.length === 1 && admin.length === 1) {
+            const userRole = user[0];
+            const businessRole = business[0];
+            const adminRole = admin[0];
+            whatUsers.push(userRole , businessRole , adminRole);
+        } else if (user.length === 1 && business.length === 1) {
+            const userRole = user[0];
+            const businessRole = business[0];
+            whatUsers.push(userRole , businessRole);
+        } else if (user.length === 1 && admin.length === 1) {
+            const userRole = user[0];
+            const adminRole = admin[0];
+            whatUsers.push(userRole , adminRole);
+        } else if (business.length === 1 && admin.length === 1) {
+            const businessRole = business[0];
+            const adminRole = admin[0];
+            whatUsers.push(businessRole , adminRole);
+        } 
+        setWhatUser(whatUsers);
+      } else if (user.length === 1 || business.length === 1 || admin.length === 1) {
+        if(user.length === 1){
+          setUserInfo(user[0]);
+        }else if(business.length === 1){
+          setUserInfo(business[0]);
+        }else if(admin.length === 1){
+          setUserInfo(admin[0]);
+        }
         (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
       } else {
         (document.getElementById("Get-Started") as HTMLDialogElement)?.close();

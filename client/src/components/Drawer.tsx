@@ -143,7 +143,7 @@ const Drawer: React.FC = () => {
                 <div>
                   <Link to={"#"}>
                     <li>
-                      <a>Payment methods</a>
+                      <a>History Booking</a>
                     </li>
                   </Link>
                 </div>

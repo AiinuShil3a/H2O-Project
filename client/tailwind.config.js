@@ -9,8 +9,10 @@ export default {
     colors: {
       'primaryUser': '#DC9832',
       'primaryBusiness': '#4B99FA',
+      'primaryAdmin': '#29AB87',
       'secondUser': '#E1BF0E',
       'secondBusiness': '#72B1FF',
+      'secondAdmin': '#C7EA46',
       'smoke': '#848884  ',
       'white':"#FFFFFF",
       'dark':"#000",

@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { FaHouseUser } from "react-icons/fa";
 import { FaBuildingUser } from "react-icons/fa6";
+import { MdAdminPanelSettings } from 'react-icons/md';
 import { AuthContext } from "../AuthContext/auth.provider";
 
 const ModalSelectRoles = ({ name } : {name : string}) => {
@@ -11,9 +12,11 @@ const ModalSelectRoles = ({ name } : {name : string}) => {
   }
 
   const { whatUser, setUserInfo } = authContext;
+  const customerUser = whatUser.find((user) => user.role === "user");
+  const businessUser = whatUser.find((user) => user.role === "business");
+  const adminUser = whatUser.find((user) => user.role === "admin");
 
   const clickUser = () => {
-    const customerUser = whatUser.find((user) => user.role === "user");
     if(!customerUser){
       throw new Error('No customerUser!');
     }
@@ -21,11 +24,17 @@ const ModalSelectRoles = ({ name } : {name : string}) => {
     (document.getElementById(name) as HTMLDialogElement)?.close();
   };
   const clickBusiness = () => {
-    const businessUser = whatUser.find((user) => user.role === "business");
     if(!businessUser){
       throw new Error('No customerUser!');
     }
     setUserInfo(businessUser);
+    (document.getElementById(name) as HTMLDialogElement)?.close();
+  };
+  const clickAdmin = () => {
+    if(!adminUser){
+      throw new Error('No adminUser!');
+    }
+    setUserInfo(adminUser);
     (document.getElementById(name) as HTMLDialogElement)?.close();
   };
   return (
@@ -56,24 +65,51 @@ const ModalSelectRoles = ({ name } : {name : string}) => {
             What do you want to log in as?
           </h1>
         </div>
-        <button
-          className="rounded-[0.5rem] w-full h-[100px] relative overflow-hidden focus:outline-none bg-white border border-primaryUser text-primaryUser hover:bg-primaryUser hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2 text-[30px]"
-          onClick={clickUser}
-        >
-          <span className="relative z-10 flex items-center justify-center w-full h-full">
-            <FaHouseUser />
-            <h3 className="ml-3">Customer</h3>
-          </span>
-        </button>
-        <button
-          className="rounded-[0.5rem] w-full h-[100px] relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryBusiness hover:bg-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2 mt-[1rem] text-[36px]"
-          onClick={clickBusiness}
-        >
-          <span className="relative z-10 flex items-center justify-center w-full h-full">
-            <FaBuildingUser />
-            <h3 className="ml-3">Business</h3>
-          </span>
-        </button>
+        {customerUser ? (
+          <>
+            <button
+              className="rounded-[0.5rem] w-full h-[100px] relative overflow-hidden focus:outline-none bg-white border border-primaryUser text-primaryUser hover:bg-gradient-to-r from-primaryUser to-secondUser hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2 text-[30px]"
+              onClick={clickUser}
+            >
+              <span className="relative z-10 flex items-center justify-start w-full h-full">
+                <div className="flex flex-row items-center justify-start w-full h-full">
+                  <FaHouseUser className="ml-10" />
+                  <h3 className="flex-1 text-center">Customer</h3>
+                </div>
+              </span>
+            </button>
+          </>
+        ) : null }
+        {businessUser ? (
+          <>
+            <button
+            className="rounded-[0.5rem] w-full h-[100px] relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryBusiness hover:bg-gradient-to-r from-primaryBusiness to-secondBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2 mt-[1rem] text-[36px]"
+            onClick={clickBusiness}
+            >
+              <span className="relative z-10 flex items-center justify-center w-full h-full">
+                <div className="flex flex-row items-center justify-start w-full h-full">
+                  <FaBuildingUser className="ml-10" />
+                  <h3 className="flex-1 text-center">Business</h3>
+                </div>
+              </span>
+            </button>
+          </>
+        ) : null }
+        {adminUser ?(
+          <>
+            <button
+            className="rounded-[0.5rem] w-full h-[100px] relative overflow-hidden focus:outline-none bg-white border border-primaryAdmin text-primaryAdmin hover:bg-gradient-to-r from-primaryAdmin to-secondAdmin hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2 mt-[1rem] text-[36px]"
+            onClick={clickAdmin}
+            >
+              <span className="relative z-10 flex items-center justify-center w-full h-full">
+                <div className="flex flex-row items-center justify-start w-full h-full">
+                  <MdAdminPanelSettings className="ml-10" />
+                  <h3 className="flex-1 text-center">Admin</h3>
+                </div>
+              </span>
+            </button>
+          </>
+        ) : null}
       </div>
     </dialog>
   );
