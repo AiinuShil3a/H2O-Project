@@ -21,7 +21,7 @@ const Search: React.FC = () => {
                 className="bg-gradient-to-r from-primaryUser to-primaryBusiness text-white p-2 mr-2 rounded-[15px]"
                 onClick={clickToHome}
               >
-                สถานที่พัก
+                ที่พัก
               </button>
             </div>
             <div className="relative">
@@ -62,7 +62,7 @@ const Search: React.FC = () => {
                 className="bg-white text-black p-2 mr-2 rounded-[15px]"
                 onClick={clickToHome}
               >
-                สถานที่พัก
+                ที่พัก
               </button>
             </div>
             <div className="relative">

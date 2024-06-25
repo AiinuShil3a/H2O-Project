@@ -1,4 +1,4 @@
-import React, { useState , useContext } from "react";
+import React, { useState, useContext } from "react";
 import { SiGmail } from "react-icons/si";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AuthContext } from "../AuthContext/auth.provider";
@@ -20,7 +20,11 @@ interface FormValues {
 }
 
 const Modal: React.FC<ModalProps> = ({ name }) => {
-  const { handleSubmit, register } = useForm<FormValues>();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<FormValues>();
 
   const authContext = useContext(AuthContext);
 
@@ -30,7 +34,9 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
 
   const { handleLogin, handleSignUp, handleForgot } = authContext;
 
-  const [activePage, setActivePage] = useState<"login" | "signup-user" | "signup-business">("login");
+  const [activePage, setActivePage] = useState<
+    "login" | "signup-user" | "signup-business"
+  >("login");
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const email = data.email;
@@ -89,7 +95,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
     (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
     event.preventDefault();
 
-    const validateEmailFormat = (email : string) => {
+    const validateEmailFormat = (email: string) => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailRegex.test(email);
     };
@@ -101,9 +107,9 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
       showCancelButton: true,
       inputValidator: (value) => {
         if (!value) {
-          return 'You need to enter an email address';
+          return "You need to enter an email address";
         } else if (!validateEmailFormat(value)) {
-          return 'Invalid email format';
+          return "Invalid email format";
         }
       },
     });
@@ -161,6 +167,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                 </label>
                 <input
                   type="password"
+                  minLength={8}
                   placeholder="password"
                   className="input input-bordered"
                   required
@@ -215,6 +222,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                   </label>
                   <input
                     type="password"
+                    minLength={8}
                     placeholder="password"
                     className="input input-bordered w-full"
                     required
@@ -223,10 +231,11 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                 </div>
                 <div className="ml-2">
                   <label className="label">
-                    <span className="label-text">Confirm Password</span>
+                    <span className="label-text whitespace-nowrap">Confirm Password</span>
                   </label>
                   <input
                     type="password"
+                    minLength={8}
                     placeholder="confirm password"
                     className="input input-bordered w-full"
                     required
@@ -250,12 +259,24 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
 
                 <input
                   type="tel"
+                  minLength={9}
+                  maxLength={10}
                   placeholder="Phone number"
                   className="input input-bordered ml-2 w-full"
                   required
-                  {...register("phone")}
+                  {...register("phone", {
+                    pattern: {
+                      value: /^[0-9\b]+$/,
+                      message: "Please enter a only phone number",
+                    },
+                  })}
                 />
               </div>
+              {errors.phone && (
+                <span className="text-red-500 text-sm">
+                  {errors.phone.message}
+                </span>
+              )}
             </>
           ) : (
             <>
@@ -286,10 +307,11 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
               <div className="flex flex-row justify-between">
                 <div>
                   <label className="label">
-                    <span className="label-text">Password</span>
+                    <span className="label-text">Password &emsp;</span>
                   </label>
                   <input
                     type="password"
+                    minLength={8}
                     placeholder="password"
                     className="input input-bordered w-full"
                     required
@@ -298,10 +320,13 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                 </div>
                 <div className="ml-2">
                   <label className="label">
-                    <span className="label-text">Confirm Password</span>
+                    <span className="label-text whitespace-nowrap">
+                      Confirm Password
+                    </span>
                   </label>
                   <input
                     type="password"
+                    minLength={8}
                     placeholder="confirm password"
                     className="input input-bordered w-full"
                     required
@@ -322,14 +347,27 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                     </option>
                   </select>
                 </div>
+
                 <input
                   type="tel"
+                  minLength={9}
+                  maxLength={10}
                   placeholder="Phone number"
                   className="input input-bordered ml-2 w-full"
                   required
-                  {...register("phone")}
+                  {...register("phone", {
+                    pattern: {
+                      value: /^[0-9\b]+$/,
+                      message: "Please enter a only phone number",
+                    },
+                  })}
                 />
               </div>
+              {errors.phone && (
+                <span className="text-red-500 text-sm">
+                  {errors.phone.message}
+                </span>
+              )}
             </>
           )}
           <div className="form-control">
@@ -396,10 +434,10 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
           <button
             className={
               activePage === "login"
-                ? "rounded-[0.5rem] w-full h-12 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryUser hover:bg-gradient-to-r from-primaryUser to-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
+                ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryUser hover:bg-gradient-to-r from-primaryUser to-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
                 : activePage === "signup-user"
-                ? "rounded-[0.5rem] w-full h-12 relative overflow-hidden focus:outline-none bg-white border border-primaryUser text-primaryUser hover:bg-primaryUser hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
-                : "rounded-[0.5rem] w-full h-12 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryBusiness hover:bg-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
+                ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryUser text-primaryUser hover:bg-primaryUser hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
+                : "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryBusiness hover:bg-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
             }
           >
             <span className="relative z-10 flex items-center justify-center w-full h-full">
