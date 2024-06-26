@@ -9,6 +9,7 @@ import VerifyModal from "../components/verifyModal";
 import OTPModal from "../components/verifyOTP";
 import { sendOTP, ConfirmationResult } from "../Firebase/OTP";
 import Swal from "sweetalert2";
+import bcrypt from 'bcryptjs';
 
 type SignUpForm1Data = {
   type: "form1";
@@ -186,76 +187,70 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const responseUser = await fetch("/userData.json");
+      const responseUser = await fetch("http://localhost:3000/user/userData");
       const responseBusiness = await fetch("/businessData.json");
       const responseAdmin = await fetch("/adminData.json");
-
+          
       if (!responseUser.ok && !responseBusiness && !responseAdmin) {
         throw new Error("Failed to fetch user data");
       }
+
       const userDataUser: User[] = await responseUser.json();
       const userDataBusiness: User[] = await responseBusiness.json();
       const userDataAdmin: User[] = await responseAdmin.json();
 
-      const user = userDataUser.filter(
-        (user) =>
-          user.email.toLowerCase() === email.toLowerCase() &&
-          user.password === password
-      );
-      const business = userDataBusiness.filter(
-        (business) =>
-          business.email.toLowerCase() === email.toLowerCase() &&
-          business.password === password
-      );
-      const admin = userDataAdmin.filter(
-        (admin) =>
-          admin.email.toLowerCase() === email.toLowerCase() &&
-          admin.password === password
-      );
+      console.log(userDataUser);
 
-      if (
-        (user.length === 1 && business.length === 1 && admin.length === 1) ||
-        (user.length === 1 && business.length === 1) ||
-        (user.length === 1 && admin.length === 1) ||
-        (business.length === 1 && admin.length === 1)
-      ) {
+      const allUsers = [...userDataUser, ...userDataBusiness, ...userDataAdmin];
+
+      console.log(allUsers);
+      
+      const user = allUsers.filter(
+        (user) =>
+          user.email.toLowerCase() === email.toLowerCase() 
+      );
+            
+      if (user.length >= 2) {
         (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
-        (
-          document.getElementById("Modal-SelectRoles") as HTMLDialogElement
-        )?.showModal();
-        const whatUsers: User[] = [];
-        if (user.length === 1 && business.length === 1 && admin.length === 1) {
-          const userRole = user[0];
-          const businessRole = business[0];
-          const adminRole = admin[0];
-          whatUsers.push(userRole, businessRole, adminRole);
-        } else if (user.length === 1 && business.length === 1) {
-          const userRole = user[0];
-          const businessRole = business[0];
-          whatUsers.push(userRole, businessRole);
-        } else if (user.length === 1 && admin.length === 1) {
-          const userRole = user[0];
-          const adminRole = admin[0];
-          whatUsers.push(userRole, adminRole);
-        } else if (business.length === 1 && admin.length === 1) {
-          const businessRole = business[0];
-          const adminRole = admin[0];
-          whatUsers.push(businessRole, adminRole);
+        (document.getElementById("Modal-SelectRoles") as HTMLDialogElement)?.showModal();
+        setWhatUser(user);
+      } else if (user.length === 1) { 
+        try {
+          const isPasswordValid = await bcrypt.compare(password, user[0].password);
+          if(isPasswordValid){
+            const userData = {
+              "email": email,
+              "password": password
+            }   
+            try {
+              const response = await fetch("http://localhost:3000/user/login", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(userData),
+                credentials: "include"
+              });
+      
+              if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+              }
+              const data = await response.json();
+              const token = document.cookie.split('; ').find(row => row.startsWith('token='));
+              console.log(token);
+              
+              setUserInfo(data);
+              
+              (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+              console.log("Registration successful:", data);
+            } catch (error) {
+              console.error("Error registering user:", error);
+            }
+          }
+        } catch (error) {
+          console.log(error);
+          console.error("Error:", (error as Error).message);
         }
-        setWhatUser(whatUsers);
-      } else if (
-        user.length === 1 ||
-        business.length === 1 ||
-        admin.length === 1
-      ) {
-        if (user.length === 1) {
-          setUserInfo(user[0]);
-        } else if (business.length === 1) {
-          setUserInfo(business[0]);
-        } else if (admin.length === 1) {
-          setUserInfo(admin[0]);
-        }
-        (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
       } else {
         (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
         Swal.fire({
