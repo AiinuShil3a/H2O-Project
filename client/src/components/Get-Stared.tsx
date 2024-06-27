@@ -167,7 +167,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                 </label>
                 <input
                   type="password"
-                  minLength={6}
+                  minLength={8}
                   placeholder="password"
                   className="input input-bordered"
                   required

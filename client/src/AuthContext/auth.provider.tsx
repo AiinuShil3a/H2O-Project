@@ -1,14 +1,9 @@
-import React, {
-  useState,
-  useEffect,
-  ReactNode,
-  createContext,
-  FC,
-} from "react";
+import React, {useState,useEffect,ReactNode,createContext,FC,} from "react";
 import VerifyModal from "../components/verifyModal";
 import OTPModal from "../components/verifyOTP";
 import { sendOTP, ConfirmationResult } from "../Firebase/OTP";
 import Swal from "sweetalert2";
+import axiosPublic from "../hook/axiosPublic";
 import bcrypt from 'bcryptjs';
 
 type SignUpForm1Data = {
@@ -71,9 +66,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [thisPage, setThisPage] = useState<string>("");
   const [whatUser, setWhatUser] = useState<User[]>([]);
-  const [messageOTP, setMessageOTP] = useState<ConfirmationResult | undefined>(
-    undefined
-  );
+  const [messageOTP, setMessageOTP] = useState<ConfirmationResult | undefined>(undefined);
   const [dataRegister, setDataRegister] = useState<User | null>(null);
   const [changPassword, setChangPassword] = useState<User | null>(null);
   const [reload, setReload] = useState<boolean>(false);
@@ -81,7 +74,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [showModalVerify, setShowModalVerify] = useState<boolean>(false);
   const [showModalOTP, setShowModalOTP] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<User | null>(() => {
-    const storedUser = localStorage.getItem("user");
+  const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
@@ -187,70 +180,76 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const responseUser = await fetch("http://localhost:3000/user/userData");
-      const responseBusiness = await fetch("/businessData.json");
-      const responseAdmin = await fetch("/adminData.json");
+      const responseUser = await axiosPublic.get("/user/userData");
+      const responseBusiness = await axiosPublic.get("/user/businessData");
+      const responseAdmin = await axiosPublic.get("/user/adminData");
           
-      if (!responseUser.ok && !responseBusiness && !responseAdmin) {
+      if (!responseUser && !responseBusiness && !responseAdmin) {
         throw new Error("Failed to fetch user data");
       }
 
-      const userDataUser: User[] = await responseUser.json();
-      const userDataBusiness: User[] = await responseBusiness.json();
-      const userDataAdmin: User[] = await responseAdmin.json();
-
-      console.log(userDataUser);
+      const userDataUser: User[] = await responseUser.data;
+      const userDataBusiness: User[] = await responseBusiness.data;
+      const userDataAdmin: User[] = await responseAdmin.data;
 
       const allUsers = [...userDataUser, ...userDataBusiness, ...userDataAdmin];
-
-      console.log(allUsers);
       
       const user = allUsers.filter(
         (user) =>
           user.email.toLowerCase() === email.toLowerCase() 
       );
-            
+
+      
       if (user.length >= 2) {
         (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
         (document.getElementById("Modal-SelectRoles") as HTMLDialogElement)?.showModal();
-        setWhatUser(user);
+        const userSendData = [...user, { password : password }] as User[];
+        setWhatUser(userSendData);
       } else if (user.length === 1) { 
-        try {
-          const isPasswordValid = await bcrypt.compare(password, user[0].password);
-          if(isPasswordValid){
-            const userData = {
-              "email": email,
-              "password": password
-            }   
-            try {
-              const response = await fetch("http://localhost:3000/user/login", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(userData),
-                credentials: "include"
-              });
-      
-              if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-              }
-              const data = await response.json();
-              const token = document.cookie.split('; ').find(row => row.startsWith('token='));
-              console.log(token);
-              
-              setUserInfo(data);
-              
-              (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
-              console.log("Registration successful:", data);
-            } catch (error) {
-              console.error("Error registering user:", error);
-            }
-          }
-        } catch (error) {
-          console.log(error);
-          console.error("Error:", (error as Error).message);
+        const isPasswordValid = await bcrypt.compare(password, user[0].password);
+        const loggedInUser = user[0];
+        const userData = {
+          "email": email,
+          "password": password,
+          "role": loggedInUser.role
         }
+        if(isPasswordValid){
+          try {
+            const response = await axiosPublic.post("/user/login", userData, { withCredentials: true });
+            const data = response.data;   
+              if(data.isVerified){
+                setUserInfo(data);
+              }else{
+                Swal.fire({
+                  icon: 'warning',
+                  title: 'Email Confirmation',
+                  text: 'Your email has not been confirmed yet.',
+                  confirmButtonText: 'OK',
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
+                  }
+                });
+              }
+            (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+          } catch (error) {
+            console.error("Error registering user:", error);
+          }
+        }else{
+          (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Invalid Password!",
+            footer: '<a href="#">Why do I have this issue?</a>',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              (
+                document.getElementById("Get-Started") as HTMLDialogElement
+              )?.showModal();
+            }
+          });
+        }   
       } else {
         (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
         Swal.fire({

@@ -3,6 +3,15 @@ import { FaHouseUser } from "react-icons/fa";
 import { FaBuildingUser } from "react-icons/fa6";
 import { MdAdminPanelSettings } from 'react-icons/md';
 import { AuthContext } from "../AuthContext/auth.provider";
+import Swal from "sweetalert2";
+import bcrypt from 'bcryptjs';
+import axiosPublic from "../hook/axiosPublic";
+
+interface loginData {
+  email: string; 
+  password: string; 
+  role: string;
+}
 
 const ModalSelectRoles = ({ name } : {name : string}) => {
   const authContext = useContext(AuthContext);
@@ -16,26 +25,121 @@ const ModalSelectRoles = ({ name } : {name : string}) => {
   const businessUser = whatUser.find((user) => user.role === "business");
   const adminUser = whatUser.find((user) => user.role === "admin");
 
-  const clickUser = () => {
+  let password:string = "";
+  if(whatUser.length === 4){
+    password = whatUser[3].password;
+  }else if(whatUser.length === 3){
+    password = whatUser[2].password;
+  }
+
+  const apiLogin = async(userData: loginData) => {
+    try {
+      const response = await axiosPublic.post("/user/login", userData, { withCredentials: true });
+      const data = response.data;   
+        if(data.isVerified){
+          setUserInfo(data);
+        }else{
+          Swal.fire({
+            icon: 'warning',
+            title: 'Email Confirmation',
+            text: 'Your email has not been confirmed yet.',
+            confirmButtonText: 'OK',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
+            }
+          });
+        }
+      (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+      (document.getElementById(name) as HTMLDialogElement)?.close();
+    } catch (error) {
+      console.error("Error registering user:", error);
+    }
+  }
+
+  const clickUser = async() => {
     if(!customerUser){
       throw new Error('No customerUser!');
     }
-    setUserInfo(customerUser);
-    (document.getElementById(name) as HTMLDialogElement)?.close();
+    const isPasswordValid = await bcrypt.compare(password, customerUser.password);
+    const userData = {
+      "email": customerUser.email,
+      "password": password,
+      "role": customerUser.role
+    }
+    if(isPasswordValid){
+      apiLogin(userData)
+    }else{
+      (document.getElementById(name) as HTMLDialogElement)?.close();
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Invalid Password!",
+        footer: '<a href="#">Why do I have this issue?</a>',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          (
+            document.getElementById("Get-Started") as HTMLDialogElement
+          )?.showModal();
+        }
+      });
+    }   
   };
-  const clickBusiness = () => {
+  const clickBusiness = async() => {
     if(!businessUser){
       throw new Error('No customerUser!');
     }
-    setUserInfo(businessUser);
-    (document.getElementById(name) as HTMLDialogElement)?.close();
+    const isPasswordValid = await bcrypt.compare(password, businessUser.password);
+    const userData = {
+      "email": businessUser.email,
+      "password": password,
+      "role": businessUser.role
+    }
+    if(isPasswordValid){
+      apiLogin(userData)
+    }else{
+      (document.getElementById(name) as HTMLDialogElement)?.close();
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Invalid Password!",
+        footer: '<a href="#">Why do I have this issue?</a>',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          (
+            document.getElementById("Get-Started") as HTMLDialogElement
+          )?.showModal();
+        }
+      });
+    }   
   };
-  const clickAdmin = () => {
+  const clickAdmin = async() => {
     if(!adminUser){
       throw new Error('No adminUser!');
     }
-    setUserInfo(adminUser);
-    (document.getElementById(name) as HTMLDialogElement)?.close();
+    const isPasswordValid = await bcrypt.compare(password, adminUser.password);
+    const userData = {
+      "email": adminUser.email,
+      "password": password,
+      "role": adminUser.role
+    }
+    if(isPasswordValid){
+      apiLogin(userData)
+    }else{
+      (document.getElementById(name) as HTMLDialogElement)?.close();
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Invalid Password!",
+        footer: '<a href="#">Why do I have this issue?</a>',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          (
+            document.getElementById("Get-Started") as HTMLDialogElement
+          )?.showModal();
+        }
+      });
+    }   
   };
   return (
     <dialog id={name} className="modal">

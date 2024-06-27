@@ -19,6 +19,7 @@
     "phone" : "+66982510776",
     "birthday" : "24/05/2545",
     "address": "",
+    "isVerified": false,
     "role": "business"
   },
   {
