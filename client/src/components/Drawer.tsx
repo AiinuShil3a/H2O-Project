@@ -27,6 +27,8 @@ const Drawer: React.FC = () => {
                   ? "btn btn-circle btn-primary drawer-button lg:hidden bg-gradient-to-b from-primaryUser to-secondUser"
                   : userInfo?.role === "business"
                   ? "btn btn-circle btn-primary drawer-button lg:hidden bg-gradient-to-b from-primaryBusiness to-secondBusiness"
+                  : userInfo?.role === "admin"
+                  ? "btn btn-circle btn-primary drawer-button lg:hidden bg-gradient-to-b from-primaryAdmin to-secondAdmin"
                   : "btn btn-circle btn-primary drawer-button lg:hidden bg-gradient-to-b from-dark to-smoke"
               }
             >
@@ -45,6 +47,8 @@ const Drawer: React.FC = () => {
                   ? "menu p-4 w-80 min-h-full bg-gradient-to-b from-primaryUser to-secondUser text-dark text-xl"
                   : userInfo?.role === "business"
                   ? "menu p-4 w-80 min-h-full bg-gradient-to-b from-primaryBusiness to-secondBusiness text-dark text-xl"
+                  : userInfo?.role === "admin"
+                  ? "menu p-4 w-80 min-h-full bg-gradient-to-b from-primaryAdmin to-secondAdmin text-dark text-xl"
                   : "menu p-4 w-80 min-h-full bg-gradient-to-b from-dark to-smoke text-white text-xl"
               }
             >
@@ -80,10 +84,12 @@ const Drawer: React.FC = () => {
                       ? "btn btn-sm rounded-full bg-white text-dark hover:bg-gradient-to-r from-primaryUser to-secondUser"
                       : userInfo?.role === "business"
                       ? "btn btn-sm rounded-full bg-white text-dark hover:bg-gradient-to-r from-primaryBusiness to-secondBusiness"
+                      : userInfo?.role === "admin"
+                      ? "btn btn-sm rounded-full bg-white text-dark hover:bg-gradient-to-r from-primaryAdmin to-secondAdmin"
                       : "btn btn-sm rounded-full bg-white text-dark hover:bg-gradient-to-r from-dark to-smoke"
                   }
                 >
-                  {userInfo?.role === "user"
+                  {userInfo?.role === "user" || userInfo?.role === "admin"
                     ? `${userInfo?.name} ${userInfo?.lastName}`
                     : userInfo?.role === "business"
                     ? `${userInfo?.businessName}`
@@ -137,7 +143,15 @@ const Drawer: React.FC = () => {
                     </li>
                   </Link>
                 </div>
-              ) : null}
+              ) : userInfo?.role === "admin" ? (
+                <div>
+                  <Link to={"/dashboard-business/ProfileAdmin"}>
+                    <li>
+                      <a>Profile</a>
+                    </li>
+                  </Link>
+                </div>
+              ): null}
               <hr className="h-px my-4 bg-white border-0 dark:bg-gray-300"></hr>
               {userInfo?.role === "user" ? (
                 <div>

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext ,useEffect } from "react";
 import { SiGmail } from "react-icons/si";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AuthContext } from "../AuthContext/auth.provider";
@@ -24,6 +24,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
     handleSubmit,
     register,
     formState: { errors },
+    reset 
   } = useForm<FormValues>();
 
   const authContext = useContext(AuthContext);
@@ -32,12 +33,21 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
     throw new Error("AuthContext must be used within an AuthProvider");
   }
 
-  const { handleLogin, handleSignUp, handleForgot } = authContext;
+  const { handleLogin, handleSignUp, handleForgot , userInfo } = authContext;
 
   const [activePage, setActivePage] = useState<
     "login" | "signup-user" | "signup-business"
   >("login");
 
+  useEffect(() => {
+    reset();
+    if ((activePage === "login" || activePage === "signup-user" || activePage === "signup-business") && userInfo?.role === "admin") {
+      setActivePage("signup-user");
+    } else  {
+      return
+    }
+  }, [userInfo , reset , activePage]); 
+  
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const email = data.email;
     const password = data.password;
@@ -116,14 +126,19 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
     handleForgot(email);
   };
 
+  if (userInfo && userInfo?.role !== "admin") {
+    return null;
+  }
+
   return (
     <dialog id={name} className="modal">
       <div className="modal-box">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           onClick={() => {
-            toggleForm("login");
             (document.getElementById(name) as HTMLDialogElement).close();
+            reset();
+            toggleForm("login");
           }}
         >
           <svg
@@ -143,9 +158,14 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
           <h3 className="font-bold text-xl ml-auto mr-auto">
             {activePage === "login"
               ? "Login Now"
-              : activePage === "signup-user"
+              : activePage === "signup-user" && userInfo?.role !== "admin"
               ? "Sign Up - Customer"
-              : "Sign Up - Business"}
+              :activePage === "signup-business"
+              ? "Sign Up - Business"
+              : activePage === "signup-user" && userInfo?.role === "admin"
+              ? "Sign Up - Admin"
+              : null
+            }
           </h3>
           {activePage === "login" ? (
             <>
@@ -390,16 +410,22 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
               className={
                 activePage === "login"
                   ? "btn bg-gradient-to-r from-primaryUser to-primaryBusiness transition-opacity group-hover:opacity-100 text-white border-white"
-                  : activePage === "signup-user"
+                  : activePage === "signup-user" && userInfo?.role !== "admin"
                   ? "btn bg-gradient-to-r from-primaryUser to-secondUser transition-opacity group-hover:opacity-100 text-white border-white"
-                  : "btn bg-gradient-to-r from-primaryBusiness to-secondBusiness transition-opacity group-hover:opacity-100 text-white border-white"
+                  : activePage === "signup-business"
+                  ? "btn bg-gradient-to-r from-primaryBusiness to-secondBusiness transition-opacity group-hover:opacity-100 text-white border-white"
+                  : activePage === "signup-user" && userInfo?.role === "admin"
+                  ? "btn bg-gradient-to-r from-primaryAdmin to-secondAdmin transition-opacity group-hover:opacity-100 text-white border-white"
+                  : "btn bg-gradient-to-r from-dark to-smoke transition-opacity group-hover:opacity-100 text-white border-white"
               }
             />
           </div>
           <p className="text-center my-2 font-bold text-[0.9rem] ">
             {activePage === "login"
               ? "Don't have an account?"
-              : "Already have an account?"}{" "}
+              : (activePage === "signup-user" || activePage === "signup-business") && userInfo?.role !== "admin"
+              ? "Already have an account?"
+              : "For administrators only"}{" "}
             <button
               type="button"
               className="underline text-red-700 ml-1"
@@ -407,15 +433,22 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                 toggleForm(activePage === "login" ? "signup-user" : "login")
               }
             >
-              {activePage === "login" ? "Sign Up Now" : "Login"}
+              {activePage === "login" 
+                ? "Sign Up Now" 
+                : (activePage === "signup-user" || activePage === "signup-business") && userInfo?.role !== "admin"
+                ? "Login"
+                : null
+              }
             </button>
           </p>
         </form>
         <div className="max-w-screen-xl flex items-center justify-between">
           <hr
             className={
-              activePage === "login" || activePage === "signup-user"
+              activePage === "login" || activePage === "signup-user" && userInfo?.role !== "admin"
                 ? "w-[50vw] border-t-2 border-primaryUser shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
+                : userInfo?.role === "admin"
+                ? "w-[50vw] border-t-2 border-primaryAdmin shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
                 : "w-[50vw] border-t-2 border-primaryBusiness shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
             }
           />
@@ -424,8 +457,10 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
           </div>
           <hr
             className={
-              activePage === "login" || activePage === "signup-business"
+              activePage === "login" || activePage === "signup-business" && userInfo?.role !== "admin"
                 ? "w-[50vw] border-t-2 border-primaryBusiness shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
+                : userInfo?.role === "admin"
+                ? "w-[50vw] border-t-2 border-primaryAdmin shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
                 : "w-[50vw] border-t-2 border-primaryUser shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
             }
           />
@@ -435,17 +470,21 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
             className={
               activePage === "login"
                 ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryUser hover:bg-gradient-to-r from-primaryUser to-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
-                : activePage === "signup-user"
+                : activePage === "signup-user" && userInfo?.role !== "admin"
                 ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryUser text-primaryUser hover:bg-primaryUser hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
-                : "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryBusiness hover:bg-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
-            }
+                : activePage === "signup-business"
+                ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryBusiness hover:bg-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
+                : activePage === "signup-user" && userInfo?.role === "admin"
+                ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryAdmin text-primaryAdmin hover:bg-primaryAdmin hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
+                : "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-dark text-dark hover:bg-dark hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
+            }   
           >
             <span className="relative z-10 flex items-center justify-center w-full h-full">
               <SiGmail className="w-6 h-6" />
               <h3 className="ml-3">Gmail</h3>
             </span>
           </button>
-          {activePage === "signup-user" || activePage === "signup-business" ? (
+          {(activePage === "signup-user" || activePage === "signup-business") && userInfo?.role !== "admin"  ? (
             <button
               className={
                 activePage === "signup-user"
@@ -474,9 +513,13 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
           className={
             activePage === "login"
               ? "bg-gradient-to-r from-primaryUser to-primaryBusiness absolute left-0 right-0 h-6"
-              : activePage === "signup-user"
+              : activePage === "signup-user" && userInfo?.role !== "admin"
               ? "bg-primaryUser absolute left-0 right-0 h-6"
-              : "bg-primaryBusiness absolute left-0 right-0 h-6"
+              : activePage === "signup-business"
+              ? "bg-primaryBusiness absolute left-0 right-0 h-6"
+              : activePage === "signup-user"&& userInfo?.role === "admin"
+              ? "bg-primaryAdmin absolute left-0 right-0 h-6"
+              : "bg-dark absolute left-0 right-0 h-6"
           }
         />
       </div>

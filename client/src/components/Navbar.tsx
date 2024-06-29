@@ -18,6 +18,10 @@ const Navbar: React.FC = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleCreateAdmin = () => {
+    (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
+  }
+
   return (
     <div>
       <nav
@@ -28,6 +32,8 @@ const Navbar: React.FC = () => {
             ? "bg-gradient-to-r from-primaryUser to-secondUser border-gray-200 dark:bg-gray-900 relative"
             : userInfo && userInfo.role === "business"
             ? "bg-gradient-to-r from-primaryBusiness to-secondBusiness border-gray-200 dark:bg-gray-900 relative"
+            : userInfo && userInfo.role === "admin"
+            ? "bg-gradient-to-r from-primaryAdmin to-secondAdmin border-gray-200 dark:bg-gray-900 relative"
             : "bg-gradient-to-r from-dark to-smoke border-gray-200 dark:bg-gray-900 relative"
         }
       >
@@ -117,11 +123,12 @@ const Navbar: React.FC = () => {
                       >
                         <div className="px-4 py-3 text-sm text-gray-900">
                           <div>
-                            {userInfo.role === "user"
+                            {userInfo.role === "user" || userInfo.role === "admin"
                               ? `${userInfo.name} ${userInfo.lastName}`
                               : userInfo.role === "business"
                               ? `${userInfo.businessName}`
-                              : null}
+                              :null
+                            }
                           </div>
                           <div className="font-medium truncate">
                             {userInfo.email}
@@ -143,6 +150,13 @@ const Navbar: React.FC = () => {
                             <li>
                               <a href="/create-business" className="block px-4 py-2">
                                 Create a sale 
+                              </a>
+                            </li>
+                          )}
+                          {userInfo && userInfo.role === "admin" && (
+                            <li>
+                              <a className="block px-4 py-2" onClick={handleCreateAdmin}>
+                                Create a User
                               </a>
                             </li>
                           )}

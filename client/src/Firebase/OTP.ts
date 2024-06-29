@@ -5,6 +5,7 @@ import {
   UserCredential,
 } from "./firebase.config";
 import Swal from "sweetalert2";
+import axiosPublic from "../hook/axiosPublic";
 import { User } from "../AuthContext/auth.provider"
 
 interface CustomWindow extends Window {
@@ -88,24 +89,18 @@ const verifyOTP = async (
       onClose();
       if(userData !== null){
         try {
-          const response = await fetch("/userData.json", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(userData),
-          });
+          const response = await axiosPublic.post(`${userData}Register` , userData)
   
-          if (!response.ok) {
-            throw new Error(`Error: ${response.statusText}`);
-          } else if (response.ok) {
+          if (!response) {
+            throw new Error(`Error: can't register`);
+          } else if (response) {
             Swal.fire({
               icon: "success",
               title: "Success",
               text: "Sign up successful!",
             });
           }
-          const data = await response.json();
+          const data = await response.data;
           console.log("Registration successful:", data);
         } catch (error) {
           console.error("Error registering user:", error);

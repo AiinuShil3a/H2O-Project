@@ -15,6 +15,8 @@ const Footer = () => {
           ? "bg-gradient-to-l from-primaryUser to-secondUser text-white py-4"
           : userInfo?.role === "business" && thisPage !== "/"
           ? "bg-gradient-to-l from-primaryBusiness to-secondBusiness text-white py-4"
+          : userInfo?.role === "admin" && thisPage !== "/"
+          ? "bg-gradient-to-l from-primaryAdmin to-secondAdmin text-white py-4"
           : "bg-gradient-to-r from-primaryUser to-primaryBusiness text-white py-4 mt-10"
       }
     >

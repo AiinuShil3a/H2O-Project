@@ -91,13 +91,30 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
       if (type === "form1") {
         const { name, lastName } = formData;
+        let yourRole:string = ""
+        let roles:string = "";
+
+        if(userInfo){
+          yourRole = userInfo?.role;
+        }else{
+          return
+        }
+
+        const createdAdmin = yourRole;
+
+        if(createdAdmin === "admin"){
+          roles = "admin";
+        }else{
+          roles = "user";
+        }
+
         newUser = {
           name,
           lastName,
           email,
           password,
           phone,
-          role: "user",
+          role: roles,
           image: "",
           address: "",
           birthday: null,
@@ -144,13 +161,26 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         };
 
         try {
-          const confirmationResult = await sendOTP(
-            newPhone,
-            openInputOTP,
-            invalidMessageOTP
-          );
-          setMessageOTP(confirmationResult);
-          setDataRegister(newUser);
+          if(userInfo?.role !== "admin" && newUser.role === "admin"){
+            Swal.fire({
+              icon: "error",
+              title: "Can't register because role isn't admin",
+              text: "Please check the role if you want register admin.",
+              confirmButtonText: "OK",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
+              }
+            });
+          }else{
+            const confirmationResult = await sendOTP(
+              newPhone,
+              openInputOTP,
+              invalidMessageOTP
+            );
+            setMessageOTP(confirmationResult);
+            setDataRegister(newUser);
+          }
         } catch (error) {
           console.error("Error:", (error as Error).message);
         }

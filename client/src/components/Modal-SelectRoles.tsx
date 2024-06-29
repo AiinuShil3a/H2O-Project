@@ -20,7 +20,7 @@ const ModalSelectRoles = ({ name } : {name : string}) => {
     throw new Error('AuthContext must be used within an AuthProvider');
   }
 
-  const { whatUser, setUserInfo } = authContext;
+  const { whatUser, setUserInfo , userInfo } = authContext;
   const customerUser = whatUser.find((user) => user.role === "user");
   const businessUser = whatUser.find((user) => user.role === "business");
   const adminUser = whatUser.find((user) => user.role === "admin");
@@ -141,6 +141,11 @@ const ModalSelectRoles = ({ name } : {name : string}) => {
       });
     }   
   };
+
+  if(userInfo){
+    return
+  }
+  
   return (
     <dialog id={name} className="modal">
       <div className="modal-box ">

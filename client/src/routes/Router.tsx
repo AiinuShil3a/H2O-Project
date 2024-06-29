@@ -2,12 +2,12 @@ import { createBrowserRouter } from "react-router-dom";
 import Main from "../layout/Main";
 import PrivateRouterUser from "../PrivateRouter/PrivateRouterUser";
 import PrivateRouterBusiness from "../PrivateRouter/PrivateRouterBusiness";
+import PrivateRouterAdmin from "../PrivateRouter/PrivateRouterAdmin";
 import Home from "../pages/home/homepage";
 import ProfileUser from "../pages/user/profile";
 import ProfileBusiness from "../pages/business/profile";
 import SelectionCreate from "../pages/business/selectionCreate";
 import DrawerDashBoard from "../layout/DrawerDashBoard";
-
 
 const router = createBrowserRouter([
   {
@@ -50,6 +50,20 @@ const router = createBrowserRouter([
         children: [
           {
             path: "/dashboard-business/ProfileBusiness",
+            element: <ProfileBusiness />
+          },
+        ]
+      },
+      {
+        path:"/dashboard-admin",
+        element:(
+          <PrivateRouterAdmin>
+            <DrawerDashBoard />
+          </PrivateRouterAdmin>
+        ),
+        children: [
+          {
+            path: "/dashboard-admin/ProfileAdmin",
             element: <ProfileBusiness />
           },
         ]
