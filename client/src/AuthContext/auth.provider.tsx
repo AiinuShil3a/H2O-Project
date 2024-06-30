@@ -31,9 +31,17 @@ interface User {
   businessName?: string;
   email: string;
   password: string;
+  phone: string | undefined;
   image: string;
-  birthday: Date | null;
-  address: string;
+  role: string;
+}
+
+interface UserRegister {
+  name?: string;
+  lastName?: string;
+  businessName?: string;
+  email: string;
+  password: string;
   phone: string | undefined;
   role: string;
 }
@@ -67,7 +75,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [thisPage, setThisPage] = useState<string>("");
   const [whatUser, setWhatUser] = useState<User[]>([]);
   const [messageOTP, setMessageOTP] = useState<ConfirmationResult | undefined>(undefined);
-  const [dataRegister, setDataRegister] = useState<User | null>(null);
+  const [dataRegister, setDataRegister] = useState<UserRegister | null>(null);
   const [changPassword, setChangPassword] = useState<User | null>(null);
   const [reload, setReload] = useState<boolean>(false);
   const [isOTPVarify, setIsOTPVarify] = useState<boolean>(false);
@@ -87,7 +95,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const handleSignUp = async (formData: SignUpFormData) => {
     try {
       const { email, password, type, phone } = formData;
-      let newUser: User;
+      let newUser: UserRegister;
 
       if (type === "form1") {
         const { name, lastName } = formData;
@@ -96,8 +104,6 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
         if(userInfo){
           yourRole = userInfo?.role;
-        }else{
-          return
         }
 
         const createdAdmin = yourRole;
@@ -115,9 +121,6 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           password,
           phone,
           role: roles,
-          image: "",
-          address: "",
-          birthday: null,
         };
       } else if (type === "form2") {
         const { businessName } = formData;
@@ -127,9 +130,6 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           password,
           phone,
           role: "business",
-          image: "",
-          address: "",
-          birthday: null,
         };
       } else {
         throw new Error("Invalid form type");
@@ -137,73 +137,128 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
       (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
 
-      if (!phone) {
-        throw new Error("Phone number is required");
-      }
-
-      if (phone.length <= 10 && phone.length >= 9) {
-        let newPhone: string = "";
-        if (phone.startsWith("0")) {
-          newPhone = "+66" + phone.substr(1);
-          setShowModalVerify(true);
-        } else if (!phone.startsWith("0")) {
-          newPhone = "+66" + phone;
-          setShowModalVerify(true);
-        }
-
-        const openInputOTP = () => {
-          setShowModalVerify(false);
-          setShowModalOTP(true);
-        };
-
-        const invalidMessageOTP = () => {
-          setShowModalVerify(false);
-        };
-
-        try {
-          if(userInfo?.role !== "admin" && newUser.role === "admin"){
-            Swal.fire({
-              icon: "error",
-              title: "Can't register because role isn't admin",
-              text: "Please check the role if you want register admin.",
-              confirmButtonText: "OK",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
-              }
-            });
-          }else{
-            const confirmationResult = await sendOTP(
-              newPhone,
-              openInputOTP,
-              invalidMessageOTP
-            );
-            setMessageOTP(confirmationResult);
-            setDataRegister(newUser);
-          }
-        } catch (error) {
-          console.error("Error:", (error as Error).message);
-        }
-      } else {
+      let haveEmail:boolean = true;
+      const cheackMail = await axiosPublic.post(`/user/checkEmailExists` , {email:newUser.email , role:newUser.role})
+      haveEmail = cheackMail.data
+      
+      if(haveEmail){
+        (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
         Swal.fire({
           icon: "error",
-          title: "Invalid Phone Number",
-          text: "Please check the phone number again.",
+          title: "this email can't use!",
+          text: `Can't register because this email is use role ${newUser.role}.`,
           confirmButtonText: "OK",
         }).then((result) => {
           if (result.isConfirmed) {
-            (
-              document.getElementById("Get-Started") as HTMLDialogElement
-            )?.showModal();
+            (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
           }
         });
+      }else if(!haveEmail){
+        if (!phone) {
+          throw new Error("Phone number is required");
+        }
+  
+        if (phone.length <= 10 && phone.length >= 9) {
+          let newPhone: string = "";
+          if (phone.startsWith("0")) {
+            if(phone.length <= 9){
+              (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+              Swal.fire({
+                icon: "error",
+                title: "Please check the phone numbe",
+                text: "The Phone number format is incorrect.",
+                confirmButtonText: "OK",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
+                }
+              });
+            }else{
+              newPhone = "+66" + phone.substr(1);
+              newUser.phone = newPhone;
+              setShowModalVerify(true);
+            }
+          } else if (!phone.startsWith("0")) {
+            if(phone.length >= 10){
+              (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+              Swal.fire({
+                icon: "error",
+                title: "Please check the phone numbe",
+                text: "The Phone number format is incorrect.",
+                confirmButtonText: "OK",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
+                }
+              });
+            }else{
+              newPhone = "+66" + phone;
+              newUser.phone = newPhone;
+              setShowModalVerify(true);
+            }
+          }
+  
+          const openInputOTP = () => {
+            setShowModalVerify(false);
+            setShowModalOTP(true);
+          };
+  
+          const invalidMessageOTP = () => {
+            setShowModalVerify(false);
+          };
+  
+          try {
+            if(userInfo?.role !== "admin" && newUser.role === "admin"){
+              Swal.fire({
+                icon: "error",
+                title: "Can't register because role isn't admin",
+                text: "Please check the role if you want register admin.",
+                confirmButtonText: "OK",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
+                }
+              });
+            }else{
+              const confirmationResult = await sendOTP(
+                newPhone,
+                openInputOTP,
+                invalidMessageOTP
+              );
+              setMessageOTP(confirmationResult);
+              setDataRegister(newUser);
+            }
+          } catch (error) {
+            console.error("Error:", (error as Error).message);
+          }
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Invalid Phone Number",
+            text: "Please check the phone number again.",
+            confirmButtonText: "OK",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              (
+                document.getElementById("Get-Started") as HTMLDialogElement
+              )?.showModal();
+            }
+          });
+        }
       }
     } catch (error) {
       console.error("Error:", (error as Error).message);
       Swal.fire({
         icon: "error",
-        title: "Error",
-        text: "Failed to sign up. Please try again.",
+        title: "Error invalid phone",
+        text: "Failed to sign up. Please try enter phone number again.",
+        confirmButtonText: "OK",
+        }).then((result) => {
+        if (result.isConfirmed) {
+          (
+            document.getElementById("Get-Started") as HTMLDialogElement
+          )?.showModal();
+        }
       });
     }
   };
@@ -465,7 +520,8 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     });
   };
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
+    await axiosPublic.post("/user/logout");
     setUserInfo(null);
     localStorage.removeItem("user");
     window.location.href = "/";
@@ -492,7 +548,6 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     <AuthContext.Provider value={authInfo}>
       <VerifyModal
         showModal={showModalVerify}
-        onClose={() => setShowModalVerify(false)}
       />
       {children}
       <OTPModal
@@ -509,4 +564,4 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 };
 
 export default AuthProvider;
-export type { User };
+export type { UserRegister , User };

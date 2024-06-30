@@ -6,7 +6,7 @@ import {
 } from "./firebase.config";
 import Swal from "sweetalert2";
 import axiosPublic from "../hook/axiosPublic";
-import { User } from "../AuthContext/auth.provider"
+import { UserRegister , User } from "../AuthContext/auth.provider"
 
 interface CustomWindow extends Window {
   recaptchaVerifier?: RecaptchaVerifier;
@@ -21,7 +21,6 @@ declare let window: CustomWindow;
 
 const sendOTP = async (phone: string , openInputOTP: () => void , invalidMessageOTP: () => void): Promise<ConfirmationResult | undefined> => {
   const recaptchaContainer = document.getElementById("reCAPTCHA");
-  console.log(auth);
   
   if (!recaptchaContainer) {
     console.log("ไม่พบ element ที่ระบุสำหรับ reCAPTCHA");
@@ -79,7 +78,7 @@ const verifyOTP = async (
   otp: string,
   invalidOTP:() => void,
   formatOTP:() => void,
-  userData:User|null,
+  userData:UserRegister|null,
   onClose:() => void,
   changPassword:User | null,
 ) => {
@@ -89,7 +88,7 @@ const verifyOTP = async (
       onClose();
       if(userData !== null){
         try {
-          const response = await axiosPublic.post(`${userData}Register` , userData)
+          const response = await axiosPublic.post(`/user/${userData.role}Register` , userData)
   
           if (!response) {
             throw new Error(`Error: can't register`);
@@ -97,7 +96,7 @@ const verifyOTP = async (
             Swal.fire({
               icon: "success",
               title: "Success",
-              text: "Sign up successful!",
+              text: "Sign up successful! Pless cheack verify in Email..",
             });
           }
           const data = await response.data;

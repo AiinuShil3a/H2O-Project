@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { verifyOTP } from "../Firebase/OTP";
-import { User } from "../AuthContext/auth.provider"
+import { UserRegister , User } from "../AuthContext/auth.provider"
 import { ConfirmationResult } from "../Firebase/OTP";
 import { MdSecurity } from "react-icons/md";
 import Swal from "sweetalert2";
@@ -10,7 +10,7 @@ interface ModalProps {
   onClose: () => void;
   messageOTP: ConfirmationResult | undefined;
   invalidOTP: () => void;
-  dataRegister: User | null;
+  dataRegister: UserRegister | null;
   setMessageOTPUndify: () => void;
   changPassword: User | null;
 }
@@ -42,14 +42,6 @@ const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalid
   ) => {
     currentOTPIndex = index;
     if (e.key === "Backspace") setActiveOTPIndex(currentOTPIndex - 1);
-  };
-
-  const handleModalCloseAndOpenRegister = () => {
-    setOtp(new Array(6).fill(""));
-    setActiveOTPIndex(0);
-    setCounter(60);
-    onClose();
-    (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
   };
 
   const handleModalClose = () => {
@@ -115,7 +107,15 @@ const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalid
         setCounter((prevCounter) => prevCounter - 1);
       }, 1000);
     } else if (counter === 0) {
-      handleModalCloseAndOpenRegister();
+      handleModalClose();
+      Swal.fire({
+        icon: 'warning',
+        title: 'Time expired for OTP input',
+        text: 'Please try again',
+        timer: 3000,
+        timerProgressBar: true, 
+        showConfirmButton: false
+      });
     }
     return () => {
       if (interval) {
@@ -137,6 +137,23 @@ const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalid
                 <h4 className="text-2xl font-semibold">Please verify OTP...</h4>
                 <MdSecurity size={23} />
               </div>
+              <button
+                  className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                  onClick={handleModalClose}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
             </div>
             <div className="relative p-6 flex-auto">
               <div className={"flex justify-center items-center space-x-2"}>
@@ -147,7 +164,7 @@ const VerifyModal: React.FC<ModalProps> = ({showModal,onClose,messageOTP,invalid
                         ref={activeOTPIndex === index ? inputRef : null}
                         type="text"
                         className={
-                          "w-12 h-12 border-2 rounded bg-white outline-none text-center font-semibold text-xl spin-button-none border-primaryUser focus:border-primaryBusiness focus:text-primaryUser text-dark transition shadow-md shadow-dark"
+                          "w-8 h-8 border-2 rounded bg-white outline-none text-center font-semibold text-xl spin-button-none border-primaryUser focus:border-primaryBusiness focus:text-primaryUser text-dark transition shadow-md shadow-dark"
                         }
                         onChange={handleOnChange}
                         onKeyDown={(e) => handleOnKeyDown(e, index)}

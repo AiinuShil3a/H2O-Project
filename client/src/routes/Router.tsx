@@ -4,6 +4,7 @@ import PrivateRouterUser from "../PrivateRouter/PrivateRouterUser";
 import PrivateRouterBusiness from "../PrivateRouter/PrivateRouterBusiness";
 import PrivateRouterAdmin from "../PrivateRouter/PrivateRouterAdmin";
 import Home from "../pages/home/homepage";
+import VerifyEmailSuccess from "../pages/orther/emailIsVerify";
 import ProfileUser from "../pages/user/profile";
 import ProfileBusiness from "../pages/business/profile";
 import SelectionCreate from "../pages/business/selectionCreate";
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/verifySuccess",
+        element: <VerifyEmailSuccess />
       },
       {
         path: "/create-business",

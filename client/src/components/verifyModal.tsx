@@ -3,17 +3,11 @@ import { BsShieldLockFill } from "react-icons/bs";
 
 interface ModalProps {
   showModal: boolean;
-  onClose: () => void;
 }
 
-const VerifyModal: React.FC<ModalProps> = ({ showModal, onClose }) => {
+const VerifyModal: React.FC<ModalProps> = ({ showModal }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
-
-  const handleModalClose = () => {
-    onClose();
-    (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
-  };
 
   useEffect(() => {
     if (modalRef.current && backdropRef.current) {
@@ -48,14 +42,8 @@ const VerifyModal: React.FC<ModalProps> = ({ showModal, onClose }) => {
                 className="flex items-center justify-center"
               />
             </div>
-            <div className="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">
-              <button
-                className="bg-dark text-white active:bg-gray-600 font-bold uppercase text-sm px-6 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
-                type="button"
-                onClick={handleModalClose}
-              >
-                Close
-              </button>
+            <div className="flex items-center justify-center p-6 border-t border-solid border-gray-300 rounded-b">
+              <span className="text-md">Please confirm that you are not a robot.</span>
             </div>
           </div>
         </div>
