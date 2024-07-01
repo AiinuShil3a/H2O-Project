@@ -3,6 +3,8 @@ import { SiGmail } from "react-icons/si";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AuthContext } from "../AuthContext/auth.provider";
 import { FaPhone } from "react-icons/fa";
+import { BsExclamationTriangle } from "react-icons/bs";
+import axiosPublic from "../hook/axiosPublic";
 import Swal from "sweetalert2";
 
 interface ModalProps {
@@ -19,14 +21,13 @@ interface FormValues {
   businessName?: string;
 }
 
-interface FirebaseUser {
-  displayName: string | null;
+interface UserInfo {
+  name: string;
+  lastName: string;
   email: string | null;
-  uid: string;
-}
-
-interface FirebaseSignUpResult {
-  user: FirebaseUser;
+  image: string | null;
+  role: string;
+  isVerified: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({ name }) => {
@@ -45,18 +46,16 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
 
   const { handleLogin, handleSignUp, handleForgot , userInfo , signUpWithGoogle } = authContext;
 
-  const [activePage, setActivePage] = useState<
-    "login" | "signup-user" | "signup-business"
-  >("login");
+  const [activePage, setActivePage] = useState<"login" | "signup-user" | "signup-business">("login");
+
 
   useEffect(() => {
-    reset();
     if ((activePage === "login" || activePage === "signup-user" || activePage === "signup-business") && userInfo?.role === "admin") {
       setActivePage("signup-user");
-    } else  {
+    }else{
       return
     }
-  }, [userInfo , reset , activePage]); 
+  }, [userInfo , activePage]);
   
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const email = data.email;
@@ -105,31 +104,115 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
     }
   };
 
-  const GoogleSignUp = () => {
-    let role: string = "";
-    if(activePage === "signup-user" && userInfo?.role !== "admin"){
-      role = "user"
-    }else if(activePage === "signup-business"){
-      role = "business"
-    }else if(activePage === "signup-user" && userInfo?.role === "admin"){
-      role = "business"
-    }else if(activePage === "login"){
-      role = ""
-    }
-    console.log(role);
-    signUpWithGoogle()
-      .then((result : FirebaseSignUpResult) => {
-        console.log("result",result)
-        const user = result.user;
-        console.log("user",user);
-        alert("Google Sign Up Successful");
-      })
-      .catch((error : Error) => {
-        console.log(error);
+
+  
+  const GoogleSignUp = async (role: string) => {
+    try {
+      await signUpWithGoogle()
+        .then((result) => {
+          const user = result.user;
+          const displayName = user?.displayName;
+          let firstName = "";
+          let lastName = "";
+  
+          if (displayName) {
+            const parts = displayName.split(" ");
+            firstName = parts[0];
+            lastName = parts[1];
+          }
+  
+          let userInfo: UserInfo[] = [];
+          if (role === "user" || role === "admin") {
+            const reqBody = {
+              name: firstName,
+              lastName: lastName,
+              email: user?.email,
+              image: user?.photoURL,
+              isVerified: user?.emailVerified,
+              role: role,
+            };
+            userInfo.push(reqBody);
+          } else if (role === "business") {
+            const str = user?.uid;
+            const firstFourChars = str.slice(0, 4);
+            const nameDefaultBusiness = `Business@${firstFourChars}`;
+            const reqBody = {
+              businessName: nameDefaultBusiness,
+              name: firstName,
+              lastName: lastName,
+              email: user?.email,
+              image: user?.photoURL,
+              isVerified: user?.emailVerified,
+              role: role,
+            };
+            userInfo.push(reqBody);
+          }else{
+            userInfo = [];
+          }
+          
+          if (userInfo.length > 0) {
+            axiosPublic
+              .post(`/user/${role}Register`, ...userInfo)
+              .then((response) => {
+                (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+                const data = response.data;
+                if(data){
+                  Swal.fire({
+                    title: "Login google account successfully",
+                    icon: "success",
+                    timer: 1500,
+                  });
+                }
+              })
+              .catch((error: Error) => {
+                console.log(error);
+                Swal.fire({
+                  title: "Error",
+                  text: "An error occurred while registering. Please try again later.",
+                  icon: "error",
+                });
+              });
+          } else {
+            Swal.fire({
+              title: "Error",
+              text: "Invalid role specified.",
+              icon: "error",
+            });
+          }
+        })
+        .catch((error: Error) => {
+          console.log(error);
+          Swal.fire({
+            title: "Error",
+            text: "An error occurred during Google sign-up. Please try again later.",
+            icon: "error",
+          });
+        });
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        title: "Error",
+        text: "An error occurred. Please try again later.",
+        icon: "error",
       });
+    }
+  };
+
+  const GoogleSignUpOrSignIn = () => {
+    if(activePage === "signup-user"){
+      const role = "user"
+      GoogleSignUp(role)
+    }else if(activePage === "signup-business"){
+      const role = "business"
+      GoogleSignUp(role)
+    }else if(activePage === "login"){
+      const role = "admin"
+      GoogleSignUp(role)
+    }   
   };
 
   const toggleForm = (page: "login" | "signup-user" | "signup-business") => {
+    reset();
     setActivePage(page);
   };
 
@@ -205,27 +288,57 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
             <>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Email</span>
+                  <span className="label-text">Email</span>              
+                  {errors.email && (
+                      <div className="tooltip">
+                        <span className="text-alert text-sm">
+                          <BsExclamationTriangle className="inline-block mr-1" />
+                          <span className="tooltip-text">{errors.email.message}</span>
+                        </span>
+                      </div>
+                  )}
                 </label>
                 <input
                   type="email"
                   placeholder="email"
                   className="input input-bordered"
-                  required
-                  {...register("email")}
+                  {...register("email", {
+                    required: "Please enter email",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email format"
+                    }
+                  })}
                 />
               </div>
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Password</span>
+                  {errors.password && (
+                      <div className="tooltip">
+                        <span className="text-alert text-sm">
+                          <BsExclamationTriangle className="inline-block mr-1" />
+                          <span className="tooltip-text">{errors.password.message}</span>
+                        </span>
+                      </div>
+                  )}
                 </label>
                 <input
                   type="password"
-                  minLength={8}
                   placeholder="password"
                   className="input input-bordered"
-                  required
-                  {...register("password")}
+                  {...register("password", {
+                    required: "Please enter a password",
+                    minLength: {
+                      value: 8,
+                      message: "Password must be at least 8 characters",
+                    },
+                    pattern: {
+                      value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/,
+                      message:
+                        "The password format is incorrect.",
+                    },
+                  })}
                 />
               </div>
             </>
@@ -235,65 +348,136 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                 <div>
                   <label className="label">
                     <span className="label-text">Name</span>
+                    {errors.name && (
+                      <div className="tooltip">
+                        <span className="text-alert text-sm">
+                          <BsExclamationTriangle className="inline-block mr-1" />
+                          <span className="tooltip-text">{errors.name.message}</span>
+                        </span>
+                      </div>
+                    )}
                   </label>
                   <input
                     type="text"
                     placeholder="Your name"
                     className="input input-bordered w-full"
-                    required
-                    {...register("name")}
+                    {...register("name", {
+                      required: "Please enter",
+                      pattern: {
+                        value: /^[A-Za-zก-ฮ]+$/,
+                        message: "Invalid format"
+                      }
+                    })}
                   />
                 </div>
                 <div className="ml-2">
                   <label className="label">
                     <span className="label-text">Last Name</span>
+                    {errors.lastName && (
+                      <div className="tooltip">
+                        <span className="text-alert text-sm">
+                          <BsExclamationTriangle className="inline-block mr-1" />
+                          <span className="tooltip-text">{errors.lastName.message}</span>
+                        </span>
+                      </div>
+                    )}
                   </label>
                   <input
                     type="text"
                     placeholder="Your last name"
                     className="input input-bordered w-full"
-                    required
-                    {...register("lastName")}
+                    {...register("lastName", {
+                      required: "Please enter",
+                      pattern: {
+                        value: /^[A-Za-zก-ฮ]+$/,
+                        message: "Invalid format"
+                      }
+                    })}
                   />
                 </div>
               </div>
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Email</span>
+                  {errors.email && (
+                      <div className="tooltip">
+                        <span className="text-alert text-sm">
+                          <BsExclamationTriangle className="inline-block mr-1" />
+                          <span className="tooltip-text">{errors.email.message}</span>
+                        </span>
+                      </div>
+                  )}
                 </label>
                 <input
                   type="email"
                   placeholder="email"
                   className="input input-bordered"
-                  required
-                  {...register("email")}
+                  {...register("email", {
+                    required: "Please enter email",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email format"
+                    }
+                  })}
                 />
               </div>
               <div className="flex flex-row justify-between">
                 <div>
                   <label className="label">
                     <span className="label-text">Password</span>
+                    {errors.password && (
+                      <div className="tooltip">
+                        <span className="text-alert text-sm">
+                          <BsExclamationTriangle className="inline-block mr-1" />
+                          <span className="tooltip-text">{errors.password.message}</span>
+                        </span>
+                      </div>
+                    )}
                   </label>
                   <input
                     type="password"
-                    minLength={8}
                     placeholder="password"
                     className="input input-bordered w-full"
-                    required
-                    {...register("password")}
+                    {...register("password", {
+                      required: "Please enter a password",
+                      minLength: {
+                        value: 8,
+                        message: "Password must be at least 8 characters",
+                      },
+                      pattern: {
+                        value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/,
+                        message: "Password must contain at least 1 digit, 1 lowercase letter, 1 uppercase letter, 1 special character, and be at least 8 characters long.",
+                      },
+                    })}
                   />
                 </div>
                 <div className="ml-2">
                   <label className="label">
                     <span className="label-text whitespace-nowrap">Confirm Password</span>
+                      {errors.ConfirmPassword && (
+                        <div className="tooltip">
+                          <span className="text-alert text-sm">
+                            <BsExclamationTriangle className="inline-block mr-1" />
+                            <span className="tooltip-text">{errors.ConfirmPassword.message}</span>
+                          </span>
+                        </div>
+                      )}
                   </label>
                   <input
                     type="password"
-                    minLength={8}
                     placeholder="confirm password"
                     className="input input-bordered w-full"
-                    required
-                    {...register("ConfirmPassword")}
+                    {...register("ConfirmPassword", {
+                      required: "Please enter a password",
+                      minLength: {
+                        value: 8,
+                        message: "Password must be at least 8 characters",
+                      },
+                      pattern: {
+                        value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/,
+                        message: "Password must contain at least 1 digit, 1 lowercase letter, 1 uppercase letter, 1 special character, and be at least 8 characters long.",
+                      },
+                    })}
                   />
                 </div>
               </div>
@@ -301,6 +485,14 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                 <span className="label-text flex items-center">
                   Phone Number <FaPhone className="ml-1" />
                 </span>
+                {errors.phone && (
+                      <div className="tooltip">
+                        <span className="text-alert text-sm">
+                          <BsExclamationTriangle className="inline-block mr-1" />
+                          <span className="tooltip-text">{errors.phone.message}</span>
+                        </span>
+                      </div>
+                )}
               </label>
               <div className="flex flex-row justify-between">
                 <div>
@@ -313,12 +505,18 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
 
                 <input
                   type="tel"
-                  minLength={9}
-                  maxLength={10}
                   placeholder="Phone number"
                   className="input input-bordered ml-2 w-full"
-                  required
                   {...register("phone", {
+                    required: "Please enter a password",
+                    minLength: {
+                      value: 9,
+                      message: "Password must be at least 9 number",
+                    },
+                    maxLength: {
+                      value: 10,
+                      message: "Phone must be at max 10 number",
+                    },
                     pattern: {
                       value: /^[0-9\b]+$/,
                       message: "Please enter a only phone number",
@@ -326,50 +524,83 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                   })}
                 />
               </div>
-              {errors.phone && (
-                <span className="text-red-500 text-sm">
-                  {errors.phone.message}
-                </span>
-              )}
             </>
           ) : (
             <>
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Business name</span>
+                  {errors.businessName && (
+                      <div className="tooltip">
+                        <span className="text-alert text-sm">
+                          <BsExclamationTriangle className="inline-block mr-1" />
+                          <span className="tooltip-text">{errors.businessName.message}</span>
+                        </span>
+                      </div>
+                  )}
                 </label>
                 <input
                   type="text"
                   placeholder="Your business name"
                   className="input input-bordered"
-                  required
-                  {...register("businessName")}
+                  {...register("businessName", {
+                    required: "Please enter",
+                  })}
                 />
               </div>
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Email</span>
+                  {errors.email && (
+                      <div className="tooltip">
+                        <span className="text-alert text-sm">
+                          <BsExclamationTriangle className="inline-block mr-1" />
+                          <span className="tooltip-text">{errors.email.message}</span>
+                        </span>
+                      </div>
+                  )}
                 </label>
                 <input
                   type="email"
                   placeholder="email"
                   className="input input-bordered"
-                  required
-                  {...register("email")}
+                  {...register("email", {
+                    required: "Please enter email",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email format"
+                    }
+                  })}
                 />
               </div>
               <div className="flex flex-row justify-between">
                 <div>
                   <label className="label">
-                    <span className="label-text">Password &emsp;</span>
+                    <span className="label-text">Password</span>
+                    {errors.password && (
+                      <div className="tooltip">
+                        <span className="text-alert text-sm">
+                          <BsExclamationTriangle className="inline-block mr-1" />
+                          <span className="tooltip-text">{errors.password.message}</span>
+                        </span>
+                      </div>
+                    )}
                   </label>
                   <input
                     type="password"
-                    minLength={8}
                     placeholder="password"
                     className="input input-bordered w-full"
-                    required
-                    {...register("password")}
+                    {...register("password", {
+                      required: "Please enter a password",
+                      minLength: {
+                        value: 8,
+                        message: "Password must be at least 8 characters",
+                      },
+                      pattern: {
+                        value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/,
+                        message: "Password must contain at least 1 digit, 1 lowercase letter, 1 uppercase letter, 1 special character, and be at least 8 characters long.",
+                      },
+                    })}
                   />
                 </div>
                 <div className="ml-2">
@@ -377,14 +608,30 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                     <span className="label-text whitespace-nowrap">
                       Confirm Password
                     </span>
+                    {errors.ConfirmPassword && (
+                        <div className="tooltip">
+                          <span className="text-alert text-sm">
+                            <BsExclamationTriangle className="inline-block mr-1" />
+                            <span className="tooltip-text">{errors.ConfirmPassword.message}</span>
+                          </span>
+                        </div>
+                    )}
                   </label>
                   <input
                     type="password"
-                    minLength={8}
                     placeholder="confirm password"
                     className="input input-bordered w-full"
-                    required
-                    {...register("ConfirmPassword")}
+                    {...register("ConfirmPassword", {
+                      required: "Please enter a password",
+                      minLength: {
+                        value: 8,
+                        message: "Password must be at least 8 characters",
+                      },
+                      pattern: {
+                        value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/,
+                        message: "Password must contain at least 1 digit, 1 lowercase letter, 1 uppercase letter, 1 special character, and be at least 8 characters long.",
+                      },
+                    })}
                   />
                 </div>
               </div>
@@ -392,6 +639,14 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                 <span className="label-text flex items-center">
                   Phone Number <FaPhone className="ml-1" />
                 </span>
+                {errors.phone && (
+                      <div className="tooltip">
+                        <span className="text-alert text-sm">
+                          <BsExclamationTriangle className="inline-block mr-1" />
+                          <span className="tooltip-text">{errors.phone.message}</span>
+                        </span>
+                      </div>
+                )}
               </label>
               <div className="flex flex-row justify-between">
                 <div>
@@ -404,12 +659,18 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
 
                 <input
                   type="tel"
-                  minLength={9}
-                  maxLength={10}
                   placeholder="Phone number"
                   className="input input-bordered ml-2 w-full"
-                  required
                   {...register("phone", {
+                    required: "Please enter a password",
+                    minLength: {
+                      value: 9,
+                      message: "Password must be at least 9 number",
+                    },
+                    maxLength: {
+                      value: 10,
+                      message: "Phone must be at max 10 number",
+                    },
                     pattern: {
                       value: /^[0-9\b]+$/,
                       message: "Please enter a only phone number",
@@ -417,11 +678,6 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                   })}
                 />
               </div>
-              {errors.phone && (
-                <span className="text-red-500 text-sm">
-                  {errors.phone.message}
-                </span>
-              )}
             </>
           )}
           <div className="form-control">
@@ -512,7 +768,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                 ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryAdmin text-primaryAdmin hover:bg-primaryAdmin hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
                 : "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-dark text-dark hover:bg-dark hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
             }  
-            onClick={GoogleSignUp}
+            onClick={GoogleSignUpOrSignIn}
           >
             <span className="relative z-10 flex items-center justify-center w-full h-full">
               <SiGmail className="w-6 h-6" />

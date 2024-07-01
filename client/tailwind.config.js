@@ -13,6 +13,7 @@ export default {
       'secondUser': '#E1BF0E',
       'secondBusiness': '#72B1FF',
       'secondAdmin': '#C7EA46',
+      'alert':"#dc143c ",
       'smoke': '#848884  ',
       'white':"#FFFFFF",
       'dark':"#000",

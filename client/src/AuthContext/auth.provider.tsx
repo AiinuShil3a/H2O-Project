@@ -8,7 +8,8 @@ import bcrypt from 'bcryptjs';
 import {
   auth,
   GoogleAuthProvider , 
-  signInWithPopup
+  signInWithPopup,
+  UserCredential
 } from "../Firebase/firebase.config";
 
 type SignUpForm1Data = {
@@ -29,6 +30,8 @@ type SignUpForm2Data = {
 };
 
 type SignUpFormData = SignUpForm1Data | SignUpForm2Data;
+
+type SignInWithPopupFunction = () => Promise<UserCredential>;
 
 interface User {
   name?: string;
@@ -65,7 +68,7 @@ interface AuthContextType {
   handleSignUp: (formData: SignUpFormData) => Promise<void>;
   whatUser: User[];
   setWhatUser: React.Dispatch<React.SetStateAction<User[]>>;
-  signUpWithGoogle: any;
+  signUpWithGoogle: SignInWithPopupFunction;
   handleLogout: () => void;
 }
 
