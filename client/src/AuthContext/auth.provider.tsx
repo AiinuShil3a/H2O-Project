@@ -5,6 +5,11 @@ import { sendOTP, ConfirmationResult } from "../Firebase/OTP";
 import Swal from "sweetalert2";
 import axiosPublic from "../hook/axiosPublic";
 import bcrypt from 'bcryptjs';
+import {
+  auth,
+  GoogleAuthProvider , 
+  signInWithPopup
+} from "../Firebase/firebase.config";
 
 type SignUpForm1Data = {
   type: "form1";
@@ -60,6 +65,7 @@ interface AuthContextType {
   handleSignUp: (formData: SignUpFormData) => Promise<void>;
   whatUser: User[];
   setWhatUser: React.Dispatch<React.SetStateAction<User[]>>;
+  signUpWithGoogle: any;
   handleLogout: () => void;
 }
 
@@ -261,6 +267,11 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         }
       });
     }
+  };
+
+  const signUpWithGoogle = () => {
+    const provider = new GoogleAuthProvider();
+    return signInWithPopup(auth, provider);
   };
 
   const handleLogin = async (email: string, password: string) => {
@@ -542,6 +553,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     handleForgot,
     isOTPVarify,
     setIsOTPVarify,
+    signUpWithGoogle,
   };
 
   return (

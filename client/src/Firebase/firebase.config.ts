@@ -3,22 +3,24 @@ import {
   getAuth,
   RecaptchaVerifier,
   signInWithPhoneNumber,
+  GoogleAuthProvider , 
+  signInWithPopup
 } from "firebase/auth";
 import { type UserCredential } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCoD4PbErtkXG3PTWxceNLhmblCxJUWS4Q",
-  authDomain: "testing-2646a.firebaseapp.com",
-  projectId: "testing-2646a",
-  storageBucket: "testing-2646a.appspot.com",
-  messagingSenderId: "659342724256",
-  appId: "1:659342724256:web:99478583d5d27ddf5f8dc5",
-  measurementId: "G-BKKNPV4XZC"
+  apiKey: "AIzaSyABFcHWtPSxYI4ZHWmBRDhXVFUOYROJzDw",
+  authDomain: "aeiou-dcea8.firebaseapp.com",
+  projectId: "aeiou-dcea8",
+  storageBucket: "aeiou-dcea8.appspot.com",
+  messagingSenderId: "440571327089",
+  appId: "1:440571327089:web:0a82b34e9b0e648908a1d0",
+  measurementId: "G-3FYQ2V5BD1"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const type = getAuth();
 
-export { app, auth, RecaptchaVerifier, signInWithPhoneNumber , type };
+export { app, auth, RecaptchaVerifier, signInWithPhoneNumber , type ,   GoogleAuthProvider , signInWithPopup };
 export type { UserCredential };

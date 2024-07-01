@@ -19,6 +19,16 @@ interface FormValues {
   businessName?: string;
 }
 
+interface FirebaseUser {
+  displayName: string | null;
+  email: string | null;
+  uid: string;
+}
+
+interface FirebaseSignUpResult {
+  user: FirebaseUser;
+}
+
 const Modal: React.FC<ModalProps> = ({ name }) => {
   const {
     handleSubmit,
@@ -33,7 +43,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
     throw new Error("AuthContext must be used within an AuthProvider");
   }
 
-  const { handleLogin, handleSignUp, handleForgot , userInfo } = authContext;
+  const { handleLogin, handleSignUp, handleForgot , userInfo , signUpWithGoogle } = authContext;
 
   const [activePage, setActivePage] = useState<
     "login" | "signup-user" | "signup-business"
@@ -93,6 +103,30 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
         });
       }
     }
+  };
+
+  const GoogleSignUp = () => {
+    let role: string = "";
+    if(activePage === "signup-user" && userInfo?.role !== "admin"){
+      role = "user"
+    }else if(activePage === "signup-business"){
+      role = "business"
+    }else if(activePage === "signup-user" && userInfo?.role === "admin"){
+      role = "business"
+    }else if(activePage === "login"){
+      role = ""
+    }
+    console.log(role);
+    signUpWithGoogle()
+      .then((result : FirebaseSignUpResult) => {
+        console.log("result",result)
+        const user = result.user;
+        console.log("user",user);
+        alert("Google Sign Up Successful");
+      })
+      .catch((error : Error) => {
+        console.log(error);
+      });
   };
 
   const toggleForm = (page: "login" | "signup-user" | "signup-business") => {
@@ -477,7 +511,8 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
                 : activePage === "signup-user" && userInfo?.role === "admin"
                 ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryAdmin text-primaryAdmin hover:bg-primaryAdmin hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
                 : "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-dark text-dark hover:bg-dark hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
-            }   
+            }  
+            onClick={GoogleSignUp}
           >
             <span className="relative z-10 flex items-center justify-center w-full h-full">
               <SiGmail className="w-6 h-6" />
