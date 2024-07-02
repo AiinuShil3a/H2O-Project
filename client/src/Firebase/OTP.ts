@@ -120,6 +120,8 @@ const verifyOTP = async (
                 Swal.showValidationMessage('Password must be at least 8 characters long');
               } else if (newPassword !== confirmPassword) {
                 Swal.showValidationMessage('Passwords do not match');
+              }else if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/.test(newPassword)) {
+                Swal.showValidationMessage('Password must contain at least one digit, one lowercase letter, one uppercase letter, one special character, and be at least 8 characters long');
               }
               return { newPassword };
             },
@@ -127,27 +129,22 @@ const verifyOTP = async (
 
           if (formValues) {
             const newPassword = formValues.newPassword;
-            changPassword.password = newPassword;
+            const updatePassword = {
+              password : newPassword,
+              role : changPassword.role
+            }
+            
+            const response = await axiosPublic.put(`/user/updateUser/${changPassword._id}` , updatePassword)
 
-            const response = await fetch(`/${changPassword.role}Data.json`, {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(userData),
-            });
-
-            if (!response.ok) {
-              throw new Error(`Error: ${response.statusText}`);
-            } else if (response.ok) {
+            if (!response) {
+              throw new Error(`Error: ${response}`);
+            } else if (response) {
               Swal.fire({
                 icon: "success",
                 title: "Success",
                 text: "Password change successful!",
               });
             }
-            const data = await response.json();
-            console.log("Password change successful:", data);
           }
         } catch (error) {
           console.error("Error updating password:", error);

@@ -34,6 +34,7 @@ type SignUpFormData = SignUpForm1Data | SignUpForm2Data;
 type SignInWithPopupFunction = () => Promise<UserCredential>;
 
 interface User {
+  _id?: string;
   name?: string;
   lastName?: string;
   businessName?: string;
@@ -371,35 +372,30 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   const handleForgot = async (email: string) => {
     try {
-      const responseUser = await fetch("/userData.json");
-      const responseBusiness = await fetch("/businessData.json");
-      const responseAdmin = await fetch("/adminData.json");
-
-      if (!responseUser.ok && !responseBusiness && !responseAdmin) {
+      const responseUser = await axiosPublic.get("/user/userData");
+      const responseBusiness = await axiosPublic.get("/user/businessData");
+      const responseAdmin = await axiosPublic.get("/user/adminData");
+          
+      if (!responseUser && !responseBusiness && !responseAdmin) {
         throw new Error("Failed to fetch user data");
       }
-      const userDataUser: User[] = await responseUser.json();
-      const userDataBusiness: User[] = await responseBusiness.json();
-      const userDataAdmin: User[] = await responseAdmin.json();
 
-      const user = userDataUser.filter(
+      const userDataUser: User[] = await responseUser.data;
+      const userDataBusiness: User[] = await responseBusiness.data;
+      const userDataAdmin: User[] = await responseAdmin.data;
+
+      const allUsers = [...userDataUser, ...userDataBusiness, ...userDataAdmin];
+      
+      const user = allUsers.filter(
         (user) =>
-          user.email.toLowerCase() === email.toLowerCase()
-      );
-      const business = userDataBusiness.filter(
-        (business) =>
-          business.email.toLowerCase() === email.toLowerCase() 
-      );
-      const admin = userDataAdmin.filter(
-        (admin) =>
-          admin.email.toLowerCase() === email.toLowerCase()
+          user.email.toLowerCase() === email.toLowerCase()  && user.password
       );
 
-      if(user.length === 1 || business.length === 1 || admin.length === 1){
+      if(user.length > 0){
         const validatePhoneFormat = (phone : string) => {
           const phoneRegex = /^\d{10}$/;
           return phoneRegex.test(phone);
-        };
+        };    
 
         const { value: phone } = await Swal.fire({
           title: "Enter your phone number",
@@ -414,7 +410,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
             }
           },
         });
-        
+
         let newPhone: string = "";
         if (phone.startsWith("0")) {
           newPhone = "+66" + phone.substr(1);
@@ -433,14 +429,10 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
             }
           });
         }
-        
-        let whatUsers : User[] = [];
-        const userRole = user.filter(u => u.phone === newPhone);
-        const businessRole = business.filter(u => u.phone === newPhone);
-        const adminRole = admin.filter(u => u.phone === newPhone);
-        whatUsers = [...userRole, ...businessRole, ...adminRole];
 
-        if(whatUsers.length != 0){
+        const whatUsers = user.filter(u => u.phone === newPhone);
+  
+        if(whatUsers.length > 0){
           let readyChangePassword : User[] = []
 
           const inputOptions: { [key: string]: string } = {};
@@ -474,6 +466,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           if(phonInData){
             setChangPassword(readyChangePassword[0])
             setShowModalVerify(true);
+            
             const openInputOTP = () => {
               setShowModalVerify(false);
               setShowModalOTP(true);
@@ -508,12 +501,12 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
             text: 'The email and phone you entered does not math in our system.',
           });  
         }
-      } else {
+      }else{
         Swal.fire({
           icon: 'error',
           title: 'Email not found',
           text: 'The email you entered does not exist in our system.',
-        });  
+        });   
       }
     } catch (error) {
       console.error("Error:", (error as Error).message);

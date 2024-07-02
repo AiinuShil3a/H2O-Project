@@ -321,6 +321,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
   const handleForgotPasswordClick = async (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
+    reset();
     (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
     event.preventDefault();
 
