@@ -44,7 +44,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
     throw new Error("AuthContext must be used within an AuthProvider");
   }
 
-  const { handleLogin, handleSignUp, handleForgot , userInfo , signUpWithGoogle } = authContext;
+  const { handleLogin, handleSignUp, handleForgot , userInfo , signUpWithGoogle , setUserInfo } = authContext;
 
   const [activePage, setActivePage] = useState<"login" | "signup-user" | "signup-business">("login");
 
@@ -108,88 +108,99 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
   
   const GoogleSignUp = async (role: string) => {
     try {
-      await signUpWithGoogle()
-        .then((result) => {
-          const user = result.user;
-          const displayName = user?.displayName;
-          let firstName = "";
-          let lastName = "";
+      const result = await signUpWithGoogle(); // รอให้ signUpWithGoogle() เสร็จสิ้นและรับผลลัพธ์
   
-          if (displayName) {
-            const parts = displayName.split(" ");
-            firstName = parts[0];
-            lastName = parts[1];
-          }
+      const user = result.user;
+      const displayName = user?.displayName;
+      let firstName = "";
+      let lastName = "";
   
-          let userInfo: UserInfo[] = [];
-          if (role === "user" || role === "admin") {
-            const reqBody = {
-              name: firstName,
-              lastName: lastName,
-              email: user?.email,
-              image: user?.photoURL,
-              isVerified: user?.emailVerified,
-              role: role,
-            };
-            userInfo.push(reqBody);
-          } else if (role === "business") {
-            const str = user?.uid;
-            const firstFourChars = str.slice(0, 4);
-            const nameDefaultBusiness = `Business@${firstFourChars}`;
-            const reqBody = {
-              businessName: nameDefaultBusiness,
-              name: firstName,
-              lastName: lastName,
-              email: user?.email,
-              image: user?.photoURL,
-              isVerified: user?.emailVerified,
-              role: role,
-            };
-            userInfo.push(reqBody);
-          }else{
-            userInfo = [];
-          }
-          
-          if (userInfo.length > 0) {
-            axiosPublic
-              .post(`/user/${role}Register`, ...userInfo)
-              .then((response) => {
-                (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
-                const data = response.data;
-                if(data){
-                  Swal.fire({
-                    title: "Login google account successfully",
-                    icon: "success",
-                    timer: 1500,
-                  });
-                }
-              })
-              .catch((error: Error) => {
-                console.log(error);
-                Swal.fire({
-                  title: "Error",
-                  text: "An error occurred while registering. Please try again later.",
-                  icon: "error",
-                });
-              });
-          } else {
-            Swal.fire({
-              title: "Error",
-              text: "Invalid role specified.",
-              icon: "error",
-            });
-          }
-        })
-        .catch((error: Error) => {
-          console.log(error);
+      if (displayName) {
+        const parts = displayName.split(" ");
+        firstName = parts[0];
+        lastName = parts[1];
+      }
+  
+      let userInfo: UserInfo[] = [];
+  
+      if (role === "user" || role === "admin") {
+        const reqBody = {
+          name: firstName,
+          lastName: lastName,
+          email: user?.email,
+          image: user?.photoURL,
+          isVerified: user?.emailVerified,
+          role: role,
+        };
+        userInfo.push(reqBody);
+      } else if (role === "business") {
+        const str = user?.uid;
+        const firstFourChars = str.slice(0, 4);
+        const nameDefaultBusiness = `Business@${firstFourChars}`;
+        const reqBody = {
+          businessName: nameDefaultBusiness,
+          name: firstName,
+          lastName: lastName,
+          email: user?.email,
+          image: user?.photoURL,
+          isVerified: user?.emailVerified,
+          role: role,
+        };
+        userInfo.push(reqBody);
+      } else [
+        userInfo = []
+      ]
+  
+      if (userInfo.length > 0) {
+        const response = await axiosPublic.post(`/user/${role}Register`, ...userInfo);
+  
+        (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+        const dataRegister = response.data;
+  
+        if (dataRegister) {
           Swal.fire({
-            title: "Error",
-            text: "An error occurred during Google sign-up. Please try again later.",
-            icon: "error",
+            title: "Login google account successfully",
+            icon: "success",
+            timer: 1500,
           });
+  
+          const userData = {
+            email: dataRegister.email,
+            role: dataRegister.role,
+          };
+  
+          try {
+            const response = await axiosPublic.post("/user/login", userData, { withCredentials: true });
+            const data = response.data;
+  
+            if (data.isVerified) {
+              setUserInfo(data);
+            } else {
+              Swal.fire({
+                icon: 'warning',
+                title: 'Email Confirmation',
+                text: 'Your email has not been confirmed yet.',
+                confirmButtonText: 'OK',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
+                }
+              });
+            }
+            (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+          } catch (error) {
+            console.error("Error logging in user:", error);
+          }
+        }
+      } else {
+        Swal.fire({
+          title: "Error",
+          text: "Invalid role specified.",
+          icon: "error",
         });
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error signing up with Google:", error);
       Swal.fire({
         title: "Error",
         text: "An error occurred. Please try again later.",
@@ -197,6 +208,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
       });
     }
   };
+  
 
   const GoogleSignUpOrSignIn = () => {
     if(activePage === "signup-user"){
