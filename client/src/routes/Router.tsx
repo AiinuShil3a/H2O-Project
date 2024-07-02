@@ -3,6 +3,7 @@ import Main from "../layout/Main";
 import PrivateRouterUser from "../PrivateRouter/PrivateRouterUser";
 import PrivateRouterBusiness from "../PrivateRouter/PrivateRouterBusiness";
 import PrivateRouterAdmin from "../PrivateRouter/PrivateRouterAdmin";
+import PrivateVerifyEmail from "../PrivateRouter/PrivateVerifyEmail";
 import Home from "../pages/home/homepage";
 import VerifyEmailSuccess from "../pages/orther/emailIsVerify";
 import ProfileUser from "../pages/user/profile";
@@ -20,8 +21,12 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/verifySuccess",
-        element: <VerifyEmailSuccess />
+        path: "/verifySuccess/:token",
+        element: (
+          <PrivateVerifyEmail>
+            <VerifyEmailSuccess />
+          </PrivateVerifyEmail>
+        ),
       },
       {
         path: "/create-business",

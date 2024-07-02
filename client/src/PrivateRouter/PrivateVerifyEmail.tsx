@@ -1,51 +1,39 @@
-import { AuthContext } from "../AuthContext/auth.provider";
-import { useContext, ReactNode, FC, useEffect } from "react";
-import { Navigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import { ReactNode, FC } from "react";
+import { Navigate , useParams } from "react-router-dom";
 
 interface AuthProviderProps {
   children: ReactNode;
-  token?: string; // Optional token from query string
+  token?: string; 
 }
 
-const PrivateRouterUser: FC<AuthProviderProps> = ({ children, token }) => {
-  const authContext = useContext(AuthContext);
+const PrivateRouterUser: FC<AuthProviderProps> = ({ children }) => {
+  
+  const { token } = useParams<{ token?: string }>();
+  let decodedToken = null;
+  let userID = "";
 
-  if (!authContext) {
-    throw new Error("AuthContext must be used within an AuthProvider");
+  if (token) {
+      try {
+          const base64Url = token.split('.')[1];
+          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+          const jsonPayload = decodeURIComponent(
+              atob(base64).split('').map(function(c) {
+                  return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+              }).join('')
+          );
+  
+          decodedToken = JSON.parse(jsonPayload);
+          if(decodedToken.userId){
+            userID = decodedToken.userId;
+          }{
+            userID = "";
+          }
+      } catch (error) {
+          console.error('Error decoding token:', error);
+      }
   }
 
-  const { userInfo, handleLogout } = authContext;
-
-  useEffect(() => {
-    if (!userInfo && !token) {
-      Swal.fire({
-        title: "Please log in",
-        text: "You must log in first!",
-        icon: "warning",
-        confirmButtonText: "OK",
-      }).then(() => {
-        (
-          document.getElementById("Get-Started") as HTMLDialogElement
-        )?.showModal();
-      });
-    } else if (userInfo && userInfo.role !== "user") {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Your role is not user!",
-        footer: '<a href="#" id="logout-link">Logout now!</a>',
-        willOpen: () => {
-          const logoutLink = document.getElementById("logout-link");
-          if (logoutLink) {
-            logoutLink.addEventListener("click", handleLogout);
-          }
-        },
-      });
-    }
-  }, [userInfo, token]); // Add token as a dependency
-
-  if (userInfo && userInfo.role === "user" || token) {
+  if (token && userID !== "") {
     return children;
   } else {
     return <Navigate to="/" />;
