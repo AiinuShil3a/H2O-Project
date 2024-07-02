@@ -99,8 +99,6 @@ const verifyOTP = async (
               text: "Sign up successful! Pless cheack verify in Email..",
             });
           }
-          const data = await response.data;
-          console.log("Registration successful:", data);
         } catch (error) {
           console.error("Error registering user:", error);
         }

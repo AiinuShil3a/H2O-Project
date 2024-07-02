@@ -1,7 +1,7 @@
 import React, { useState, useContext ,useEffect } from "react";
 import { SiGmail } from "react-icons/si";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { AuthContext } from "../AuthContext/auth.provider";
+import { AuthContext , User } from "../AuthContext/auth.provider";
 import { FaPhone } from "react-icons/fa";
 import { BsExclamationTriangle } from "react-icons/bs";
 import axiosPublic from "../hook/axiosPublic";
@@ -65,6 +65,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
     const lastName = data.lastName;
     const businessName = data.businessName;
     const phone = data.phone;
+    
     if (activePage === "login") {
       handleLogin(email, password);
     } else if (activePage === "signup-user") {
@@ -108,9 +109,79 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
   
   const GoogleSignUp = async (role: string) => {
     try {
-      const result = await signUpWithGoogle(); // รอให้ signUpWithGoogle() เสร็จสิ้นและรับผลลัพธ์
+      const result = await signUpWithGoogle();
   
       const user = result.user;
+      const responseUser = await axiosPublic.get("/user/userData");
+      const responseBusiness = await axiosPublic.get("/user/businessData");
+      const responseAdmin = await axiosPublic.get("/user/adminData");
+          
+      if (!responseUser && !responseBusiness && !responseAdmin) {
+        throw new Error("Failed to fetch user data");
+      }
+
+      const userDataUser: User[] = await responseUser.data;
+      const userDataBusiness: User[] = await responseBusiness.data;
+      const userDataAdmin: User[] = await responseAdmin.data;
+
+      const allUsers = [...userDataUser, ...userDataBusiness, ...userDataAdmin];
+      const userGoogle = user?.email;
+      if(!userGoogle){
+        throw new Error("No data user...");
+      }
+      const userFilter = allUsers.filter(
+        (user) =>
+          user.email.toLowerCase() === userGoogle.toLowerCase() &&  user.role === role
+      );
+      const userRespone = userFilter[0]
+      console.log(userRespone);
+      
+      if(userRespone){
+        if(!userRespone.password){
+          const userData = {
+            email : userRespone.email,
+            role : userRespone.role,
+          }
+          
+          try {
+            const response = await axiosPublic.post("/user/login", userData, { withCredentials: true });
+            const data = response.data;
+  
+            if (data.isVerified) {
+              setUserInfo(data);
+              return
+            } else {
+              Swal.fire({
+                icon: 'warning',
+                title: 'Email Confirmation',
+                text: 'Your email has not been confirmed yet.',
+                confirmButtonText: 'OK',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
+                }
+              });
+            }
+            (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+          } catch (error) {
+            console.error("Error logging in user:", error);
+          }
+        }else if(userRespone.password){
+          (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+          Swal.fire({
+            icon: 'error',
+            title: 'Email is already in use',
+            text: "You didn't sign up through Google.",
+            confirmButtonText: 'OK',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              (document.getElementById("Get-Started") as HTMLDialogElement)?.showModal();
+            }
+          });
+          return
+        }
+      }
+
       const displayName = user?.displayName;
       let firstName = "";
       let lastName = "";
@@ -137,6 +208,7 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
         const str = user?.uid;
         const firstFourChars = str.slice(0, 4);
         const nameDefaultBusiness = `Business@${firstFourChars}`;
+        
         const reqBody = {
           businessName: nameDefaultBusiness,
           name: firstName,
@@ -209,7 +281,6 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
     }
   };
   
-
   const GoogleSignUpOrSignIn = () => {
     if(activePage === "signup-user"){
       const role = "user"
@@ -218,8 +289,27 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
       const role = "business"
       GoogleSignUp(role)
     }else if(activePage === "login"){
-      const role = "admin"
-      GoogleSignUp(role)
+      (document.getElementById("Get-Started") as HTMLDialogElement)?.close();
+      Swal.fire({
+        title: 'Select status to log in',
+        text: 'Log in with your Google account.',
+        showCancelButton: true,
+        confirmButtonText: 'USER',
+        cancelButtonText: 'BUSINESS',
+        reverseButtons: false,
+        customClass: {
+          confirmButton: 'swal-button-confirm',
+          cancelButton: 'swal-button-cancel'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+            const role = (result.dismiss === Swal.DismissReason.cancel) ? "business" : "user";
+            GoogleSignUp(role)
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            const role = "business";
+            GoogleSignUp(role)
+        }
+      });
     }   
   };
 
@@ -744,49 +834,62 @@ const Modal: React.FC<ModalProps> = ({ name }) => {
             </button>
           </p>
         </form>
-        <div className="max-w-screen-xl flex items-center justify-between">
-          <hr
-            className={
-              activePage === "login" || activePage === "signup-user" && userInfo?.role !== "admin"
-                ? "w-[50vw] border-t-2 border-primaryUser shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
-                : userInfo?.role === "admin"
-                ? "w-[50vw] border-t-2 border-primaryAdmin shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
-                : "w-[50vw] border-t-2 border-primaryBusiness shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
-            }
-          />
-          <div className="items-center justify-center ml-6 mr-6 font-bold">
-            <h3>or</h3>
-          </div>
-          <hr
-            className={
-              activePage === "login" || activePage === "signup-business" && userInfo?.role !== "admin"
-                ? "w-[50vw] border-t-2 border-primaryBusiness shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
-                : userInfo?.role === "admin"
-                ? "w-[50vw] border-t-2 border-primaryAdmin shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
-                : "w-[50vw] border-t-2 border-primaryUser shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
-            }
-          />
-        </div>
+        {
+          activePage === "signup-user" && userInfo?.role === "admin"
+          ? null
+          :(
+            <div className="max-w-screen-xl flex items-center justify-between">
+              <hr
+                className={
+                  activePage === "login" || activePage === "signup-user" && userInfo?.role !== "admin"
+                    ? "w-[50vw] border-t-2 border-primaryUser shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
+                    : userInfo?.role === "admin"
+                    ? "w-[50vw] border-t-2 border-primaryAdmin shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
+                    : "w-[50vw] border-t-2 border-primaryBusiness shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
+                }
+              />
+              <div className="items-center justify-center ml-6 mr-6 font-bold">
+                <h3>or</h3>
+              </div>
+              <hr
+                className={
+                  activePage === "login" || activePage === "signup-business" && userInfo?.role !== "admin"
+                    ? "w-[50vw] border-t-2 border-primaryBusiness shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
+                    : userInfo?.role === "admin"
+                    ? "w-[50vw] border-t-2 border-primaryAdmin shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
+                    : "w-[50vw] border-t-2 border-primaryUser shadow-lg flex items-center space-x-3 rtl:space-x-reverse"
+                }
+              />
+            </div>
+          )
+        }
         <div className="text-center justify-center items-center p-7">
-          <button
-            className={
-              activePage === "login"
-                ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryUser hover:bg-gradient-to-r from-primaryUser to-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
-                : activePage === "signup-user" && userInfo?.role !== "admin"
-                ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryUser text-primaryUser hover:bg-primaryUser hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
-                : activePage === "signup-business"
-                ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryBusiness hover:bg-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
-                : activePage === "signup-user" && userInfo?.role === "admin"
-                ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryAdmin text-primaryAdmin hover:bg-primaryAdmin hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
-                : "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-dark text-dark hover:bg-dark hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
-            }  
-            onClick={GoogleSignUpOrSignIn}
-          >
-            <span className="relative z-10 flex items-center justify-center w-full h-full">
-              <SiGmail className="w-6 h-6" />
-              <h3 className="ml-3">Gmail</h3>
-            </span>
-          </button>
+        {
+          activePage === "signup-user" && userInfo?.role === "admin"  
+            ? null
+            : (
+                <button
+                  className={
+                    activePage === "login"
+                      ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryUser hover:bg-gradient-to-r from-primaryUser to-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
+                      : activePage === "signup-user" && userInfo?.role !== "admin"
+                      ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryUser text-primaryUser hover:bg-primaryUser hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
+                      : activePage === "signup-business"
+                      ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryBusiness text-primaryBusiness hover:bg-primaryBusiness hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
+                      : activePage === "signup-user" && userInfo?.role === "admin"
+                      ? "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-primaryAdmin text-primaryAdmin hover:bg-primaryAdmin hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
+                      : "rounded-[0.5rem] w-full h-10 relative overflow-hidden focus:outline-none bg-white border border-dark text-dark hover:bg-dark hover:text-white hover:border-white hover:shadow-lg transition-transform transform-gpu hover:-translate-y-2"
+                  }  
+                  onClick={GoogleSignUpOrSignIn}
+                >
+                  <span className="relative z-10 flex items-center justify-center w-full h-full">
+                    <SiGmail className="w-6 h-6" />
+                    <h3 className="ml-3">Gmail</h3>
+                  </span>
+                </button>
+              )
+        }
+          
           {(activePage === "signup-user" || activePage === "signup-business") && userInfo?.role !== "admin"  ? (
             <button
               className={

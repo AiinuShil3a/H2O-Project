@@ -10,7 +10,6 @@ const PrivateRouterUser: FC<AuthProviderProps> = ({ children }) => {
   
   const { token } = useParams<{ token?: string }>();
   let decodedToken = null;
-  let userID = "";
 
   if (token) {
       try {
@@ -23,20 +22,13 @@ const PrivateRouterUser: FC<AuthProviderProps> = ({ children }) => {
           );
   
           decodedToken = JSON.parse(jsonPayload);
-          if(decodedToken.userId){
-            userID = decodedToken.userId;
-          }{
-            userID = "";
+          if (token && decodedToken) {
+            return children;
           }
       } catch (error) {
           console.error('Error decoding token:', error);
+          return <Navigate to="/" />;
       }
-  }
-
-  if (token && userID !== "") {
-    return children;
-  } else {
-    return <Navigate to="/" />;
   }
 };
 

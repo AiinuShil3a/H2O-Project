@@ -201,3 +201,13 @@ body {
   visibility: visible;
   opacity: 1;
 }
+
+/* Swal butoon */
+
+.swal-button-confirm {
+  background-color: #DC9832 !important;
+}
+
+.swal-button-cancel {
+  background-color: #4B99FA !important;
+}
